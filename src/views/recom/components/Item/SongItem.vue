@@ -1,11 +1,13 @@
 <template>
   <div class="item">
-    <img :src="data.picUrl" alt="" v-layz="data.picUrl" />
+    <div class="imgBox">
+      <img alt="" v-layz="data.picUrl" />
+    </div>
     <div class="info">{{ data.name }}</div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType } from 'vue'
 export default defineComponent({
   props: {
     data: {
@@ -13,7 +15,7 @@ export default defineComponent({
       default: null,
     },
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .item {
@@ -21,11 +23,16 @@ export default defineComponent({
   height: 100%;
   display: flex;
   flex-direction: column;
-  img {
-    display: block;
+  .imgBox {
     width: 100%;
+    height: 110px;
     border-radius: 8px;
     overflow: hidden;
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   }
   .info {
     height: 40px;

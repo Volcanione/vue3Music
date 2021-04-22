@@ -9,6 +9,7 @@ const directive_loading = (app: App) => {
       container.className = "loadingBox";
       const vnode = createVNode(Loading);
       render(vnode, container);
+      el.style.position = 'relative'
       el.appendChild(container);
       const instance: any = vnode.component;
       LoadingUpdate[instance.uid] = (state: boolean) => {

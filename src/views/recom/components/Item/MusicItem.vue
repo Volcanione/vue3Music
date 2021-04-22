@@ -1,7 +1,7 @@
 <template>
   <div v-for="(item, index) in List" :key="index" class="MusicBox">
     <div class="item" v-for="i in item" :key="i.id">
-      <img :src="i.img" alt="" />
+      <img v-layz="i.img" alt="" />
       <div class="info">
         <span class="name ellipsis">{{ i.name }}</span>
         <span class="artists ellipsis">{{ i.artists }}</span>

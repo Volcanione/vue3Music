@@ -2,6 +2,7 @@ import { nextTick, ref } from "vue";
 import api from "@/api/index";
 import { LS_set, LS_get, LS_remove } from "@/utils/index";
 import { useRouter, useRoute } from "vue-router";
+import { $msg } from "@/components/Msg/index";
 export function searchFn() {
   const router = useRouter();
   const route = useRoute();
@@ -109,12 +110,10 @@ export function searchResult() {
   const total = ref(0);
   const searchResultRef = ref(null) as any;
   const resultList = ref(<any>[]);
-  const loadingState = ref(true);
+  const loadingState = ref(false);
   //请求搜索结果
 
-  const getsearchResult = async () => {
-    loadingState.value = false;
-    resultList.value = [];
+  const getsearchResult = async (state = false, refresh?: boolean) => {
     const keywords = route.params.keyword as string;
     const { code, result } = await api.searchResult({
       keywords,
@@ -125,26 +124,66 @@ export function searchResult() {
     if (code !== 200) {
       return;
     }
+    refresh && (resultList.value = [])
+    await nextTick()
     Object.values(result).forEach((val) => {
       if (typeof val === "number") {
         total.value = val;
       }
       if (val instanceof Array) {
-        resultList.value = val;
+        if (!state) {
+          resultList.value = val;
+        } else {
+          resultList.value.push(...val)
+        }
+
       }
     });
     loadingState.value = true;
     nextTick(() => {
       searchResultRef?.value?.refresh();
-      searchResultRef?.value?.scrollTo();
     });
   };
 
   //改变类别
 
-  const changeType = () => {
-    getsearchResult();
+  const changeType = async () => {
+    offset.value = 0
+    resultList.value = []
+    loadingState.value = false;
+    await getsearchResult();
+    nextTick(() => {
+      searchResultRef?.value?.scrollTo();
+    });
   };
+
+  //下拉刷新
+  const pullDown = async (done: () => void) => {
+    offset.value = 0
+    try {
+
+      await getsearchResult()
+
+    } catch (error) {
+
+    }
+    await done()
+
+  }
+  //上拉加载
+  const pullUp = async (done: (state?: number) => void) => {
+    offset.value++
+    if (total.value <= resultList.value.length) {
+      await done(2);
+      return $msg({ title: "真的到底了" });
+    }
+    try {
+      await getsearchResult(true)
+      await done(1)
+    } catch (error) {
+      await done(0)
+    }
+  }
 
   return {
     getsearchResult,
@@ -153,5 +192,7 @@ export function searchResult() {
     resultList,
     loadingState,
     searchResultRef,
+    pullDown,
+    pullUp
   };
 }

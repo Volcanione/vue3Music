@@ -1,5 +1,5 @@
 <template>
-  <LayerPage :loading="loadingState" ref="searchResultRef">
+  <LayerPage :loading="loadingState" ref="searchResultRef" @pullDown="pullDown" @pullUp="pullUp">
     <template #header>
       <Nav :right="false">
         <div class="searchBar">
@@ -8,7 +8,7 @@
               <i class="iconfont searchIcon">&#xe632;</i>
             </template>
             <template #right>
-              <i class="iconfont clearIcon">&#xe600;</i>
+              <i class="iconfont clearIcon"  @click="clearSearch">&#xe600;</i>
             </template>
           </Field>
         </div>
@@ -61,25 +61,17 @@ export default defineComponent({
           value: 1000,
         },
         {
-          label: "用户",
-          value: 1002,
-        },
-        {
           label: "MV",
           value: 1004,
-        },
-        {
-          label: "歌词",
-          value: 1006,
         },
         {
           label: "电台",
           value: 1009,
         },
-        {
-          label: "视频",
-          value: 1014,
-        },
+        // {
+        //   label: "视频",
+        //   value: 1014,
+        // },
       ],
     };
   },
@@ -87,7 +79,7 @@ export default defineComponent({
     this.init();
   },
   setup(props) {
-    const { search, searchSuggest } = searchFn();
+    const { search, searchSuggest, clearSearch, } = searchFn();
 
     const init = () => {
       getsearchResult();
@@ -100,16 +92,21 @@ export default defineComponent({
       resultList,
       loadingState,
       searchResultRef,
+      pullDown,
+      pullUp
     } = searchResult();
     return {
       search,
       searchSuggest,
+      clearSearch,
       type,
       init,
       changeType,
       resultList,
       loadingState,
       searchResultRef,
+      pullDown,
+      pullUp
     };
   },
 });

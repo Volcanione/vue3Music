@@ -1,5 +1,5 @@
 import Layz from "./index.vue";
-import { createVNode, render, App } from "vue";
+import { createVNode, render, App, watch, ref } from "vue";
 
 interface Options {
   errorImg?: string;
@@ -16,6 +16,8 @@ const directive_layz = (app: App, options: Options) => {
       if (el.tagName !== "IMG") {
         return console.error("'Element tagName is not 'IMG'");
       }
+
+      const loadState = ref(0)
       //load
       const setloadImg = () => {
         setElStyle();
@@ -26,58 +28,77 @@ const directive_layz = (app: App, options: Options) => {
             );
           }
           // el.src = options.loadImg
-          loadConfig(options.loadImg);
-          return;
+          loadConfig(options.loadImg,options.errorImg);
+        } else {
+          const Binding: ImgConfig = Object.assign(binding.value, {});
+          if (!Binding.loadImg && !options.loadImg) {
+            console.warn(
+              "When the layz config  is a Object,the global and local configuration must exist,Local weight is more than the global weight!"
+            );
+          }
+          // el.src = Binding.loadImg || options.loadImg
+          loadConfig(Binding.loadImg || options.loadImg,Binding.errorImg || options.errorImg);
         }
-        const Binding: ImgConfig = Object.assign(binding.value, {});
-        if (!Binding.loadImg && !options.loadImg) {
-          console.warn(
-            "When the layz config  is a Object,the global and local configuration must exist,Local weight is more than the global weight!"
-          );
-        }
-        // el.src = Binding.loadImg || options.loadImg
-        loadConfig(Binding.loadImg || options.loadImg);
       };
 
-      const loadConfig = (url: any) => {
+      const loadConfig = (loadImg: any,errorImg:any) => {
         const container = document.createElement("div");
-        container.className = "ImgLoad";
         const vnode = createVNode(Layz);
         render(vnode, container);
         el.appendChild(container);
+        const { props }: any = vnode.component
+        props.loadImg = loadImg
+        props.errorImg = errorImg
+        watch(() => loadState, () => {
+          props.loadState = loadState.value
+        }, { deep: true })
+        
+        intersectionObserver.observe(el);
       };
 
       const setElStyle = () => {
-        const cloneDom = el.cloneNode(true);
+        const cloneDom = el.cloneNode(false);
+        const width = el.width
+        const height = el.height
         const ImgDom = document.createElement("div") as any;
         ImgDom.appendChild(cloneDom);
         const ParentDom = el.parentElement;
         ParentDom.replaceChild(ImgDom, el);
         ImgDom.style.position = "relative";
-        // ImgDom.style.width =  cloneDom.offsetWidth
-        // ImgDom.style.height =  cloneDom.style.offsetHeight
+        width && (ImgDom.style.width = width + 'px')
+        height && (ImgDom.style.height = height + 'px')
+        el = ImgDom
       };
 
-      setloadImg();
 
       //loading
 
       const setImgUrl = () => {
-        el.src =
-          typeof binding.value === "string" ? binding.value : binding.value.src;
+        const IMG = el.firstChild
+        IMG.src = binding.value.src || binding.value
+        IMG.onload = () => {
+          loadState.value = 1
+        }
+        IMG.onerror = () => {
+          loadState.value = -1
+        }
       };
 
       const intersectionObserver = new IntersectionObserver(function (entries) {
         if (entries[0].intersectionRatio <= 0) return;
         getElposition();
       });
-      intersectionObserver.observe(el);
       const getElposition = () => {
         const { x, y } = el.getBoundingClientRect();
         if (x > 0 || y > 0) {
+          if (loadState.value) {
+            return
+          }
           setImgUrl();
         }
       };
+      //调用方法
+      setloadImg();
 
       // console.log(binding.value);
       // console.log(document.body.clientHeight);
@@ -98,7 +119,7 @@ const directive_layz = (app: App, options: Options) => {
       // LayzUpdate[instance.uid](!binding.value)
       // el.setAttribute('id', instance.uid)
     },
-    updated(el: HTMLElement, binding: any) {},
+    updated(el: HTMLElement, binding: any) { },
   });
 };
 

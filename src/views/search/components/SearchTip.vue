@@ -99,7 +99,7 @@ export default defineComponent({
 .SearchTip {
   height: calc(100% - 44px);
   width: 100%;
-  position: absolute;
+  position: absolute  !important;
   background: #{$appBackColor};
   top: 44px;
   left: 0;

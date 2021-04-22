@@ -7,32 +7,35 @@
       <ViewContent :type="routeType" :disabled="disabled" />
     </div>
   </div>
+  <Player  />
 </template>
 <script lang="ts">
-import Navbar from "./components/Navbar.vue";
-import ViewContent from "@/components/ViewContent/index.vue";
-import { defineComponent, ref } from "vue";
+import Navbar from './components/Navbar.vue'
+import ViewContent from '@/components/ViewContent/index.vue'
+import { defineComponent, ref } from 'vue'
+import Player from './components/Player/index.vue'
 export default defineComponent({
   components: {
     Navbar,
     ViewContent,
+    Player,
   },
   data() {
     return {
       x: 0 as any,
       left: 0 as any,
       disabled: false,
-    };
+    }
   },
   setup() {
-    const routeType = ref(0);
+    const routeType = ref(0)
     const changeRoute = (val: number) => {
-      routeType.value = val;
-    };
+      routeType.value = val
+    }
     return {
       changeRoute,
       routeType,
-    };
+    }
   },
   computed: {
     // disabled() {
@@ -46,20 +49,20 @@ export default defineComponent({
     $route(to, from) {
       const toRouter: any = to.matched.find(
         (route: any) => route.name === to.name
-      );
+      )
       const fromRoute: any = from.matched.find(
         (route: any) => route.name === from.name
-      );
+      )
       this.disabled = Boolean(
         toRouter?.components?.layer || fromRoute?.components?.layer
-      );
+      )
     },
   },
   methods: {},
-});
+})
 </script>
 <style lang="scss" scoped>
-@import "~@/style/layout.scss";
+@import '~@/style/layout.scss';
 .root {
   position: fixed;
   top: 0;

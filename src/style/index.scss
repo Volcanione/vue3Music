@@ -1,6 +1,12 @@
 @import '~@/style/mixin.scss';
 
-html,body{
+html,
+body {
+  height: 100%;
+}
+
+img {
+  display: block;
   height: 100%;
 }
 
@@ -23,12 +29,17 @@ html,body{
 @font-face {
   font-family: 'webfont';
   font-display: swap;
-  src: url('./fonts/HuaWenYuanTi-REGULAR-2.ttf'); /* IE9*/
-  src:  url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('embedded-opentype'), /* IE6-IE8 */
-   url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('woff2'),
-  url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('woff'), /* chrome、firefox */
-  url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-   url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('svg'); /* iOS 4.1- */
+  src: url('./fonts/HuaWenYuanTi-REGULAR-2.ttf');
+  /* IE9*/
+  src: url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('woff2'),
+    url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('woff'),
+    /* chrome、firefox */
+    url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('truetype'),
+    /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('svg');
+  /* iOS 4.1- */
 }
 
 @font-face {
