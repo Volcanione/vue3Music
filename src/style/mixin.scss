@@ -1,0 +1,17 @@
+@import '~@/style/layout.scss';
+
+@mixin viewContent {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - #{$navbarHeight} + .5px) !important;
+  background:  #{$appBackColor};
+  overflow: hidden;
+  &:after {
+    display: block;
+    clear: both;
+    height: 0;
+    content: "";
+    visibility: hidden;
+    overflow: hidden;
+  }
+}

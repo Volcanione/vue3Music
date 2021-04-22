@@ -1,0 +1,9 @@
+$navbarHeight:44px;
+$navbarBackColor:#f7f7f7;
+$appBackColor:#f7f7f7;
+
+:export {
+  navbarHeight: $navbarHeight;
+  navbarBackColor: $navbarBackColor;
+  appBackColor: $navbarHeight;
+}
