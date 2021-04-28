@@ -22,3 +22,8 @@ export function LS_get(key: string) {
 export function LS_remove(key: string) {
   localStorage.removeItem(key);
 }
+
+
+export const getIdx = <T extends unknown>(arr: T[], i: T, key: keyof T) => {
+  return arr.findIndex(m => m[key] === i[key])
+}

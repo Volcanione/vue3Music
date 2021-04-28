@@ -1,6 +1,6 @@
 <template>
   <div v-for="(item, index) in List" :key="index" class="MusicBox">
-    <div class="item" v-for="i in item" :key="i.id">
+    <div class="item" v-for="i in item" :key="i.id" @click="handlerClick(i)">
       <img v-layz="i.img" alt="" />
       <div class="info">
         <span class="name ellipsis">{{ i.name }}</span>
@@ -12,48 +12,55 @@
 </template>
 
 <script lang="ts">
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-dayjs.extend(duration);
-import { defineComponent, PropType, watchEffect, ref } from "vue";
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+dayjs.extend(duration)
+import { defineComponent, PropType, watchEffect, ref } from 'vue'
 export default defineComponent({
   props: {
     data: {
       type: Array as PropType<any[]>,
       default() {
-        return [];
+        return []
       },
     },
   },
-  setup(props: any) {
-    const List = ref([]);
+  emits: ['confirm'],
+  setup(props: any, { emit }) {
+    const List = ref([])
 
     watchEffect(() => {
-      const Arr: any[] = [];
+      const Arr: any[] = []
       props.data.forEach((item: any, index: number) => {
-        const idx = index % 3;
-        const i = Math.floor(index / 3);
+        const idx = index % 3
+        const i = Math.floor(index / 3)
         if (idx === 0) {
-          const arr: any[] = [item];
-          Arr.push(arr);
+          const arr: any[] = [item]
+          Arr.push(arr)
         } else {
-          Arr[i].push(item);
+          Arr[i].push(item)
         }
-        List.value = Arr as [];
-      });
-    });
+        List.value = Arr as []
+      })
+    })
+
+    const handlerClick = (data: any) => {
+      emit('confirm', data)
+    }
+
     return {
       List,
-    };
+      handlerClick,
+    }
   },
   computed: {
     setTime() {
       return (val: number) => {
-        return dayjs.duration(val).format("mm:ss");
-      };
+        return dayjs.duration(val).format('mm:ss')
+      }
     },
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

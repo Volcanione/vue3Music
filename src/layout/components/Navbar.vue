@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { TabBar } from '@/components/Tab/index'
-import { defineComponent } from 'vue'
+import { defineComponent, watch } from 'vue'
 import { playerSetup } from '../components/Player/setup'
 export default defineComponent({
   components: { TabBar },
