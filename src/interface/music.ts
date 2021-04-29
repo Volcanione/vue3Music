@@ -1,4 +1,4 @@
 export interface PlayListType {
-  id: number | string,
+  id: number | string;
   [propName: string]: any;
 }

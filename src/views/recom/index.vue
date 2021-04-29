@@ -67,7 +67,7 @@
                 :list="PrivateMusicList"
                 v-loading="loadingState"
               >
-                <MusicItem :data="PrivateMusicList"  @confirm="checkMusicItem"  />
+                <MusicItem :data="PrivateMusicList" @confirm="checkMusicItem" />
               </SlideWapper>
             </template>
           </ScrollBox>
@@ -191,9 +191,9 @@ export default defineComponent({
     };
 
     //点击最新歌曲
-    const  checkMusicItem =(data:any)=>{
+    const checkMusicItem = (data: any) => {
       console.log(data);
-    }
+    };
 
     return {
       ...PUBLIC,

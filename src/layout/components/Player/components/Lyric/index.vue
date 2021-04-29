@@ -1,7 +1,5 @@
 <template>
-  <div class="Lyric">
-    歌词
-  </div>
+  <div class="Lyric">歌词</div>
 </template>
 
 <style lang="scss" scoped>

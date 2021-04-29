@@ -1,15 +1,15 @@
 <template>
   <div class="mode" @click="setPlayerMode">
-    <i class="iconfont" v-if="playerMode==='alone'">&#xe6a2;</i>
-    <i class="iconfont" v-if="playerMode==='list'">&#xe6a3;</i>
-    <i class="iconfont" v-if="playerMode==='random'">&#xe624;</i>
+    <i class="iconfont" v-if="playerMode === 'alone'">&#xe6a2;</i>
+    <i class="iconfont" v-if="playerMode === 'list'">&#xe6a3;</i>
+    <i class="iconfont" v-if="playerMode === 'random'">&#xe624;</i>
   </div>
-  <div class="prev"><i class="iconfont">&#xe607;</i></div>
+  <div class="prev" @click="setPrevNow"><i class="iconfont">&#xe607;</i></div>
   <div class="play" @click="setPlayerState(!playerState)">
-    <i class="iconfont" v-if="!playerState">&#xe76a;</i>
+    <i class="iconfont" v-if="playerState">&#xe76a;</i>
     <i v-else class="iconfont">&#xe646;</i>
   </div>
-  <div class="next"><i class="iconfont">&#xe872;</i></div>
+  <div class="next" @click="setNextNow(true)"><i class="iconfont">&#xe872;</i></div>
   <div class="list"><i class="iconfont">&#xe6e4;</i></div>
 </template>
 <script lang="ts">
@@ -22,13 +22,25 @@ export default defineComponent({
       setPlayerMode,
       playerState,
       setPlayerState,
+      playerNow,
+      setPlayerNow,
+      setPrevNow,
+      setNextNow,
     } = playerSetup()
-
+    watch(
+      () => playerNow.value,
+      (val) => {
+        console.log(val)
+      },
+      { immediate: true }
+    )
     return {
       playerState,
       setPlayerState,
       setPlayerMode, //切换模式
       playerMode,
+      setPrevNow,
+      setNextNow,
     }
   },
 })

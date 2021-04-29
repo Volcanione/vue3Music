@@ -23,7 +23,26 @@ export function LS_remove(key: string) {
   localStorage.removeItem(key);
 }
 
-
-export const getIdx = <T extends unknown>(arr: T[], i: T, key: keyof T) => {
-  return arr.findIndex(m => m[key] === i[key])
+export const getIdx = <T extends unknown>(arr: T[], i: T, key: keyof T): number => {
+  return arr.findIndex((m) => m[key] === i[key]);
 }
+
+
+export const getrandomData = <T extends unknown>(arr: T[], i?: T, key?: keyof T): T | null => {
+
+  if (!arr.length) {
+    return null
+  }
+  if (!i || !key) {
+    let re = Math.floor(Math.random() * arr.length)
+    return arr[re]
+  }
+  const FILTER = arr.filter(
+    (m: T) => {
+      return m[key] !== i[key]
+    }
+  )
+  let re = Math.floor(Math.random() * FILTER.length)
+
+  return FILTER[re]
+};

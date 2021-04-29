@@ -85,4 +85,25 @@ export default {
       params,
     });
   },
+
+  //获取歌曲是否能播放
+  checkMusic() {
+    return request({
+      url: "/check/music",
+      method: "post",
+    });
+  },
+  getMusicUrl(data: any) {
+    return request({
+      url: "/song/url",
+      method: "post",
+      data
+    });
+  },
+  checkMusicByUrl(url: string) {
+    return request({
+      url,
+      method: "get",
+    });
+  }
 };

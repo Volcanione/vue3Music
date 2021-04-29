@@ -1,9 +1,9 @@
 <template>
   <div class="root">
-    <div class="progessBar" ref="progessBar" @click="handlerClick" @touchstart="fn_progressTouchStart" @touchmove.prevent="fn_progressTouchMove">
-      <div class="line" :style="{width:`${value}%`}"></div>
+    <div class="progessBar" ref="progessBar" @click.capture="handlerClick" @touchstart.capture="fn_progressTouchStart" @touchmove.capture="fn_progressTouchMove">
+      <div class="line" :style="{ width: `${value}%` }"></div>
     </div>
-    <div class="bar" ref="lineBar" :style="{left:`${barLeft}px`}"></div>
+    <div class="bar" ref="lineBar" :style="{ left: `${barLeft}px` }"></div>
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import { defineComponent, PropType, ref, watch, onMounted, nextTick } from 'vue'
 import ResizeObserver from 'resize-observer-polyfill'
 export default defineComponent({
+  emits: ['changeProgess', 'update:modelValue'],
   props: {
     modelValue: {
       type: Number as PropType<number>,
@@ -74,6 +75,7 @@ export default defineComponent({
         100
       ).toFixed(3)
       value.value = Math.min(Math.max(percentage, 0), 100)
+      emit('changeProgess', value)
     }
 
     onMounted(async () => {
@@ -130,6 +132,7 @@ export default defineComponent({
     .line {
       height: 100%;
       background: #fff;
+      pointer-events: none;
     }
   }
   .bar {
@@ -141,6 +144,7 @@ export default defineComponent({
     top: 50%;
     transform: translateY(-50%);
     overflow-y: visible !important;
+    pointer-events: none;
   }
 }
 </style>
