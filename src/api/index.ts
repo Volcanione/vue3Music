@@ -3,6 +3,7 @@ import {
   APIGetSongList,
   APISearchSuggest,
   APISearchResult,
+  APIGetMusicUrl
 } from "@/interface/index";
 export default {
   //获取banner
@@ -93,7 +94,7 @@ export default {
       method: "post",
     });
   },
-  getMusicUrl(data: any) {
+  getMusicUrl(data: APIGetMusicUrl) {
     return request({
       url: "/song/url",
       method: "post",
@@ -105,5 +106,11 @@ export default {
       url,
       method: "get",
     });
+  },
+  getMusicUrlById(id: string | number) {
+    return request({
+      url: `https://music.163.com/song/media/outer/url?id=${id}.mp3 `,
+      method: "get",
+    })
   }
 };

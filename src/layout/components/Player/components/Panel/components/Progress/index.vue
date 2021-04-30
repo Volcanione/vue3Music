@@ -17,6 +17,10 @@ export default defineComponent({
       type: Number as PropType<number>,
       default: 0,
     },
+    disabled: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
   setup(props, { emit }) {
     const value = ref(0)
@@ -55,15 +59,24 @@ export default defineComponent({
     }
     //点击进度条
     const handlerClick = (el: any) => {
+      if (props.disabled) {
+        return
+      }
       setValue(el.x)
     }
 
     //拖拽事件
     const fn_progressTouchStart = (el?: any) => {
+      if (props.disabled) {
+        return
+      }
       touchStart.value = el.touches[0].clientX
       setValue(touchStart.value)
     }
     const fn_progressTouchMove = (el?: any) => {
+      if (props.disabled) {
+        return
+      }
       const move = el.touches[0].clientX
       setValue(move)
     }

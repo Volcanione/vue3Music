@@ -32,3 +32,10 @@ export interface APISearchResult extends APISearchSuggest {
   limit?: number;
   offset?: number;
 }
+
+
+
+export interface APIGetMusicUrl {
+  id: string | number;
+  br?: string | number;
+}

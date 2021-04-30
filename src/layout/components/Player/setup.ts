@@ -30,6 +30,7 @@ export function playerSetup() {
   //播放暂停
   const setPlayerState = (state = false) => {
     if (!playerNow.value) {
+      store.commit("player/setPlayerState", false);
       return $msg({ title: "音乐列表为空额" });
     }
     store.commit("player/setPlayerState", state);

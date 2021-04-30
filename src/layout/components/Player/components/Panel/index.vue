@@ -21,7 +21,7 @@
         <span>{{duration}}</span>
       </div>
       <div class="progess">
-        <Progess v-model="progess" @changeProgess="changeProgess" />
+        <Progess v-model="progess" @changeProgess="changeProgess" :disabled="!duration" />
       </div>
     </div>
     <div class="bottom">
@@ -34,7 +34,6 @@
 import { defineComponent, PropType, ref, watch, onMounted, nextTick } from 'vue'
 import Progess from './components/Progress/index.vue'
 import Control from './components/Control/index.vue'
-import { playerSetup } from '@/layout/components/Player/setup'
 import createAudio from '@/layout/components/Player/audio'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
@@ -42,8 +41,6 @@ dayjs.extend(duration)
 export default defineComponent({
   components: { Progess, Control },
   setup(props, context) {
-    const { playerState, playerNow } = playerSetup()
-
     //创建音频
     const {
       audioElement,
@@ -53,7 +50,12 @@ export default defineComponent({
       changeProgess,
       currentTime,
       duration,
+      playerState,
+      playerNow,
     } = createAudio()
+
+    const curTime = ref('')
+    const totalTime = ref('')
 
     onMounted(async () => {
       //播放暂停
@@ -71,14 +73,25 @@ export default defineComponent({
           if (!val) {
             return
           }
-          resetPlayState() //传入参数true 为立即播放
+          resetPlayState(playerState.value) //传入参数true 为立即播放
         },
         {
           immediate: true,
         }
       )
-    })
 
+      watch(
+        [currentTime, duration],
+        ([cur, dur]) => {
+          if (!dur || !cur) {
+            return
+          }
+          curTime.value = dayjs.duration(cur*1000).format('mm:ss')
+          totalTime.value = dayjs.duration(dur*1000).format('mm:ss')
+        },
+        { immediate: true, deep: true }
+      )
+    })
 
     return {
       progess,
@@ -86,8 +99,8 @@ export default defineComponent({
       playerNow,
       audioElement,
       changeProgess,
-      currentTime,
-      duration,
+      currentTime: curTime,
+      duration: totalTime,
     }
   },
 })
@@ -179,10 +192,10 @@ export default defineComponent({
       font-size: 12px;
       display: flex;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 20px;
     }
     .progess {
-      margin: 20px 0;
+      margin: 10px 0;
       width: 100%;
       padding: 0 20px;
       height: 20px;
@@ -195,6 +208,9 @@ export default defineComponent({
       align-items: center;
       font-size: 12px;
       color: #fff;
+      padding: 0 20px;
+      margin-bottom: 0;
+      margin-top: auto;
     }
   }
   .bottom {
