@@ -15,12 +15,6 @@ const state: STATETYPE = {
   playerState: false,
   playerList: [
 
-    { id: 0 },
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-
   ],//所有加入播放列表的音乐
   playeHistory: [],//正在播放和已经播放过的音乐
 };
@@ -53,6 +47,10 @@ const mutations = {
         state.playerList.splice(idx, 1);
       }
       state.playerList.unshift(data);
+      //添加歌曲为对象时 会自动播切换当前放音乐
+      mutations.setPlayerShow(state, true)
+      mutations.setNowPlaye_History(state, data)
+      mutations.setPlayerState(state, true)
     }
   },
   deleteToPlayerList(state: STATETYPE, data?: PlayListType) {
@@ -123,6 +121,9 @@ const actions = {
           nextPlay = {} as PlayListType
           break
       }
+      if (playerList.length === 1 && playerMode !== 'alone') {
+        return rej({ code: 0, msg: '已经听完了' })
+      }
       commit("setNowPlaye_History", nextPlay)
       return res({ code: 200, msg: '下一首' })
     })
@@ -132,10 +133,10 @@ const actions = {
   prevPlayer({ commit, }: any) {
     const { playeHistory } = state
     return new Promise((res, rej) => {
-      commit('setPrevPlaye_History')
       if (playeHistory.length <= 1) {
         return rej({ code: 0, msg: '没有之前的记录' })
       }
+      commit('setPrevPlaye_History')
       return res({ code: 200, msg: '上一首' })
     })
   }

@@ -88,10 +88,11 @@ export default {
   },
 
   //获取歌曲是否能播放
-  checkMusic() {
+  checkMusic(data: APIGetMusicUrl) {
     return request({
       url: "/check/music",
       method: "post",
+      data
     });
   },
   getMusicUrl(data: APIGetMusicUrl) {

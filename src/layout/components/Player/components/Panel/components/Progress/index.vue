@@ -32,9 +32,6 @@ export default defineComponent({
 
     //初始化
     const wacthmodelValue = () => {
-      if (value.value >= 100) {
-        return
-      }
       value.value = Math.min(props.modelValue, 100)
     }
 

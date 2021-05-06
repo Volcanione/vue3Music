@@ -43,14 +43,25 @@ export function playerSetup() {
   }
 
   //上一首
-  const setPrevNow = () => {
-    store.dispatch("player/prevPlayer");
+  const setPrevNow = async () => {
+
+    try {
+      return await store.dispatch("player/prevPlayer");
+    } catch (error) {
+      $msg({ title: error.msg })
+      return error
+    }
   }
 
 
   //下一首
-  const setNextNow = (update?: boolean) => {
-    store.dispatch("player/nextPlayer", update);
+  const setNextNow = async (update?: boolean) => {
+    try {
+      return await store.dispatch("player/nextPlayer", update);
+    } catch (error) {
+      $msg({ title: error.msg })
+      return error
+    }
   }
 
 
@@ -65,6 +76,7 @@ export function playerSetup() {
     playerNow,
     setPlayerNow,
     setPrevNow,
-    setNextNow
+    setNextNow,
+    playerList: player.playerList
   };
 }

@@ -52,6 +52,8 @@ export default defineComponent({
       duration,
       playerState,
       playerNow,
+      ended,
+      setNextNow
     } = createAudio()
 
     const curTime = ref('')
@@ -91,6 +93,14 @@ export default defineComponent({
         },
         { immediate: true, deep: true }
       )
+
+      watch(()=>ended.value,(  val) => {
+         if(val){
+            setNextNow()
+          }
+      }, { immediate: true })
+
+
     })
 
     return {

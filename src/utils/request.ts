@@ -26,6 +26,7 @@ service.interceptors.request.use(
     if (method === "post") {
       params["timestamp"] = +new Date();
     }
+    config.params =params
     if (!apiWhitelist.includes(config.url)) {
       if (!store.getters.loginState) {
         try {
@@ -74,7 +75,7 @@ service.interceptors.response.use(
     if (response?.data?.size) {
       return res
     }
-    if (res.code !== 200) {
+    if (res.code !== 200 && !res.success) {
       return Promise.reject(new Error(res.message || "Error"));
     }
     return res;
