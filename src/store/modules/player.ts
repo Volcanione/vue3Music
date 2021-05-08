@@ -3,6 +3,7 @@ interface STATETYPE {
   playerState: boolean;
   playerMode: string;
   playerList: PlayListType[];
+  playerListShow: boolean;
   playeHistory: PlayListType[]
 }
 
@@ -14,8 +15,8 @@ const state: STATETYPE = {
   playerMode: "alone",
   playerState: false,
   playerList: [
-
   ],//所有加入播放列表的音乐
+  playerListShow: false,
   playeHistory: [],//正在播放和已经播放过的音乐
 };
 
@@ -39,26 +40,33 @@ const mutations = {
         state.playerList.push(i);
       });
     } else {
-      const idx = getIdx<PlayListType>(state.playerList, data, "id");
-      if (idx === 0) {
-        return;
-      }
-      if (idx !== -1) {
-        state.playerList.splice(idx, 1);
-      }
-      state.playerList.unshift(data);
-      //添加歌曲为对象时 会自动播切换当前放音乐
+      //打开播放器
       mutations.setPlayerShow(state, true)
+      const idx = getIdx<PlayListType>(state.playerList, data, "id");
+      if (idx === -1) {
+        // state.playerList.splice(idx, 1);
+        state.playerList.unshift(data);
+      }
+      // state.playerList.unshift(data);
+      //添加歌曲为对象时 会自动播切换当前放音乐
       mutations.setNowPlaye_History(state, data)
       mutations.setPlayerState(state, true)
     }
   },
+  setPlayerListShow(state: STATETYPE, data: boolean) {
+    state.playerListShow = data;
+  },
   deleteToPlayerList(state: STATETYPE, data?: PlayListType) {
     if (!data) {
-      return (state.playerList = []);
+      return (state.playerList.length = state.playeHistory.length = 0);
     }
     const idx = getIdx<PlayListType>(state.playerList, data, "id");
     state.playerList.splice(idx, 1);
+
+    const lidx = getIdx<PlayListType>(state.playeHistory, data, "id");
+    state.playeHistory.splice(lidx, 1);
+
+
   },
   setNowPlaye_History(state: STATETYPE, data: PlayListType) {
     const idx = getIdx<PlayListType>(state.playeHistory, data, "id");
@@ -77,6 +85,8 @@ const mutations = {
     }
     state.playeHistory.shift()
   }
+
+
 
 
 };

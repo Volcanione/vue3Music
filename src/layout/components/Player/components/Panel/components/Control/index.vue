@@ -10,10 +10,10 @@
     <i v-else class="iconfont">&#xe646;</i>
   </div>
   <div class="next" @click="setNextNow(true)"><i class="iconfont">&#xe872;</i></div>
-  <div class="list"><i class="iconfont">&#xe6e4;</i></div>
+  <div class="list" @click="setPlayerListShow(!playerListShow)"><i class="iconfont">&#xe6e4;</i></div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent } from 'vue'
 import { playerSetup } from '@/layout/components/Player/setup'
 export default defineComponent({
   setup() {
@@ -22,18 +22,11 @@ export default defineComponent({
       setPlayerMode,
       playerState,
       setPlayerState,
-      playerNow,
-      setPlayerNow,
       setPrevNow,
       setNextNow,
+      setPlayerListShow,
+      playerListShow,
     } = playerSetup()
-    watch(
-      () => playerNow.value,
-      (val) => {
-        console.log(val)
-      },
-      { immediate: true }
-    )
     return {
       playerState,
       setPlayerState,
@@ -41,6 +34,8 @@ export default defineComponent({
       playerMode,
       setPrevNow,
       setNextNow,
+      setPlayerListShow,
+      playerListShow,
     }
   },
 })

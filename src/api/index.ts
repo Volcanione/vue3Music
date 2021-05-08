@@ -113,5 +113,13 @@ export default {
       url: `https://music.163.com/song/media/outer/url?id=${id}.mp3 `,
       method: "get",
     })
+  },
+  getlyric(params: APIGetMusicUrl) {
+    return request({
+      url: '/lyric',
+      method: "get",
+      params
+    })
   }
+
 };

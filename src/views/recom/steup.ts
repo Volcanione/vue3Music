@@ -25,16 +25,16 @@ export function getPublicDate() {
     MusicList.value =
       code === 200
         ? result
-            .filter((i: any, n: number) => n <= 8)
-            .map(({ id, name, picUrl, song }: any) => {
-              return {
-                id,
-                name,
-                img: picUrl,
-                artists: song.artists[0].name,
-                duration: song.duration,
-              };
-            })
+          .filter((i: any, n: number) => n <= 8)
+          .map(({ id, name, picUrl, song }: any) => {
+            return {
+              id,
+              name,
+              img: picUrl,
+              artists: song.artists[0].name,
+              duration: song.duration,
+            };
+          })
         : [];
   };
 
@@ -66,20 +66,22 @@ export function getPrivateDate() {
     PrivateSongList.value = code === 200 ? recommend : [];
   };
   const getRecommendMusic = async () => {
-    const { code, recommend } = await api.getRecommendMusic();
+    const { code, data:{dailySongs:recommend} } = await api.getRecommendMusic();
     PrivateMusicList.value =
       code === 200
         ? recommend
-            .filter((i: any, n: number) => n <= 8)
-            .map((item: any) => {
-              return {
-                ...item,
-                artists: item.artists[0].name,
-                img: item.album.blurPicUrl,
-              };
-            })
+          .filter((i: any, n: number) => n <= 8)
+          .map((item: any) => {
+            return {
+              ...item,
+              artists: item?.ar[0].name,
+              img: item.al.picUrl,
+              duration:item.dt || 0
+            };
+          })
         : [];
   };
+
 
   return {
     getRecommendSong,

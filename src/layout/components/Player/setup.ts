@@ -1,6 +1,7 @@
-import { toRef } from "vue";
+import { nextTick, toRef, toRefs } from "vue";
 import { useStore } from "vuex";
 import { $msg } from "@/components/Msg/index";
+import { PlayListType } from "@/interface/music";
 const MODELIST = ["alone", "list", "random"];
 export function playerSetup() {
   //不要在这里用钩子函数 或者watch监听函数  会重复调用
@@ -8,15 +9,21 @@ export function playerSetup() {
   const store: any = useStore();
   const player = store.state.player;
   const playerGetter = store.getters
-  const playerMode = toRef(player, "playerMode");
-  const playerState = toRef(player, "playerState");
-  const playerShow = toRef(player, "playerShow");
+  // const playerMode = toRef(player, "playerMode");
+  // const playerState = toRef(player, "playerState");
+  // const playerShow = toRef(player, "playerShow");
+  // const playerListShow = toRef(player, "playerListShow");
   const playerNow = toRef(playerGetter, "player/nowPlay");
 
+  const { playerMode, playerState, playerShow, playerListShow } = toRefs(player)
   //打开关闭页面
   const setPlayerShow = (state = false) => {
     store.commit("player/setPlayerShow", state);
+    if (!state) {
+      setPlayerListShow(state)
+    }
   };
+
 
   //切换模式
   const setPlayerMode = () => {
@@ -35,12 +42,6 @@ export function playerSetup() {
     }
     store.commit("player/setPlayerState", state);
   };
-
-  //添加至当前播放
-
-  const setPlayerNow = () => {
-    store.commit("player/setNowPlaye_History", { id: 2 });
-  }
 
   //上一首
   const setPrevNow = async () => {
@@ -66,6 +67,19 @@ export function playerSetup() {
 
 
 
+
+  //打开播放列表
+
+  const setPlayerListShow = (state = false) => {
+    store.commit("player/setPlayerListShow", state);
+  }
+
+  
+
+
+
+
+
   return {
     playerShow,
     setPlayerShow,
@@ -74,9 +88,29 @@ export function playerSetup() {
     playerState,
     setPlayerState,
     playerNow,
-    setPlayerNow,
     setPrevNow,
     setNextNow,
-    playerList: player.playerList
+    playerList: player.playerList,
+    setPlayerListShow,
+    playerListShow,
   };
+}
+
+
+export function musicSetup() {
+  const store: any = useStore();
+  //添加至当前播放
+  const setPlayerNow = (data: PlayListType) => {
+    store.commit("player/addToPlayerList", data);
+  }
+    //删除歌曲
+  const removePlayList = (data?: PlayListType) => {
+    store.commit("player/deleteToPlayerList", data);
+  }
+
+  return {
+    setPlayerNow,
+    removePlayList
+  }
+
 }

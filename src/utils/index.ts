@@ -1,3 +1,5 @@
+
+import Cookies from 'js-cookie'
 export function getUserType(user: string | number) {
   const phoneReg = /^1[3-9][0-9]{9}$/ as any;
   const mailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/ as any;
@@ -46,3 +48,12 @@ export const getrandomData = <T extends unknown>(arr: T[], i?: T, key?: keyof T)
 
   return FILTER[re]
 };
+
+
+export const setCookie = (name: string, data: string) => {
+  Cookies.set(name, data);
+}
+
+export const getCookie = (name: string) => {
+  return Cookies.get(name)
+}

@@ -14,3 +14,14 @@ export async function getMusicPlayUrl(id: string | number) {
   }
   return url
 }
+
+
+export async function getMusicLyric(params: string | number) {
+  const { code, lrc, tlyric } = await api.getlyric({ id: params })
+  if (code !== 200) {
+    return null
+  }
+  const lyric_0 = lrc.lyric || null
+  const lyric_1 = tlyric.lyric || null
+  return {lyric_0,lyric_1}
+}

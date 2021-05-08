@@ -1,11 +1,11 @@
-import { onMounted, ref, nextTick, onBeforeUnmount, onUpdated, watch } from "vue";
+import { ref, nextTick, reactive } from "vue";
 import { playerSetup } from '@/layout/components/Player/setup'
-import { getMusicPlayUrl } from './data'
+import { getMusicPlayUrl, getMusicLyric } from './data'
 import { $msg } from '@/components/Msg/index'
 
 export default () => {
 
-  const { playerState, playerNow, setPlayerState: setPlayerStateByBtn, setNextNow, playerMode, playerList } = playerSetup()
+  const { playerState, playerNow, setPlayerState: setPlayerStateByBtn, setNextNow, playerMode, playerShow, playerList } = playerSetup()
 
 
   const audioElement = ref(null) as any
@@ -13,6 +13,7 @@ export default () => {
   const ended = ref(false)//是否播放结束
   const progess = ref(0) //进度
   const duration = ref(0) //长度
+  const musicLyric = reactive({})
 
 
   const getMusicDuration = () => {
@@ -50,12 +51,15 @@ export default () => {
         currentTime.value = audioElement.value?.currentTime || 0
         progess.value = + (currentTime.value / duration * 100).toFixed(3)
         ended.value = audioElement.value?.ended || false
-        await nextTick()
-        currentTime.value = 0
+        // await nextTick()
+        // currentTime.value = 0
       }
     } catch (error) {
     }
   }
+
+  //bug  暂停时切换歌曲  时间和进度条不对应 已修复
+
 
   // watch(()=>progess.value,( val ) => {
   //      audioElement.value.currentTime = val / 100 *  duration.value
@@ -69,11 +73,14 @@ export default () => {
   const delErorr = async () => {
     await $msg({ title: '暂无版权' })
     setProessDuration(0)
+    if (playerList.length <= 1) {
+      return setPlayerStateByBtn(false)
+    }
     await setNextNow()
     //跳转下一首
     //处理跳转逻辑
     //执行
-    playerState.value && resetPlayState(playerState.value)
+    playerState.value && updatePlayState(playerState.value)
   }
 
 
@@ -92,37 +99,56 @@ export default () => {
   }
 
 
-  //重置
-  const resetPlayState = async (type?: boolean) => {
+  //更新
+  const updatePlayState = async (type?: boolean) => {
+    resetPlayState()
     const url = await getMusicPlayUrl(playerNow.value.id)
     if (!url) {
       return delErorr()
     }
+    getLyric()
     setPlaySrc(url)
     ////重置
-    audioElement.value?.load()
     await nextTick()
     try {
       duration.value = await getMusicDuration()
       //设置进度条时长 
       setProessDuration(duration.value)
-      if (type) {
-        return audioElement.value?.play()
-      }
+      setPlayerState(type)
     } catch (error) {
       //错误处理
+      console.log(1111, error);
       delErorr()
     }
   }
 
+  //获取歌词
+
+  const getLyric = async () => {
+    const lyric = await getMusicLyric(playerNow.value.id)
+    if (lyric) {
+      Object.assign(musicLyric, lyric)
+    }
+  }
+
+  //重置
+  const resetPlayState = () => {
+    audioElement.value?.load()
+    currentTime.value = 0
+    progess.value = 0
+    duration.value = 0
+    Object.assign(musicLyric, { lyric_0: null, lyric_1: null })
+  }
+
+  //下一首
   const setNextNowPlay = async () => {
     if (playerMode.value === 'alone') {
-      resetPlayState(true)
+      updatePlayState(true)
     } else {
-     const {code} =  await setNextNow()
-      if(!code){
-          return setPlayerStateByBtn(false)
-        }
+      const { code } = await setNextNow()
+      if (!code) {
+        return setPlayerStateByBtn(false)
+      }
     }
   }
 
@@ -133,7 +159,7 @@ export default () => {
   return {
     audioElement,
     setPlayerState,
-    resetPlayState,
+    updatePlayState,
     currentTime,
     duration,
     progess,
@@ -141,7 +167,10 @@ export default () => {
     playerState,
     playerNow,
     ended,
-    setNextNow: setNextNowPlay
-
+    setNextNow: setNextNowPlay,
+    playerShow,
+    resetPlayState,
+    musicLyric,
+    getLyric
   }
 }

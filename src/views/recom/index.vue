@@ -67,7 +67,7 @@ import { defineComponent, nextTick, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { $msg } from '@/components/Msg/index'
 import { getPublicDate, getPrivateDate } from './steup'
-import { useStore } from 'vuex'
+import { musicSetup } from '@/layout/components/Player/setup'
 export default defineComponent({
   name: 'Recom',
   components: {
@@ -82,7 +82,6 @@ export default defineComponent({
   setup() {
     //初始化路由
     const router = useRouter()
-    const store: any = useStore()
 
     const PUBLIC = getPublicDate()
     const PRIVATE = getPrivateDate()
@@ -92,7 +91,7 @@ export default defineComponent({
 
     // const PrivateSongList = ref([])
     // const PrivateState = ref(false)
-
+    const { setPlayerNow } = musicSetup()
     const init = async () => {
       Object.values(PUBLIC).forEach((val) => {
         if (val instanceof Function) {
@@ -148,6 +147,7 @@ export default defineComponent({
           loadingState.value = true
         })
       } catch (error) {
+      console.log(error);
         await done(0)
       }
       // PrivateState.value = true
@@ -155,7 +155,7 @@ export default defineComponent({
 
     //点击最新歌曲
     const checkMusicItem = (data: any) => {
-      store.commit('player/addToPlayerList', data)
+      setPlayerNow(data)
     }
 
     return {

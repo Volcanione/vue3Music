@@ -1,24 +1,28 @@
 <template>
   <div class="Panel">
     <div class="SongDisc">
-      <div class="disc" :key="playerNow? playerNow.id:-1" :style="{ 'animation-play-state': playerState?'running':'paused' }">
-        <img src="https://p1.music.126.net/uTCh9G5LvjQ1z32dBE5_8A==/109951165872244163.jpg" />
+      <div class="disc" :key=" playerNow?.id||-1" :style="{ 'animation-play-state': playerState?'running':'paused' }">
+        <template v-if="playerShow">
+          <Disc :src="playerNow?.img" />
+        </template>
       </div>
     </div>
     <div class="content">
       <div class="Info">
         <div class="name">
-          <span class="title ellipsis">歌曲名称</span>
-          <span class="arts">歌手</span>
+          <span class="title ellipsis">{{playerNow?.name || 'nomusic'}}</span>
+          <span class="arts">{{playerNow?.artists || '-'}}</span>
         </div>
         <div class="icons">
           <i class="iconfont">&#xe870;</i>
         </div>
       </div>
-      <div class="lyric ellipsis">歌词歌词一行</div>
+      <div class="lyricBar">
+        <Lyric :key="playerNow?.id || 1" line :lyricData="musicLyric" :currentTime="currentTime"  />
+      </div>
       <div class="time">
-        <span>{{currentTime}}</span>
-        <span>{{duration}}</span>
+        <span>{{curTime || '00:00'}}</span>
+        <span>{{totalTime || '00:00'}}</span>
       </div>
       <div class="progess">
         <Progess v-model="progess" @changeProgess="changeProgess" :disabled="!duration" />
@@ -31,21 +35,24 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref, watch, onMounted, nextTick } from 'vue'
+import { defineComponent, ref, watch, onMounted, nextTick } from 'vue'
 import Progess from './components/Progress/index.vue'
 import Control from './components/Control/index.vue'
 import createAudio from '@/layout/components/Player/audio'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import Disc from './components/disc/index.vue'
+import Lyric from '@/components/Lyric/index.vue'
 dayjs.extend(duration)
 export default defineComponent({
-  components: { Progess, Control },
-  setup(props, context) {
+  components: { Progess, Control, Disc, Lyric },
+  emits: ['updateLyric', 'updateTime'],
+  setup(props, { emit }) {
     //创建音频
     const {
       audioElement,
       setPlayerState,
-      resetPlayState,
+      updatePlayState,
       progess,
       changeProgess,
       currentTime,
@@ -53,7 +60,10 @@ export default defineComponent({
       playerState,
       playerNow,
       ended,
-      setNextNow
+      setNextNow,
+      playerShow,
+      resetPlayState,
+      musicLyric,
     } = createAudio()
 
     const curTime = ref('')
@@ -73,9 +83,9 @@ export default defineComponent({
         () => playerNow.value,
         (val) => {
           if (!val) {
-            return
+            return resetPlayState()
           }
-          resetPlayState(playerState.value) //传入参数true 为立即播放
+          updatePlayState(playerState.value) //传入参数true 为立即播放
         },
         {
           immediate: true,
@@ -83,24 +93,39 @@ export default defineComponent({
       )
 
       watch(
-        [currentTime, duration],
-        ([cur, dur]) => {
-          if (!dur || !cur) {
-            return
-          }
-          curTime.value = dayjs.duration(cur*1000).format('mm:ss')
-          totalTime.value = dayjs.duration(dur*1000).format('mm:ss')
+        () => currentTime.value,
+        (cur: any | number) => {
+          curTime.value = dayjs.duration((cur || 0) * 1000).format('mm:ss')
+          emit('updateTime', cur)
         },
         { immediate: true, deep: true }
       )
 
-      watch(()=>ended.value,(  val) => {
-         if(val){
+      watch(
+        () => duration.value,
+        (dur: any | number) => {
+          totalTime.value = dayjs.duration((dur || 0) * 1000).format('mm:ss')
+        },
+        { immediate: true, deep: true }
+      )
+
+      watch(
+        () => musicLyric,
+        (data) => {
+          emit('updateLyric', data)
+        },
+        { immediate: true, deep: true }
+      )
+
+      watch(
+        () => ended.value,
+        (val) => {
+          if (val) {
             setNextNow()
           }
-      }, { immediate: true })
-
-
+        },
+        { immediate: true }
+      )
     })
 
     return {
@@ -109,8 +134,12 @@ export default defineComponent({
       playerNow,
       audioElement,
       changeProgess,
-      currentTime: curTime,
-      duration: totalTime,
+      curTime,
+      totalTime,
+      playerShow,
+      duration,
+      musicLyric,
+      currentTime,
     }
   },
 })
@@ -126,6 +155,7 @@ export default defineComponent({
   align-items: center;
   overflow: hidden;
   color: #fff;
+  position: relative;
   .SongDisc {
     width: 80vw;
     height: 80vw;
@@ -195,7 +225,7 @@ export default defineComponent({
         }
       }
     }
-    .lyric {
+    .lyricBar {
       height: 30px;
       width: 100%;
       padding: 0 20px;
@@ -203,6 +233,8 @@ export default defineComponent({
       display: flex;
       align-items: center;
       margin-top: 20px;
+      overflow: hidden;
+      position: relative;
     }
     .progess {
       margin: 10px 0;

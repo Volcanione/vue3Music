@@ -3,6 +3,7 @@ import store from "@/store";
 import router from "@/router";
 import { apiWhitelist } from "./whitelist";
 import { $msg } from "@/components/Msg/index";
+import { getCookie } from '@/utils/'
 // create an axios instance
 const service: any = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -23,10 +24,12 @@ service.interceptors.request.use(
     //   // config.headers['X-Token'] = getToken()
     // }
     const { method, params = {} } = config;
+    const cookie = getCookie('cookie')
     if (method === "post") {
       params["timestamp"] = +new Date();
     }
-    config.params =params
+    cookie && (params['cookie'] = cookie)
+    config.params = params
     if (!apiWhitelist.includes(config.url)) {
       if (!store.getters.loginState) {
         try {
@@ -73,6 +76,9 @@ service.interceptors.response.use(
     const res = response.data;
     // if the custom code is not 20000, it is judged as an error.
     if (response?.data?.size) {
+      return res
+    }
+    if(res?.data?.code===200){
       return res
     }
     if (res.code !== 200 && !res.success) {
