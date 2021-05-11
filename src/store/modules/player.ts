@@ -4,7 +4,8 @@ interface STATETYPE {
   playerMode: string;
   playerList: PlayListType[];
   playerListShow: boolean;
-  playeHistory: PlayListType[]
+  playerHistory: PlayListType[]
+  playerProgess: number
 }
 
 import { PlayListType } from "@/interface/music";
@@ -17,7 +18,8 @@ const state: STATETYPE = {
   playerList: [
   ],//所有加入播放列表的音乐
   playerListShow: false,
-  playeHistory: [],//正在播放和已经播放过的音乐
+  playerHistory: [],//正在播放和已经播放过的音乐
+  playerProgess: 0
 };
 
 const mutations = {
@@ -58,34 +60,37 @@ const mutations = {
   },
   deleteToPlayerList(state: STATETYPE, data?: PlayListType) {
     if (!data) {
-      return (state.playerList.length = state.playeHistory.length = 0);
+      return (state.playerList.length = state.playerHistory.length = 0);
     }
     const idx = getIdx<PlayListType>(state.playerList, data, "id");
     state.playerList.splice(idx, 1);
 
-    const lidx = getIdx<PlayListType>(state.playeHistory, data, "id");
-    state.playeHistory.splice(lidx, 1);
+    const lidx = getIdx<PlayListType>(state.playerHistory, data, "id");
+    state.playerHistory.splice(lidx, 1);
 
 
   },
   setNowPlaye_History(state: STATETYPE, data: PlayListType) {
-    const idx = getIdx<PlayListType>(state.playeHistory, data, "id");
+    const idx = getIdx<PlayListType>(state.playerHistory, data, "id");
     if (idx === 0) {
       return;
     }
     if (idx !== -1) {
-      state.playeHistory.splice(idx, 1);
+      state.playerHistory.splice(idx, 1);
     }
-    state.playeHistory.unshift(data);
+    state.playerHistory.unshift(data);
   },
 
   setPrevPlaye_History(state: STATETYPE) {
-    if (state.playeHistory.length <= 1) {
+    if (state.playerHistory.length <= 1) {
       return
     }
-    state.playeHistory.shift()
-  }
+    state.playerHistory.shift()
+  },
 
+  setPlayerProgess(state: STATETYPE, data: number) {
+    state.playerProgess = data
+  }
 
 
 
@@ -93,7 +98,7 @@ const mutations = {
 
 const actions = {
   nextPlayer({ commit, state, getters }: any, update?: false) {
-    const { playerMode, playerList, playeHistory } = state
+    const { playerMode, playerList, playerHistory } = state
     const { nowPlay } = getters
     return new Promise((res, rej) => {
       if (!playerList.length) {
@@ -118,13 +123,13 @@ const actions = {
           nextPlay = playerList[idx]
           break
         case 'random':
-          const noPlayList = playerList.filter((i: PlayListType) => getIdx<PlayListType>(playeHistory, i, "id") === -1)
+          const noPlayList = playerList.filter((i: PlayListType) => getIdx<PlayListType>(playerHistory, i, "id") === -1)
           if (noPlayList.length) {
             // commit("setNowPlaye_History", getrandomData(noPlayList))
             nextPlay = getrandomData(noPlayList) as PlayListType
           } else {
-            // commit("setNowPlaye_History", getrandomData(playeHistory, nowPlay, 'id'))
-            nextPlay = getrandomData(playeHistory, nowPlay, 'id') as PlayListType
+            // commit("setNowPlaye_History", getrandomData(playerHistory, nowPlay, 'id'))
+            nextPlay = getrandomData(playerHistory, nowPlay, 'id') as PlayListType
           }
           break
         default:
@@ -141,9 +146,9 @@ const actions = {
   },
 
   prevPlayer({ commit, }: any) {
-    const { playeHistory } = state
+    const { playerHistory } = state
     return new Promise((res, rej) => {
-      if (playeHistory.length <= 1) {
+      if (playerHistory.length <= 1) {
         return rej({ code: 0, msg: '没有之前的记录' })
       }
       commit('setPrevPlaye_History')
@@ -155,7 +160,7 @@ const actions = {
 
 
 const getters = {
-  nowPlay: (state: any) => state.playeHistory[0],
+  nowPlay: (state: any) => state.playerHistory[0],
 }
 
 export default {

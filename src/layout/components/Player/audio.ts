@@ -5,13 +5,14 @@ import { $msg } from '@/components/Msg/index'
 
 export default () => {
 
-  const { playerState, playerNow, setPlayerState: setPlayerStateByBtn, setNextNow, playerMode, playerShow, playerList } = playerSetup()
+  const { playerState, playerNow, setPlayerState: setPlayerStateByBtn, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
+    playerListShow, setProgess, playerProgess: progess,setPlayerShow } = playerSetup()
 
 
   const audioElement = ref(null) as any
   const currentTime = ref(0) //当前播放时间
   const ended = ref(false)//是否播放结束
-  const progess = ref(0) //进度
+  // const progess = ref(0) //进度
   const duration = ref(0) //长度
   const musicLyric = reactive({})
 
@@ -60,10 +61,6 @@ export default () => {
 
   //bug  暂停时切换歌曲  时间和进度条不对应 已修复
 
-
-  // watch(()=>progess.value,( val ) => {
-  //      audioElement.value.currentTime = val / 100 *  duration.value
-  // })
 
   const changeProgess = (proess: any) => {
     audioElement.value.currentTime = proess.value / 100 * duration.value
@@ -163,6 +160,7 @@ export default () => {
     currentTime,
     duration,
     progess,
+    setProgess,
     changeProgess,
     playerState,
     playerNow,
@@ -171,6 +169,10 @@ export default () => {
     playerShow,
     resetPlayState,
     musicLyric,
-    getLyric
+    getLyric,
+    setPlayerListShow,
+    playerListShow,
+    setPlayerStateByBtn,
+    setPlayerShow
   }
 }

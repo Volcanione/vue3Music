@@ -1,11 +1,7 @@
 <template>
   <div class="Panel">
-    <div class="SongDisc">
-      <div class="disc" :key=" playerNow?.id||-1" :style="{ 'animation-play-state': playerState?'running':'paused' }">
-        <template v-if="playerShow">
-          <Disc :src="playerNow?.img" />
-        </template>
-      </div>
+    <div class="SongDisc" ref="SongDiscRef">
+      <Disc :key=" playerNow?.id||-1" :src="playerNow?.img" :playerState="playerState" />
     </div>
     <div class="content">
       <div class="Info">
@@ -18,7 +14,7 @@
         </div>
       </div>
       <div class="lyricBar">
-        <Lyric :key="playerNow?.id || 1" line :lyricData="musicLyric" :currentTime="currentTime"  />
+        <Lyric :key="playerNow?.id || 1" line :lyricData="musicLyric" :currentTime="currentTime" />
       </div>
       <div class="time">
         <span>{{curTime || '00:00'}}</span>
@@ -39,13 +35,14 @@ import { defineComponent, ref, watch, onMounted, nextTick } from 'vue'
 import Progess from './components/Progress/index.vue'
 import Control from './components/Control/index.vue'
 import createAudio from '@/layout/components/Player/audio'
+import Disc from './components/disc/index.vue'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import Disc from './components/disc/index.vue'
 import Lyric from '@/components/Lyric/index.vue'
+import ResizeObserver from 'resize-observer-polyfill'
 dayjs.extend(duration)
 export default defineComponent({
-  components: { Progess, Control, Disc, Lyric },
+  components: { Progess, Control, Lyric, Disc },
   emits: ['updateLyric', 'updateTime'],
   setup(props, { emit }) {
     //创建音频
@@ -54,6 +51,7 @@ export default defineComponent({
       setPlayerState,
       updatePlayState,
       progess,
+      setProgess,
       changeProgess,
       currentTime,
       duration,
@@ -68,8 +66,20 @@ export default defineComponent({
 
     const curTime = ref('')
     const totalTime = ref('')
+    const SongDiscRef = ref(null)
 
     onMounted(async () => {
+      const setDiscWidth = async () => {
+        const dom = SongDiscRef.value as any
+        await nextTick()
+        dom.style.width = dom.clientHeight + 'px'
+      }
+
+      //监听器
+      const intersectionObserver = new ResizeObserver(function () {
+        setDiscWidth()
+      })
+      intersectionObserver.observe(SongDiscRef.value as any)
       //播放暂停
       watch(
         () => playerState.value,
@@ -97,6 +107,7 @@ export default defineComponent({
         (cur: any | number) => {
           curTime.value = dayjs.duration((cur || 0) * 1000).format('mm:ss')
           emit('updateTime', cur)
+          setProgess(progess.value)
         },
         { immediate: true, deep: true }
       )
@@ -140,6 +151,7 @@ export default defineComponent({
       duration,
       musicLyric,
       currentTime,
+      SongDiscRef,
     }
   },
 })
@@ -157,13 +169,13 @@ export default defineComponent({
   color: #fff;
   position: relative;
   .SongDisc {
+    flex-shrink: 0;
     width: 80vw;
-    height: 80vw;
-    max-width: 600px;
-    max-height: 600px;
+    flex: 2;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     .disc {
       width: 80%;
       height: 80%;

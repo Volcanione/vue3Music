@@ -19,7 +19,7 @@
           </span>
         </div>
         <div class="center">
-          <ScrollPage ref="scrollPageRef">
+          <ScrollPage ref="scrollPageRef" :scrollBack="false">
             <div class="item" :class="{playing:playerNow?.id===item.id}" v-for="item in playerList" :key="item.id">
               <span class="name ellipsis" @click.self="setPlayerNow(item)">{{item.name}}</span>
               <span class="artists ellipsis" @click.self="setPlayerNow(item)">{{item.artists}}</span>

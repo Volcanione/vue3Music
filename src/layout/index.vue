@@ -9,6 +9,7 @@
   </div>
   <Player />
   <PlayerList />
+  <HomeController />
 </template>
 <script lang="ts">
 import Navbar from './components/Navbar.vue'
@@ -16,12 +17,14 @@ import ViewContent from '@/components/ViewContent/index.vue'
 import { defineComponent, ref } from 'vue'
 import Player from './components/Player/index.vue'
 import PlayerList from './components/Player/components/List/index.vue'
+import HomeController from './components/Player/components/HomeController/index.vue'
 export default defineComponent({
   components: {
     Navbar,
     ViewContent,
     Player,
     PlayerList,
+    HomeController,
   },
   data() {
     return {

@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="LyricBox" :class="{line:line}" v-if=" lyricData?.lyric_0">
       <div class="box">
-        <ScrollPage ref="scrollPageRef" :disabled="line" :key="key">
+        <ScrollPage ref="scrollPageRef" :disabled="line" :key="key" :scrollBack="false">
           <template v-if="!checkLyricState">
             <div class="item  ellipsis" :class="{active: activeIdx===index}" v-for="(item,index) in lyric_0" :key="item.time" :ref="lyricItemRef">{{item.lyricText}}</div>
           </template>
@@ -19,14 +19,7 @@
 
 <script lang="ts">
 import ScrollPage from '@/components/ScrollPage/index.vue'
-import {
-  defineComponent,
-  PropType,
-  ref,
-  onMounted,
-  watch,
-  nextTick,
-} from 'vue'
+import { defineComponent, PropType, ref, watch, nextTick } from 'vue'
 import { lyricRegular, NextTimeArray } from '@/utils/player'
 export default defineComponent({
   components: { ScrollPage },
@@ -58,12 +51,16 @@ export default defineComponent({
 
     //更新组件
     const refresh = () => {
-      s = scrollPageRef.value as any
       s?.refresh()
     }
-    onMounted(() => {
-      refresh()
-    })
+
+    watch(
+      () => scrollPageRef.value,
+      (val) => {
+        s = val as any
+        refresh()
+      }
+    )
 
     const lyricItemRef = (el: HTMLElement) => {
       if (el) {
@@ -82,9 +79,9 @@ export default defineComponent({
       const arr = !checkLyricState.value ? lyric_0.value : lyric_1.value
       activeIdx.value = NextTimeArray(time, arr)
       const activeDom = lyricItemDom[activeIdx.value]
-      if (s?.scroll?.scrollToElement) {
+      if (s?.scrollToElement) {
         try {
-          s?.scroll.scrollToElement(activeDom, 300, 0, props.line ? 0 : -150)
+          s?.scrollToElement(activeDom, 300, 0, props.line ? 0 : -150)
         } catch (error) {
           console.log(error)
           key.value = +new Date()
@@ -127,6 +124,13 @@ export default defineComponent({
       }
     )
 
+    watch(
+      () => activeIdx.value,
+      () => {
+        refresh()
+      }
+    )
+
     return {
       scrollPageRef,
       lyricItemRef,
@@ -152,8 +156,8 @@ export default defineComponent({
     flex: 1;
     overflow: hidden;
     flex-shrink: 0;
-    height: 300px;
     margin: 0 10px 30px;
+    position: relative;
     .item {
       min-height: 30px;
       line-height: 30px;

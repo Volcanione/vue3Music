@@ -4,7 +4,7 @@
       <slot name="header" />
     </div>
     <div class="content" v-loading="loading">
-      <ScrollPage @refresh="pullDownrefresh" :pull-down="pullDown" @loading="pullUploading" :pull-Up="pullUp" ref="ScrollPage">
+      <ScrollPage @refresh="pullDownrefresh" :pull-down="pullDown" @loading="pullUploading" :pull-Up="pullUp" ref="ScrollPage" :forcedUpdates="forcedUpdates">
         <template #pullDown="{ state }">
           <PullDownSlot :state="state" />
         </template>
@@ -31,6 +31,10 @@ export default defineComponent({
     loading: {
       type: Boolean as PropType<boolean>,
       default: true,
+    },
+    forcedUpdates: {
+      type: Boolean as PropType<boolean>,
+      default: false,
     },
   },
   computed: {

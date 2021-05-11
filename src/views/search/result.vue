@@ -1,5 +1,5 @@
 <template>
-  <LayerPage :loading="loadingState" ref="searchResultRef" @pullDown="pullDown" @pullUp="pullUp">
+  <LayerPage :loading="loadingState" ref="searchResultRef" @pullDown="pullDown" @pullUp="pullUp" forcedUpdates>
     <template #header>
       <Nav :right="false">
         <div class="searchBar">

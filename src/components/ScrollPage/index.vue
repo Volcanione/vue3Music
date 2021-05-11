@@ -23,7 +23,18 @@
 import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
 import Pullup from '@better-scroll/pull-up'
-import { defineComponent, nextTick, PropType } from 'vue'
+import {
+  defineComponent,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  PropType,
+  reactive,
+  ref,
+  toRefs,
+  watch,
+} from 'vue'
+import { useStore } from 'vuex'
 import { BScrollType } from '@/interface/index'
 BScroll.use(PullDown)
 BScroll.use(Pullup)
@@ -41,89 +52,89 @@ export default defineComponent({
       type: Boolean as PropType<boolean>,
       default: false,
     },
+    scrollBack: {
+      type: Boolean as PropType<boolean>,
+      default: true,
+    },
+    forcedUpdates: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
   data() {
     return {
-      scroll: {} as BScrollType,
-      threshold: 60,
-      stop: 40,
-      pullDownConfig: {
-        srcollState: true,
-        type: 0, //0初始 1 下拉中 2 加载中
-        refreshtimeID: -1,
-        initializetimeID: -1,
-      },
-      pullUpConfig: {
-        type: 0, //0初始 1 上拉中 2 加载中
-        refreshtimeID: -1,
-        initializetimeID: -1,
-      },
+      // scroll: {} as BScrollType,
+      // threshold: 60,
+      // stop: 40,
+      // pullDownConfig: {
+      //   srcollState: true,
+      //   type: 0, //0初始 1 下拉中 2 加载中
+      //   refreshtimeID: -1,
+      //   initializetimeID: -1,
+      // },
+      // pullUpConfig: {
+      //   type: 0, //0初始 1 上拉中 2 加载中
+      //   refreshtimeID: -1,
+      //   initializetimeID: -1,
+      // },
     }
   },
-  computed: {
-    pullingDownText() {
-      switch (this.pullDownConfig.type) {
-        case 0:
-          return '下拉刷新'
-        case 1:
-          return '松开刷新'
-        case 2:
-          return '加载中'
-        case 3:
-          return '加载成功'
-        default:
-          return '加载失败'
-      }
-    },
-    pullingUpText() {
-      switch (this.pullUpConfig.type) {
-        case 0:
-          return '加载中'
-        case 1:
-          return '加载成功'
-        case 2:
-          return '没有数据'
-        default:
-          return '加载失败'
-      }
-    },
-  },
-  mounted() {
-    this.init()
-  },
-  watch: {
-    'pullUpConfig.type': {
-      handler() {
-        this.refresh()
-      },
-    },
-    disabled:{
-      immediate:true,
-       handler(val) {
-        this.$nextTick((  ) => {
-          val &&  this.scroll.disable()
-        })
-      },
+  setup(props, { emit }) {
+    const { scrollBack, pullDown, pullUp, disabled, forcedUpdates } = toRefs(
+      props
+    )
+
+    const store: any = useStore()
+    const CONFIG = {} as any
+    const threshold = 60
+    const stop = 40
+    let scroll = reactive({}) as BScrollType
+
+    const pullDownConfig = reactive({
+      srcollState: true,
+      type: 0, //0初始 1 下拉中 2 加载中
+      refreshtimeID: -1,
+      initializetimeID: -1,
+    })
+    const pullUpConfig = reactive({
+      type: 0, //0初始 1 上拉中 2 加载中
+      refreshtimeID: -1,
+      initializetimeID: -1,
+    })
+
+    const scrollWarpper = ref(null) as any
+
+    const pullingDownText = ref('')
+    const pullingUpText = ref('')
+
+    //初始化
+    const init = () => {
+      initWapper()
     }
-  },
-  methods: {
-    init() {
-      this.initWapper()
-      this.refresh()
-    },
-    initWapper() {
-      const CONFIG = {} as any
-      this.pullDown &&
+    //初始化容器
+    const initWapper = () => {
+      pullDown.value &&
         (CONFIG.pullDownRefresh = {
-          threshold: this.threshold,
-          stop: this.stop,
+          threshold: threshold,
+          stop: stop,
         })
-      this.pullUp &&
+      pullUp.value &&
         (CONFIG.pullUpLoad = {
           threshold: 0,
         })
 
-      this.scroll = new BScroll(this.$refs.scrollWarpper as HTMLElement, {
+      // Object.assign(
+      //   scroll,
+      //   new BScroll(scrollWarpper.value, {
+      //     scrollbar: false,
+      //     stopPropagation: true,
+      //     bounce: { top: true, bottom: true, left: false, right: false },
+      //     bounceTime: 400,
+      //     click: true,
+      //     ...CONFIG,
+      //   })
+      // )
+      scroll = new BScroll(scrollWarpper.value, {
         scrollbar: false,
         stopPropagation: true,
         bounce: { top: true, bottom: true, left: false, right: false },
@@ -131,119 +142,210 @@ export default defineComponent({
         click: true,
         ...CONFIG,
       }) as any
-      this.pullDown && this.scroll.on('pullingDown', this.pullingDownHandler)
-      this.pullUp && this.scroll.on('pullingUp', this.pullingUPHandler)
+      pullDown.value && scroll.on('pullingDown', pullingDownHandler)
+      pullUp.value && scroll.on('pullingUp', pullingUPHandler)
+      scroll.on('scroll', pageScrollHandler)
+      scroll.on('touchEnd', pageTouchEndHandler)
+      setscrollBack(scroll)
+    }
 
-      this.scroll.on('scroll', this.pageScrollHandler)
-      this.scroll.on('touchEnd', this.pageTouchEndHandler)
-    },
-    refresh() {
-      this.$nextTick(() => {
-        try {
-          this.scroll.refresh && this.scroll.refresh()
-        } catch (error) {}
-      })
-    },
-    scrollTo() {
-      this.scroll.scrollTo && this.scroll.scrollTo(0, 0, 0)
-    },
+    //下拉
+    const pullingDownHandler = () => {
+      pullDownConfig.type = 2
+    }
+    //页面触摸停止处理
+    const pageTouchEndHandler = (pos: any) => {
+      pullDown.value && hanlderPulldownTouchEnd(pos)
+    }
 
-    //下拉刷新
-    pullingDownHandler() {
-      this.pullDownConfig.type = 2
-    },
-
-    //上拉加载
-    pullingUPHandler() {
-      this.pullUpConfig.type = 0
-      this.pullUp && this.hanlderPullUpTouchEnd()
-    },
-
-    //监听滚动
-    pageScrollHandler(pos: any) {
+    //页面滚动处理
+    const pageScrollHandler = (pos: any) => {
       if (pos.y < 10) {
-        this.pullDownConfig.type = 0
+        pullDownConfig.type = 0
       }
-      this.pullDown && this.hanlderPullDownScroll(pos)
-    },
-    //下拉逻辑
-    hanlderPullDownScroll(pos: any) {
-      if (pos.y >= this.threshold && this.pullDownConfig.srcollState) {
-        this.pullDownConfig.type = 1
-      }
-    },
-
-    //手指离开
-    pageTouchEndHandler(pos: any) {
-      this.pullDown && this.hanlderPulldownTouchEnd(pos)
-    },
+      pullDown.value && hanlderPullDownScroll(pos)
+    }
 
     //下拉逻辑
-    hanlderPulldownTouchEnd(pos: any) {
-      if (pos.y < this.threshold) {
+    const hanlderPullDownScroll = (pos: any) => {
+      if (pos.y >= threshold && pullDownConfig.srcollState) {
+        pullDownConfig.type = 1
+      }
+    }
+    //下拉逻辑处理
+    const hanlderPulldownTouchEnd = (pos: any) => {
+      if (pos.y < threshold) {
         return
       }
-      this.pullDownConfig.srcollState = false
-      this.$emit('refresh', this.handlerRefresh)
-    },
-    //上拉逻辑
-    hanlderPullUpTouchEnd() {
-      this.$emit('loading', this.handlerLoading)
-    },
+      pullDownConfig.srcollState = false
+      emit('refresh', handlerRefresh)
+    }
     //下拉请求数据处理逻辑
-    async handlerRefresh(state = true) {
+    const handlerRefresh = (state = true) => {
       return new Promise((res: any) => {
-        clearTimeout(this.pullDownConfig.refreshtimeID)
-        this.pullDownConfig.refreshtimeID = setTimeout(() => {
-          this.pullDownConfig.type = state ? 3 : 4
-          this.scroll.finishPullDown && this.scroll.finishPullDown()
-          clearTimeout(this.pullDownConfig.refreshtimeID)
-          this.refreshScrollPullDown()
-          this.pullDownConfig.srcollState = true
+        clearTimeout(pullDownConfig.refreshtimeID)
+        pullDownConfig.refreshtimeID = setTimeout(() => {
+          pullDownConfig.type = state ? 3 : 4
+          scroll.finishPullDown && scroll.finishPullDown()
+          clearTimeout(pullDownConfig.refreshtimeID)
+          refreshScrollPullDown()
+          pullDownConfig.srcollState = true
           res()
         }, 500)
       })
-    },
-    refreshScrollPullDown() {
-      clearTimeout(this.pullDownConfig.initializetimeID)
-      this.pullDownConfig.initializetimeID = setTimeout(() => {
-        clearTimeout(this.pullDownConfig.initializetimeID)
-        this.pullDownConfig.type = 0
-        this.refresh()
+    }
+    //完成上拉处理
+    const refreshScrollPullDown = () => {
+      clearTimeout(pullDownConfig.initializetimeID)
+      pullDownConfig.initializetimeID = setTimeout(() => {
+        clearTimeout(pullDownConfig.initializetimeID)
+        pullDownConfig.type = 0
+        refresh()
       }, 300)
-    },
+    }
 
-    //上拉加载数据处理逻辑
-    async handlerLoading(state = 0) {
+    //上拉
+    const pullingUPHandler = () => {
+      pullUpConfig.type = 0
+      pullUp.value && hanlderPullUpTouchEnd()
+    }
+    //上拉结束处理
+    const hanlderPullUpTouchEnd = () => {
+      emit('loading', handlerLoading)
+    }
+    //上拉逻辑处理
+    const handlerLoading = async (state = 0) => {
       return new Promise((res: any) => {
-        clearTimeout(this.pullUpConfig.refreshtimeID)
-        this.pullUpConfig.refreshtimeID = setTimeout(() => {
-          clearTimeout(this.pullUpConfig.refreshtimeID)
-          this.pullUpConfig.type = state === 0 ? -1 : state
-          this.scroll.finishPullUp && this.scroll.finishPullUp()
-          this.refreshScrollPullUp(state)
+        clearTimeout(pullUpConfig.refreshtimeID)
+        pullUpConfig.refreshtimeID = setTimeout(() => {
+          clearTimeout(pullUpConfig.refreshtimeID)
+          pullUpConfig.type = state === 0 ? -1 : state
+          scroll.finishPullUp && scroll.finishPullUp()
+          refreshScrollPullUp(state)
           res()
         }, 500)
       })
-    },
-    refreshScrollPullUp(state: number) {
-      clearTimeout(this.pullUpConfig.initializetimeID)
-      this.pullUpConfig.initializetimeID = setTimeout(() => {
-        clearTimeout(this.pullUpConfig.initializetimeID)
-        this.refresh()
+    }
+    //完成上拉处理
+    const refreshScrollPullUp = (state: number) => {
+      clearTimeout(pullUpConfig.initializetimeID)
+      pullUpConfig.initializetimeID = setTimeout(() => {
+        clearTimeout(pullUpConfig.initializetimeID)
+        refresh()
       }, 300)
-    },
+    }
+
     //卸载
-    destroy() {
-      this.scroll.destroy && this.scroll.destroy()
-    },
-  },
-  beforeUnmount() {
-    clearTimeout(this.pullUpConfig.refreshtimeID)
-    clearTimeout(this.pullUpConfig.initializetimeID)
-    this.$nextTick(() => {
-      this.destroy()
+    const destroy = () => {
+      scroll.destroy && scroll.destroy()
+    }
+
+    //刷新
+    const refresh = async () => {
+      forcedUpdates.value && setscrollBack(null)
+      await nextTick()
+      try {
+        forcedUpdates.value && setscrollBack(scroll)
+        scroll.refresh && scroll.refresh()
+      } catch (error) {}
+    }
+
+    //滚动到顶部
+    const scrollTo = () => {
+      scroll.scrollTo && scroll.scrollTo(0, 0, 0)
+    }
+
+    //滚动指定位置
+    const scrollToElement = (
+      el: any,
+      time: number,
+      offsetX: number,
+      offsetY: number,
+      easing: any
+    ) => {
+      scroll.scrollToElement &&
+        scroll.scrollToElement(el, time, offsetX, offsetY, easing)
+    }
+
+    watch(
+      () => pullUpConfig.type,
+      (val) => {
+        refresh()
+        let t = ''
+        switch (val) {
+          case 0:
+            t = '加载中'
+          case 1:
+            t = '加载成功'
+          case 2:
+            t = '没有数据'
+          default:
+            t = '加载失败'
+        }
+        pullingUpText.value = t
+      }
+    )
+
+    watch(
+      () => pullDownConfig.type,
+      (val) => {
+        let t = ''
+        switch (val) {
+          case 0:
+            t = '下拉刷新'
+          case 1:
+            t = '松开刷新'
+          case 2:
+            t = '加载中'
+          case 3:
+            t = '加载成功'
+          default:
+            t = '加载失败'
+        }
+        pullingDownText.value = t
+      }
+    )
+
+    watch(
+      () => disabled.value,
+      async (val) => {
+        await nextTick()
+        val && scroll.disable()
+      },
+      { immediate: true }
+    )
+
+    const setscrollBack = (s: any = null) => {
+      if (scrollBack.value) {
+        store.commit('route/setRouterScroll', s)
+      }
+    }
+
+    //挂载
+    onMounted(() => {
+      init()
+      refresh()
     })
+    //卸载
+    onBeforeUnmount(async () => {
+      clearTimeout(pullUpConfig.refreshtimeID)
+      clearTimeout(pullUpConfig.initializetimeID)
+      setscrollBack()
+      await nextTick()
+      destroy()
+    })
+
+    return {
+      scroll,
+      refresh,
+      scrollWarpper,
+      scrollTo,
+      pullDownConfig,
+      pullUpConfig,
+      pullingDownText,
+      pullingUpText,
+      scrollToElement,
+    }
   },
 })
 </script>
