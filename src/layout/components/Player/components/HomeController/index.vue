@@ -2,6 +2,7 @@
   <teleport to="body">
     <transition @before-enter="beforeEnter" @enter="enter" @leave="leave" @after-leave="afterLeave" type="animation" :css="false">
       <div class="homeController" v-show="show">
+
         <div class="homeDisc" @click="setPlayerShow(true)">
           <Disc :size="50" :key=" playerNow?.id||-1" :src="playerNow?.img" :playerState="playerState" />
         </div>
@@ -12,6 +13,7 @@
         <div class="listBtn" @click="setPlayerListShow(!playerListShow)">
           <i class="iconfont">&#xe6e4;</i>
         </div>
+        <div class="bg"></div>
       </div>
     </transition>
   </teleport>
@@ -33,7 +35,7 @@ export default defineComponent({
       playerListShow,
       progess,
       setPlayerStateByBtn,
-      setPlayerShow
+      setPlayerShow,
     } = createAudio()
 
     const store: any = useStore()
@@ -100,7 +102,7 @@ export default defineComponent({
       playerListShow,
       progess,
       setPlayerStateByBtn,
-      setPlayerShow
+      setPlayerShow,
     }
   },
 })
@@ -120,6 +122,15 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
+  .bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255,1);
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+    z-index: -1;
+  }
   .homeDisc {
     width: 40px;
     height: 40px;

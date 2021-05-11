@@ -19,7 +19,7 @@
           </span>
         </div>
         <div class="center">
-          <ScrollPage ref="scrollPageRef" :scrollBack="false">
+          <ScrollPage ref="scrollPageRef" :scrollBack="false" v-if="playerList.length">
             <div class="item" :class="{playing:playerNow?.id===item.id}" v-for="item in playerList" :key="item.id">
               <span class="name ellipsis" @click.self="setPlayerNow(item)">{{item.name}}</span>
               <span class="artists ellipsis" @click.self="setPlayerNow(item)">{{item.artists}}</span>
@@ -27,6 +27,9 @@
               <span class="remove" @click="removePlayList(item)"><i class="iconfont">&#xe600;</i></span>
             </div>
           </ScrollPage>
+          <div v-if="!playerList.length" class="noData">
+            最近没有播放过音乐哟
+          </div>
         </div>
         <div class="bottom"></div>
       </div>
@@ -180,6 +183,13 @@ export default defineComponent({
         margin-right: 0;
         margin-left: auto;
       }
+    }
+    .noData {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      height: 100%;
     }
   }
 }

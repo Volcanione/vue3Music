@@ -55,6 +55,9 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    .iconfont {
+      color: #999;
+    }
   }
   svg {
     position: absolute;
