@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "@/store";
 import router from "@/router";
-import { apiWhitelist } from "./whitelist";
+import { apiAuthlist } from "./whitelist";
 import { $msg } from "@/components/Msg/index";
 import { getCookie } from '@/utils/'
 // create an axios instance
@@ -10,6 +10,8 @@ const service: any = axios.create({
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
 });
+
+let loginState = true
 
 // request interceptor
 service.interceptors.request.use(
@@ -30,15 +32,19 @@ service.interceptors.request.use(
     }
     cookie && (params['cookie'] = cookie)
     config.params = params
-    if (!apiWhitelist.includes(config.url)) {
+    if (apiAuthlist.includes(config.url)) {
       if (!store.getters.loginState) {
-        try {
-          await store.dispatch("user/getLoginStatus");
-        } catch (error) {
-          await $msg({ title: error.response?.data?.msg });
-          router.push({
-            path: "/login",
-          });
+        if (loginState) {
+          loginState = false
+          try {
+            await store.dispatch("user/getLoginStatus");
+          } catch (error) {
+            await $msg({ title: error?.msg });
+            loginState = true
+            router.push({
+              path: "/login",
+            });
+          }
         }
       } else {
         try {
@@ -78,7 +84,7 @@ service.interceptors.response.use(
     if (response?.data?.size) {
       return res
     }
-    if(res?.data?.code===200){
+    if (res?.data?.code === 200) {
       return res
     }
     if (res.code !== 200 && !res.success) {

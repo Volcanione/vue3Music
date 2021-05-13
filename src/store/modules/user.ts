@@ -20,11 +20,16 @@ const actions = {
       user
         .loginStatus()
         .then((result: any) => {
+          if (!result?.data?.account) {
+            rej({ code: 301, msg: '需要登录' });
+            commit("setLastPath", false);
+            return
+          }
           res(result);
           commit("setLastPath", true);
         })
         .catch((err: any) => {
-          rej(err);
+          rej({ code: 301, msg: '需要登录' });
           commit("setLastPath", false);
         });
     });

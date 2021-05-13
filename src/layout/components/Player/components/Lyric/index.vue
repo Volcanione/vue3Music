@@ -1,6 +1,6 @@
 <template>
   <div class="LyricPage">
-    <Lyric :key="playerNow?.id + 'page' || 1+'page'" :lyricData="lyricData" :currentTime="curTime" />
+    <Lyric v-if="playerShow" :key="playerNow?.id + 'page' || 1+'page'" :lyricData="lyricData" :currentTime="curTime" ref="lyricRef" />
   </div>
 </template>
 
@@ -21,9 +21,10 @@ export default defineComponent({
   },
   components: { Lyric },
   setup() {
-    const { playerNow } = createAudio()
+    const { playerNow, playerShow } = createAudio()
     return {
       playerNow,
+      playerShow,
     }
   },
 })

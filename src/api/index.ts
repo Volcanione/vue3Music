@@ -95,6 +95,7 @@ export default {
       data
     });
   },
+  ///获取音乐地址
   getMusicUrl(data: APIGetMusicUrl) {
     return request({
       url: "/song/url",
@@ -108,18 +109,34 @@ export default {
       method: "get",
     });
   },
+  //获取音乐地址
   getMusicUrlById(id: string | number) {
     return request({
       url: `https://music.163.com/song/media/outer/url?id=${id}.mp3 `,
       method: "get",
     })
   },
+  //获取歌词
   getlyric(params: APIGetMusicUrl) {
     return request({
       url: '/lyric',
       method: "get",
       params
     })
-  }
+  },
+  //获取歌单分类
+  getSongListCatList() {
+    return request({
+      url: '/playlist/catlist',
+      method: "get",
+    })
+  },
 
+  //获取歌单分类(hot)
+  getSongListCatListHOT() {
+    return request({
+      url: '/playlist/hot',
+      method: "get",
+    })
+  },
 };

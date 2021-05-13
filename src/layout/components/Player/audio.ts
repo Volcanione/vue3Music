@@ -5,8 +5,8 @@ import { $msg } from '@/components/Msg/index'
 
 export default () => {
 
-  const { playerState, playerNow, setPlayerState: setPlayerStateByBtn, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
-    playerListShow, setProgess, playerProgess: progess,setPlayerShow } = playerSetup()
+  const { playerState, playerNow, setPlayerState, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
+    playerListShow, setProgess, playerProgess: progess, setPlayerShow } = playerSetup()
 
 
   const audioElement = ref(null) as any
@@ -71,7 +71,7 @@ export default () => {
     await $msg({ title: '暂无版权' })
     setProessDuration(0)
     if (playerList.length <= 1) {
-      return setPlayerStateByBtn(false)
+      return setPlayerState(false)
     }
     await setNextNow()
     //跳转下一首
@@ -84,7 +84,7 @@ export default () => {
 
 
   //播放暂停
-  const setPlayerState = async (type?: boolean) => {
+  const setPlayerAudioState = async (type?: boolean) => {
     await nextTick()
     try {
       if (type) {
@@ -135,6 +135,8 @@ export default () => {
     progess.value = 0
     duration.value = 0
     Object.assign(musicLyric, { lyric_0: null, lyric_1: null })
+    setPlayerState(false)
+
   }
 
   //下一首
@@ -144,7 +146,7 @@ export default () => {
     } else {
       const { code } = await setNextNow()
       if (!code) {
-        return setPlayerStateByBtn(false)
+        return setPlayerState(false)
       }
     }
   }
@@ -155,7 +157,7 @@ export default () => {
 
   return {
     audioElement,
-    setPlayerState,
+    setPlayerAudioState,
     updatePlayState,
     currentTime,
     duration,
@@ -172,7 +174,7 @@ export default () => {
     getLyric,
     setPlayerListShow,
     playerListShow,
-    setPlayerStateByBtn,
+    setPlayerState,
     setPlayerShow
   }
 }

@@ -101,7 +101,9 @@ export default defineComponent({
           </div>
           <div class="right">
             <span>{item.name}</span>
-            <span class="time">{dayjs(item.createTime).format('YYYY-MM-DD')}</span>
+            <span class="time">
+              {dayjs(item.createTime).format('YYYY-MM-DD')}
+            </span>
           </div>
         </div>
       )
@@ -148,7 +150,10 @@ export default defineComponent({
 }
 .song {
   height: 40px;
-  margin: 10px;
+  margin: 0 10px 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
   display: flex;
   justify-content: space-between;
   .left {
@@ -169,7 +174,10 @@ export default defineComponent({
 }
 .album {
   height: 50px;
-  margin: 10px;
+  margin: 0 10px 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
   display: flex;
   .imgBox {
     height: 100%;
@@ -189,7 +197,10 @@ export default defineComponent({
 }
 .arts {
   height: 50px;
-  margin: 10px;
+  margin: 0 10px 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
   display: flex;
   .ImgBox {
     width: 50px;
@@ -209,7 +220,10 @@ export default defineComponent({
 }
 .songList {
   height: 50px;
-  margin: 10px;
+  margin: 0 10px 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
   display: flex;
   .ImgBox {
     width: 50px;
@@ -229,7 +243,10 @@ export default defineComponent({
 }
 .Mv {
   height: 50px;
-  margin: 10px;
+  margin: 0 10px 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
   display: flex;
   .ImgBox {
     width: 50px;
@@ -253,7 +270,10 @@ export default defineComponent({
 }
 .radio {
   height: 50px;
-  margin: 10px;
+  margin: 0 10px 10px;
+  &:first-child {
+    margin-top: 10px;
+  }
   display: flex;
   .ImgBox {
     width: 50px;
@@ -265,7 +285,7 @@ export default defineComponent({
     flex-direction: column;
     justify-content: space-around;
     overflow: hidden;
-    .time{
+    .time {
       font-size: 12px;
       color: #999;
     }

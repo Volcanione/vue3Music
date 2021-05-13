@@ -21,8 +21,8 @@
         <div class="center">
           <ScrollPage ref="scrollPageRef" :scrollBack="false" v-if="playerList.length">
             <div class="item" :class="{playing:playerNow?.id===item.id}" v-for="item in playerList" :key="item.id">
-              <span class="name ellipsis" @click.self="setPlayerNow(item)">{{item.name}}</span>
-              <span class="artists ellipsis" @click.self="setPlayerNow(item)">{{item.artists}}</span>
+              <span class="name ellipsis" @click.self="addplay(item)">{{item.name}}</span>
+              <span class="artists ellipsis" @click.self="addplay(item)">{{item.artists}}</span>
               <span class="play" v-if="playerNow?.id===item.id"> <i class="iconfont">&#xe610;</i></span>
               <span class="remove" @click="removePlayList(item)"><i class="iconfont">&#xe600;</i></span>
             </div>
@@ -52,6 +52,8 @@ export default defineComponent({
       setPlayerMode,
       playerList,
       playerNow,
+      playerShow,
+      setPlayerShow,
     } = playerSetup()
     const { setPlayerNow, removePlayList } = musicSetup()
     const scrollPageRef = ref(null)
@@ -78,6 +80,13 @@ export default defineComponent({
         y: '100%',
         onComplete: done,
       })
+    }
+
+    const addplay = (item: any) => {
+      const state = playerShow.value
+      setPlayerNow(item)
+      setPlayerShow(state)
+      
     }
 
     //更新组件
@@ -119,6 +128,7 @@ export default defineComponent({
       playerNow,
       setPlayerNow,
       removePlayList,
+      addplay,
     }
   },
 })

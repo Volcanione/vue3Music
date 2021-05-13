@@ -8,7 +8,7 @@
         </div>
         <div class="name ellipsis">{{ playerNow?.name || 'nomusic'}}</div>
         <div class="playBtn">
-          <PlayProgess :progess="progess" :playerState="playerState" @play=" setPlayerStateByBtn(!playerState)" />
+          <PlayProgess :progess="progess" :playerState="playerState" @play=" setPlayerState(!playerState)" />
         </div>
         <div class="listBtn" @click="setPlayerListShow(!playerListShow)">
           <i class="iconfont">&#xe6e4;</i>
@@ -34,7 +34,7 @@ export default defineComponent({
       setPlayerListShow,
       playerListShow,
       progess,
-      setPlayerStateByBtn,
+      setPlayerState,
       setPlayerShow,
     } = createAudio()
 
@@ -101,7 +101,7 @@ export default defineComponent({
       setPlayerListShow,
       playerListShow,
       progess,
-      setPlayerStateByBtn,
+      setPlayerState,
       setPlayerShow,
     }
   },

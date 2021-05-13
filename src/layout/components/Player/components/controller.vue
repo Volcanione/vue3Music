@@ -2,7 +2,7 @@
   <div class="playContont" ref="wrapper">
     <div class="box">
       <Panel :key="0" ref="Panel" @updateLyric="updateLyric" @updateTime="updateTime" />
-      <Lyric :key="1" ref="Lyric" :curTime="curTime" :lyricData="lyricData" />
+      <Lyric :key="1" ref="Lyric" :curTime="curTime" :lyricData="lyricData"   />
     </div>
   </div>
 </template>

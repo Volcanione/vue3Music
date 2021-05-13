@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="lyricBar">
-        <Lyric :key="playerNow?.id || 1" line :lyricData="musicLyric" :currentTime="currentTime" />
+        <Lyric v-if="playerShow" :key="playerNow?.id || 1" line :lyricData="musicLyric" :currentTime="currentTime" ref="lyricRef" />
       </div>
       <div class="time">
         <span>{{curTime || '00:00'}}</span>
@@ -48,7 +48,7 @@ export default defineComponent({
     //创建音频
     const {
       audioElement,
-      setPlayerState,
+      setPlayerAudioState,
       updatePlayState,
       progess,
       setProgess,
@@ -67,6 +67,7 @@ export default defineComponent({
     const curTime = ref('')
     const totalTime = ref('')
     const SongDiscRef = ref(null)
+    const lyricRef = ref(null)
 
     onMounted(async () => {
       const setDiscWidth = async () => {
@@ -84,7 +85,7 @@ export default defineComponent({
       watch(
         () => playerState.value,
         (val) => {
-          setPlayerState(val)
+          setPlayerAudioState(val)
         }
       )
       //监听当前播放应用变化重置播放器
@@ -129,6 +130,14 @@ export default defineComponent({
       )
 
       watch(
+        () => playerShow.value,
+        () => {
+          const s = lyricRef.value as any
+          // s.refresh()
+        }
+      )
+
+      watch(
         () => ended.value,
         (val) => {
           if (val) {
@@ -152,6 +161,7 @@ export default defineComponent({
       musicLyric,
       currentTime,
       SongDiscRef,
+      lyricRef,
     }
   },
 })

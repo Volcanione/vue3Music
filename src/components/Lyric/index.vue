@@ -74,6 +74,7 @@ export default defineComponent({
         data?.lyric_1 && (lyric_1.value = lyricRegular(data.lyric_1))
       }
     }
+    delLryic(lyricData)
     //当前歌词
     const setIndex = async (time: number) => {
       const arr = !checkLyricState.value ? lyric_0.value : lyric_1.value
@@ -124,12 +125,12 @@ export default defineComponent({
       }
     )
 
-    watch(
-      () => activeIdx.value,
-      () => {
-        refresh()
-      }
-    )
+    // watch(
+    //   () => activeIdx.value,
+    //   () => {
+    //     refresh()
+    //   }
+    // )
 
     return {
       scrollPageRef,
@@ -140,6 +141,7 @@ export default defineComponent({
       key,
       checkLyric,
       checkLyricState,
+      refresh,
     }
   },
 })

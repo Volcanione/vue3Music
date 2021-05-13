@@ -7,7 +7,7 @@
       <Slide :list="BannerList" v-loading="BannerList.length" />
       <ScrollBox title="推荐歌单" direction="x" height="160px" :update="SongList.length">
         <template #rightBtn>
-          <span>更多</span>
+          <span @click="moreSongList">更多</span>
         </template>
         <template #content>
           <div class="songlist" v-for="item in SongList" :key="item.id">
@@ -102,9 +102,13 @@ export default defineComponent({
 
     //点击歌单
     const handlerClick = (data: any) => {
-      console.log(data, 11)
+      console.log(data)
+    }
+    //点击歌单更多
+    const moreSongList = () => {
       router.push({
-        path: '/setting',
+        path: '/songList',
+        query: { type: 0 },
       })
     }
 
@@ -147,7 +151,7 @@ export default defineComponent({
           loadingState.value = true
         })
       } catch (error) {
-      console.log(error);
+        console.log(error)
         await done(0)
       }
       // PrivateState.value = true
@@ -168,6 +172,7 @@ export default defineComponent({
       PrivateState,
       loadingState,
       checkMusicItem,
+      moreSongList
     }
   },
   methods: {},

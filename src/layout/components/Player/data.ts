@@ -8,7 +8,8 @@ export async function getMusicPlayUrl(id: string | number) {
       return ''
     }
     const { code, data } = await api.getMusicUrl({ id })
-    url = code === 200 ? data[0].url : ''
+    // url = code === 200 ? data[0].url : ''
+    url = `https://music.163.com/song/media/outer/url?id=${id}.mp3 `
   } catch (error) {
     url = `https://music.163.com/song/media/outer/url?id=${id}.mp3 `
   }
@@ -23,5 +24,5 @@ export async function getMusicLyric(params: string | number) {
   }
   const lyric_0 = lrc.lyric || null
   const lyric_1 = tlyric.lyric || null
-  return {lyric_0,lyric_1}
+  return { lyric_0, lyric_1 }
 }

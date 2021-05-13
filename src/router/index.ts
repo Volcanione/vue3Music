@@ -58,6 +58,13 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/songList",
+    name: "SongList",
+    components: {
+      layer: () => import("@/views/songList/index.vue"),
+    },
+  },
+  {
     path: "/test",
     name: "Test",
     components: {

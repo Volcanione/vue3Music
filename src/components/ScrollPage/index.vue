@@ -147,6 +147,7 @@ export default defineComponent({
       scroll.on('scroll', pageScrollHandler)
       scroll.on('touchEnd', pageTouchEndHandler)
       setscrollBack(scroll)
+      refresh()
     }
 
     //下拉
@@ -324,7 +325,6 @@ export default defineComponent({
     //挂载
     onMounted(() => {
       init()
-      refresh()
     })
     //卸载
     onBeforeUnmount(async () => {
@@ -359,6 +359,15 @@ export default defineComponent({
     width: 100%;
     min-height: 100%;
     position: relative;
+    overflow: hidden;
+    &:after {
+      display: block;
+      clear: both;
+      height: 0;
+      content: '';
+      visibility: hidden;
+      overflow: hidden;
+    }
     .pullingDownLoading {
       position: absolute;
       width: 100%;
