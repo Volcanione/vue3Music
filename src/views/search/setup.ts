@@ -1,4 +1,4 @@
-import { nextTick, ref } from "vue";
+import { nextTick, ref, reactive } from "vue";
 import api from "@/api/index";
 import { LS_set, LS_get, LS_remove } from "@/utils/index";
 import { useRouter, useRoute } from "vue-router";
@@ -106,21 +106,22 @@ export function searchFn() {
 export function searchResult() {
   const type = ref(1);
   const route = useRoute();
-  const offset = ref(0);
+  const router = useRouter();
   const total = ref(0);
   const searchResultRef = ref(null) as any;
   const resultList = ref(<any>[]);
   const loadingState = ref(false);
+
+  const searchParam = reactive({
+    keywords: route.params.keyword,
+    type,
+    limit: 30,
+    offset: 0,
+  }) as any
   //请求搜索结果
 
   const getsearchResult = async (state = false, refresh?: boolean) => {
-    const keywords = route.params.keyword as string;
-    const { code, result } = await api.searchResult({
-      keywords,
-      type: type.value,
-      limit: 30,
-      offset: offset.value,
-    });
+    const { code, result } = await api.searchResult(searchParam);
     if (code !== 200) {
       return;
     }
@@ -140,26 +141,28 @@ export function searchResult() {
       }
     });
     loadingState.value = true;
-    nextTick(() => {
-      searchResultRef?.value?.refresh();
-    });
+    refreshScroll()
   };
+
+  const refreshScroll = async () => {
+    await nextTick();
+    searchResultRef?.value?.refresh();
+  }
 
   //改变类别
 
   const changeType = async () => {
-    offset.value = 0
+    searchParam.offset = 0
     resultList.value = []
     loadingState.value = false;
     await getsearchResult();
-    nextTick(() => {
-      searchResultRef?.value?.scrollTo();
-    });
+    refreshScroll()
+    searchResultRef?.value?.scrollTo()
   };
 
   //下拉刷新
   const pullDown = async (done: () => void) => {
-    offset.value = 0
+    searchParam.offset = 0
     try {
 
       await getsearchResult()
@@ -172,7 +175,7 @@ export function searchResult() {
   }
   //上拉加载
   const pullUp = async (done: (state?: number) => void) => {
-    offset.value++
+    searchParam.offset++
     if (total.value <= resultList.value.length) {
       await done(2);
       return $msg({ title: "真的到底了" });
@@ -185,6 +188,29 @@ export function searchResult() {
     }
   }
 
+  //点击item
+  const confirmItem = (data: any) => {
+    console.log(type.value);
+    let name = ''
+    switch (type.value) {
+      case 1000:
+        name = 'SongListDetail'
+        break
+    }
+    if (!name) {
+      return
+    }
+    router.push({
+      name, params: {
+        cat: '搜索',
+        id: data.id,
+      },
+      query: {
+        name: data.name
+      }
+    })
+  }
+
   return {
     getsearchResult,
     type,
@@ -193,6 +219,7 @@ export function searchResult() {
     loadingState,
     searchResultRef,
     pullDown,
-    pullUp
+    pullUp,
+    confirmItem
   };
 }

@@ -2,7 +2,7 @@
   <div class="playContont" ref="wrapper">
     <div class="box">
       <Panel :key="0" ref="Panel" @updateLyric="updateLyric" @updateTime="updateTime" />
-      <Lyric :key="1" ref="Lyric" :curTime="curTime" :lyricData="lyricData"   />
+      <Lyric :key="1" ref="Lyric" :curTime="curTime" :lyricData="lyricData" />
     </div>
   </div>
 </template>
@@ -28,30 +28,29 @@ export default defineComponent({
     const Lyric = ref(null)
     const curTime = ref(0)
     const lyricData: any = reactive({})
-    const scroll = reactive({ config: null }) as any
+    let scroll = {} as any
     onMounted(() => {
-      scroll.config = new BScroll(wrapper.value as any, {
+      scroll = new BScroll(wrapper.value as any, {
         scrollY: false,
         scrollX: true,
         bounce: false,
         click: true,
         preventDefault: false,
       })
-      scroll.config.disable()
+      scroll.disable()
     })
 
     watch(
       () => props.config.value,
       (val) => {
-        scroll.config.refresh()
+        scroll.refresh()
         const el: any = val ? Lyric.value : Panel.value
-        scroll.config.scrollToElement(el.$el, 300, 0, 0)
+        scroll.scrollToElement(el.$el, 300, 0, 0)
       }
     )
 
     const updateLyric = (data: any) => {
       Object.assign(lyricData, data)
-
     }
 
     const updateTime = (data: any) => {
@@ -65,7 +64,7 @@ export default defineComponent({
       updateLyric,
       updateTime,
       curTime,
-      lyricData
+      lyricData,
     }
   },
 })

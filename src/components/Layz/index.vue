@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, watch } from 'vue'
+import { defineComponent, PropType } from 'vue'
 export default defineComponent({
   props: {
     loadState: {
@@ -29,7 +29,6 @@ export default defineComponent({
       loading: true,
     }
   },
-  watch: {},
 })
 </script>
 

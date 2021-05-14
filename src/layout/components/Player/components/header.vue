@@ -4,23 +4,19 @@
       <i class="iconfont">&#xe6ca;</i>
     </div>
     <div class="center">
-      <TabBar
-        v-model="active"
-        :list="list"
-        @change="
+      <TabBar v-model="active" :list="list" @change="
           (val) => {
             $emit('switch', { type: val, value: active });
           }
-        "
-      />
+        " />
     </div>
     <div class="right">-</div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType, watch } from "vue";
-import { playerSetup } from "../setup";
-import { TabBar } from "@/components/Tab/index";
+import { defineComponent, ref, PropType, watch } from 'vue'
+import { playerSetup } from '../setup'
+import { TabBar } from '@/components/Tab/index'
 export default defineComponent({
   components: { TabBar },
   props: {
@@ -29,35 +25,32 @@ export default defineComponent({
       default: 0,
     },
   },
-  data() {
-    return {
-      list: [
-        {
-          label: "歌曲",
-          value: 0,
-        },
-        {
-          label: "歌词",
-          value: 1,
-        },
-      ],
-    };
-  },
   setup(props) {
-    const active = ref(0);
+    const active = ref(0)
+    const list = [
+      {
+        label: '歌曲',
+        value: 0,
+      },
+      {
+        label: '歌词',
+        value: 1,
+      }
+    ]
     watch(
       () => props.active,
       (val) => {
-        active.value = val;
+        active.value = val
       }
-    );
-    const { setPlayerShow } = playerSetup();
+    )
+    const { setPlayerShow } = playerSetup()
     return {
       setPlayerShow,
       active,
-    };
+      list
+    }
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .playerHead {

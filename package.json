@@ -19,6 +19,7 @@
     "dayjs": "^1.10.4",
     "gsap": "^3.6.1",
     "js-cookie": "^2.2.1",
+    "lodash.clonedeep": "^4.5.0",
     "normalize.css": "^8.0.1",
     "resize-observer-polyfill": "^1.5.1",
     "vue": "^3.0.0",

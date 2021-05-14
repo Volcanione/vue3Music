@@ -4,7 +4,7 @@
       <PullDownSlot :state="state" />
     </template>
     <div class="viewContent">
-      <Slide :list="BannerList" v-loading="BannerList.length" />
+      <Slide :data="BannerList" v-loading="BannerList.length" />
       <ScrollBox title="推荐歌单" direction="x" height="160px" :update="SongList.length">
         <template #rightBtn>
           <span @click="moreSongList">更多</span>
@@ -17,7 +17,7 @@
       </ScrollBox>
       <ScrollBox title="推荐新曲" height="240px" :update="MusicList.length">
         <template #content>
-          <SlideWapper height="240px" width="calc(100vw - 20px)" :list="MusicList" v-loading="BannerList.length">
+          <SlideWapper height="240px" width="calc(100vw - 20px)" :data="MusicList" v-loading="MusicList.length">
             <MusicItem :data="MusicList" @confirm="checkMusicItem" />
           </SlideWapper>
         </template>
@@ -36,7 +36,7 @@
               <span>更多</span>
             </template>
             <template #content>
-              <SlideWapper height="240px" width="calc(100vw - 20px)" :list="PrivateMusicList" v-loading="loadingState">
+              <SlideWapper height="240px" width="calc(100vw - 20px)" :data="PrivateMusicList" v-loading="loadingState">
                 <MusicItem :data="PrivateMusicList" @confirm="checkMusicItem" />
               </SlideWapper>
             </template>
@@ -82,7 +82,6 @@ export default defineComponent({
   setup() {
     //初始化路由
     const router = useRouter()
-
     const PUBLIC = getPublicDate()
     const PRIVATE = getPrivateDate()
 
@@ -102,7 +101,16 @@ export default defineComponent({
 
     //点击歌单
     const handlerClick = (data: any) => {
-      console.log(data)
+      router.push({
+        name: 'SongListDetail',
+        params: {
+          cat: '推荐歌单',
+          id: data.id,
+        },
+        query: {
+          name: data.name,
+        },
+      })
     }
     //点击歌单更多
     const moreSongList = () => {
@@ -172,7 +180,7 @@ export default defineComponent({
       PrivateState,
       loadingState,
       checkMusicItem,
-      moreSongList
+      moreSongList,
     }
   },
   methods: {},

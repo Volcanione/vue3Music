@@ -31,7 +31,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted, nextTick } from 'vue'
+import { defineComponent, ref, watch, onMounted, nextTick, computed } from 'vue'
 import Progess from './components/Progress/index.vue'
 import Control from './components/Control/index.vue'
 import createAudio from '@/layout/components/Player/audio'
@@ -64,8 +64,6 @@ export default defineComponent({
       musicLyric,
     } = createAudio()
 
-    const curTime = ref('')
-    const totalTime = ref('')
     const SongDiscRef = ref(null)
     const lyricRef = ref(null)
 
@@ -106,17 +104,8 @@ export default defineComponent({
       watch(
         () => currentTime.value,
         (cur: any | number) => {
-          curTime.value = dayjs.duration((cur || 0) * 1000).format('mm:ss')
           emit('updateTime', cur)
           setProgess(progess.value)
-        },
-        { immediate: true, deep: true }
-      )
-
-      watch(
-        () => duration.value,
-        (dur: any | number) => {
-          totalTime.value = dayjs.duration((dur || 0) * 1000).format('mm:ss')
         },
         { immediate: true, deep: true }
       )
@@ -130,14 +119,6 @@ export default defineComponent({
       )
 
       watch(
-        () => playerShow.value,
-        () => {
-          const s = lyricRef.value as any
-          // s.refresh()
-        }
-      )
-
-      watch(
         () => ended.value,
         (val) => {
           if (val) {
@@ -147,7 +128,12 @@ export default defineComponent({
         { immediate: true }
       )
     })
-
+    const curTime = computed(() => {
+      return dayjs.duration((currentTime.value || 0) * 1000).format('mm:ss')
+    })
+    const totalTime = computed(() => {
+      return dayjs.duration((duration.value || 0) * 1000).format('mm:ss')
+    })
     return {
       progess,
       playerState,

@@ -65,6 +65,27 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/songList/:cat",
+    name: "SongListCat",
+    components: {
+      layer: () => import("@/views/songList/catList.vue"),
+    },
+    meta: {
+      parent: "SongList",
+    },
+  },
+  {
+    path: "/songList/:cat/:id",
+    name: "SongListDetail",
+    components: {
+      layer: () => import("@/views/songList/detaile.vue"),
+    },
+    meta: {
+      parent: ["SongList", "SearchResult", 'SongListCat'],
+      reuse:true//多层级页面多次使用并包含首页直接跳转的二级
+    },
+  },
+  {
     path: "/test",
     name: "Test",
     components: {

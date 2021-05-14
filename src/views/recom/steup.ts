@@ -2,7 +2,7 @@ import { ref } from "vue";
 import api from "@/api/index";
 
 export function getPublicDate() {
-  const BannerList = ref([]);
+  const BannerList: any = ref([]);
   const SongList = ref([]);
   const MusicList = ref([]);
   const RadioList = ref([]);
@@ -66,7 +66,7 @@ export function getPrivateDate() {
     PrivateSongList.value = code === 200 ? recommend : [];
   };
   const getRecommendMusic = async () => {
-    const { code, data:{dailySongs:recommend} } = await api.getRecommendMusic();
+    const { code, data: { dailySongs: recommend } } = await api.getRecommendMusic();
     PrivateMusicList.value =
       code === 200
         ? recommend
@@ -76,7 +76,7 @@ export function getPrivateDate() {
               ...item,
               artists: item?.ar[0].name,
               img: item.al.picUrl,
-              duration:item.dt || 0
+              duration: item.dt || 0
             };
           })
         : [];

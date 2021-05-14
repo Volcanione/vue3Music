@@ -24,6 +24,7 @@ import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
 import Pullup from '@better-scroll/pull-up'
 import {
+  computed,
   defineComponent,
   nextTick,
   onBeforeUnmount,
@@ -88,7 +89,7 @@ export default defineComponent({
     const CONFIG = {} as any
     const threshold = 60
     const stop = 40
-    let scroll = reactive({}) as BScrollType
+    let scroll = {} as BScrollType
 
     const pullDownConfig = reactive({
       srcollState: true,
@@ -103,9 +104,6 @@ export default defineComponent({
     })
 
     const scrollWarpper = ref(null) as any
-
-    const pullingDownText = ref('')
-    const pullingUpText = ref('')
 
     //初始化
     const init = () => {
@@ -268,45 +266,39 @@ export default defineComponent({
         scroll.scrollToElement(el, time, offsetX, offsetY, easing)
     }
 
+    const pullingDownText = computed(() => {
+      switch (+pullDownConfig.type) {
+        case 0:
+          return '下拉刷新'
+        case 1:
+          return '松开刷新'
+        case 2:
+          return '加载中'
+        case 3:
+          return '加载成功'
+        default:
+          return '加载失败'
+      }
+    })
+    const pullingUpText = computed(() => {
+      switch (pullUpConfig.type) {
+        case 0:
+          return '加载中'
+        case 1:
+          return '加载成功'
+        case 2:
+          return '没有数据'
+        default:
+          return '加载失败'
+      }
+    })
+
     watch(
       () => pullUpConfig.type,
-      (val) => {
+      () => {
         refresh()
-        let t = ''
-        switch (val) {
-          case 0:
-            t = '加载中'
-          case 1:
-            t = '加载成功'
-          case 2:
-            t = '没有数据'
-          default:
-            t = '加载失败'
-        }
-        pullingUpText.value = t
       }
     )
-
-    watch(
-      () => pullDownConfig.type,
-      (val) => {
-        let t = ''
-        switch (val) {
-          case 0:
-            t = '下拉刷新'
-          case 1:
-            t = '松开刷新'
-          case 2:
-            t = '加载中'
-          case 3:
-            t = '加载成功'
-          default:
-            t = '加载失败'
-        }
-        pullingDownText.value = t
-      }
-    )
-
     watch(
       () => disabled.value,
       async (val) => {

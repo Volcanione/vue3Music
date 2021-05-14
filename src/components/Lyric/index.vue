@@ -125,12 +125,6 @@ export default defineComponent({
       }
     )
 
-    // watch(
-    //   () => activeIdx.value,
-    //   () => {
-    //     refresh()
-    //   }
-    // )
 
     return {
       scrollPageRef,

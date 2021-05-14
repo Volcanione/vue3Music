@@ -18,7 +18,7 @@
       </div>
     </template>
     <template #content>
-      <Item :data="resultList" :type="type" v-if="resultList.length" />
+      <Item :data="resultList" :type="type" v-if="resultList.length" @confirm="confirmItem" />
     </template>
     <template #fixed>
       <SearchTip
@@ -93,7 +93,8 @@ export default defineComponent({
       loadingState,
       searchResultRef,
       pullDown,
-      pullUp
+      pullUp,
+      confirmItem
     } = searchResult();
     return {
       search,
@@ -106,7 +107,8 @@ export default defineComponent({
       loadingState,
       searchResultRef,
       pullDown,
-      pullUp
+      pullUp,
+      confirmItem
     };
   },
 });

@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 dayjs.extend(duration)
 export default defineComponent({
+  emits:['confirm'],
   props: {
     type: {
       type: Number as PropType<number>,
@@ -17,12 +18,12 @@ export default defineComponent({
       },
     },
   },
-  setup(props: any) {
+  setup(props: any,{emit}) {
     const data = props.data
     const type = props.type
     const SongItem = (item: any) => {
       return (
-        <div class="song" key={item.id}>
+        <div class="song" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="left">
             <span class="name ellipsis">{item.name}</span>
             <span class="art">{item.album.name}</span>
@@ -36,7 +37,7 @@ export default defineComponent({
 
     const AlbumItem = (item: any) => {
       return (
-        <div class="album" key={item.id}>
+        <div class="album" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="imgBox">
             <img v-layz={item.blurPicUrl} />
           </div>
@@ -50,7 +51,7 @@ export default defineComponent({
 
     const artsItem = (item: any) => {
       return (
-        <div class="arts" key={item.id}>
+        <div class="arts" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
             <img v-layz={item.img1v1Url} />
           </div>
@@ -64,7 +65,7 @@ export default defineComponent({
 
     const songList = (item: any) => {
       return (
-        <div class="songList" key={item.id}>
+        <div class="songList" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
             <img v-layz={item.coverImgUrl} />
           </div>
@@ -78,7 +79,7 @@ export default defineComponent({
 
     const MVlist = (item: any) => {
       return (
-        <div class="Mv" key={item.id}>
+        <div class="Mv" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
             <img v-layz={item.cover} />
           </div>
@@ -95,7 +96,7 @@ export default defineComponent({
 
     const radio = (item: any) => {
       return (
-        <div class="radio" key={item.id}>
+        <div class="radio" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
             <img v-layz={item.picUrl} />
           </div>

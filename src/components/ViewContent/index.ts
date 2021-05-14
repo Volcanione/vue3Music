@@ -4,7 +4,7 @@ interface TabRouteView {
   leave: (el: HTMLElement, done: any) => void;
 }
 
-import { toRefs, watch, ref } from "vue";
+import { toRefs, watch, ref, computed } from "vue";
 import { TweenMax } from "gsap";
 
 interface Props {
@@ -14,12 +14,16 @@ interface Props {
 
 export function setTabRouteView(props: Props, context: any): TabRouteView {
   const { type, disabled } = toRefs(props);
-  const X = ref();
-  const Left = ref();
-  watch([type, disabled], ([val, dis]) => {
-    X.value = dis ? 0 : val ? "-100%" : "100%";
-    Left.value = dis ? 0 : !val ? "-100%" : "100%";
+
+
+
+  const X = computed(() => {
+    return disabled.value ? 0 : type.value ? "-100%" : "100%"
   });
+  const Left = computed(() => {
+    return disabled.value ? 0 : !type.value ? "-100%" : "100%";
+  });
+
   const beforeEnter = (el: HTMLElement, done: any) => {
     context.emit("beforeEnter");
     el.style.backfaceVisibility = "hidden";

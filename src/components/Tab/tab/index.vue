@@ -2,12 +2,7 @@
   <div class="TABBER" ref="scrollContent" :style="{ height: heightPx }">
     <div class="root" :style="{ width: `${barWidth}px` }">
       <div class="bar" ref="tabbar">
-        <div
-          :class="{ item: true, active: item.value === modelValue }"
-          v-for="item in list"
-          :key="item.value"
-          @click="handlerClick(item)"
-        >
+        <div :class="{ item: true, active: item.value === modelValue }" v-for="item in list" :key="item.value" @click="handlerClick(item)">
           {{ item.label }}
         </div>
       </div>
@@ -18,22 +13,33 @@
   </div>
 </template>
 <script lang="ts">
-import BScroll from "@better-scroll/core";
-import { defineComponent, computed, toRefs, PropType, ref, watch } from "vue";
-import { BScrollType } from "@/interface/index";
+import BScroll from '@better-scroll/core'
+import {
+  defineComponent,
+  computed,
+  toRefs,
+  PropType,
+  ref,
+  watch,
+  onMounted,
+  nextTick,
+  reactive,
+  onBeforeUnmount,
+} from 'vue'
+import { BScrollType } from '@/interface/index'
 interface Item {
-  label: string;
-  value: string | number;
+  label: string
+  value: string | number
 }
 
 interface SizeSeat {
-  width: number;
-  left: number;
-  barWidth: number;
+  width: number
+  left: number
+  barWidth: number
 }
 
 export default defineComponent({
-  name: "Tab",
+  name: 'Tab',
   props: {
     modelValue: {
       type: [Number, String],
@@ -42,7 +48,7 @@ export default defineComponent({
     list: {
       type: Array as PropType<Array<Item>>,
       default: () => {
-        return [];
+        return []
       },
     },
     height: {
@@ -51,73 +57,67 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const { height, modelValue, list } = toRefs(props);
+    const { height, modelValue, list } = toRefs(props)
+    const style = reactive({ width: '', transform: '' })
+    const tabbar = ref(null) as any
+    const scrollContent = ref(null) as any
+    let scroll = {} as BScrollType
+    const barWidth = ref(0)
+
     const heightPx = computed(() => {
-      return height ? height.value + "px" : "100%";
-    });
-    let IDX = ref(0);
+      return height ? height.value + 'px' : '100%'
+    })
+
     const handlerClick = (item: Item) => {
-      emit("update:modelValue", item.value);
-    };
+      emit('update:modelValue', item.value)
+    }
+
+    watch(
+      modelValue,
+      () => {
+        setLineStyle()
+      },
+      { deep: true }
+    )
+
+    const IDX: any = computed(() => {
+      return list.value.findIndex(
+        (item: Item) => item.value === modelValue.value
+      )
+    })
+
     watch(IDX, (val, old) => {
-      emit("change", val > old ? 1 : 0);
-    });
+      emit('change', val > old ? 1 : 0)
+    })
 
-    watch(modelValue, (val) => {
-      IDX.value = list.value.findIndex((item: Item) => item.value === val);
-    });
+    const setLineStyle = () => {
+      const { width, left, barWidth: w } = getActiveWidth()
 
-    return {
-      heightPx,
-      handlerClick,
-    };
-  },
-  data() {
-    return {
-      style: {},
-      scroll: {} as BScrollType,
-      barWidth: 0,
-    };
-  },
-  watch: {
-    modelValue() {
-      this.setLineStyle();
-    },
-  },
-  mounted() {
-    this.setLineStyle();
-    this.initWapper();
-    this.refresh();
-  },
-  methods: {
-    setLineStyle() {
-      const { width, left, barWidth } = this.getActiveWidth();
-      this.style = {
-        width: 25 + "px",
+      Object.assign(style, {
+        width: 25 + 'px',
         transform: `translateX(${left + (width - 25) / 2}px)`,
-      };
-      this.barWidth = barWidth;
-    },
+      })
+      barWidth.value = w
+    }
 
-    getActiveWidth(): SizeSeat {
-      const dom = this.$refs.tabbar as HTMLElement;
-      const dix: number = this.list.findIndex(
-        (i: any) => i.value === this.modelValue
-      );
-      const activeDom = dom.children[dix] as HTMLElement;
-      const scrollIdx: number = Math.max(dix - 1, 0);
-      const scrollDom = dom.children[scrollIdx] as HTMLElement;
-
-      this.setScroll(scrollDom);
+    const getActiveWidth = (): SizeSeat => {
+      const dom = tabbar.value as HTMLElement
+      const dix: number = list.value.findIndex(
+        (i: any) => i.value === modelValue.value
+      )
+      const activeDom = dom.children[dix] as HTMLElement
+      const scrollIdx: number = Math.max(dix - 1, 0)
+      const scrollDom = dom.children[scrollIdx] as HTMLElement
+      setScroll(scrollDom)
       return {
         width: activeDom.clientWidth,
         left: activeDom.offsetLeft,
-        barWidth: this.getBarWidth(dom),
-      };
-    },
+        barWidth: getBarWidth(dom),
+      }
+    }
 
-    initWapper() {
-      this.scroll = new BScroll(this.$refs.scrollContent as HTMLElement, {
+    const initWapper = () => {
+      scroll = new BScroll(scrollContent.value as HTMLElement, {
         scrollY: false,
         scrollX: true,
         scrollbar: false,
@@ -125,27 +125,48 @@ export default defineComponent({
         disableTouch: false,
         bounce: true,
         click: true,
-        tap: "tap",
-      }) as any;
-    },
-    refresh() {
-      this.$nextTick(() => {
-        this.scroll.refresh();
-      });
-    },
+        tap: 'tap',
+      }) as any
+    }
 
-    getBarWidth(dom: HTMLElement): number {
-      const domlist: Element[] = [...dom.children];
+    const refresh = async () => {
+      await nextTick()
+      scroll.refresh()
+    }
+    const getBarWidth = (dom: HTMLElement) => {
+      const domlist: Element[] = [...dom.children]
       return domlist.reduce((count: number, item: Element) => {
-        return item.clientWidth + count;
-      }, 0);
-    },
-    setScroll(el: HTMLElement) {
-      this.scroll.scrollToElement &&
-        this.scroll.scrollToElement(el, 300, 0, 0, undefined);
-    },
+        return item.clientWidth + count
+      }, 0)
+    }
+    const setScroll = (el: HTMLElement) => {
+      scroll.scrollToElement && scroll.scrollToElement(el, 300, 0, 0, undefined)
+    }
+
+
+    
+
+    onMounted(() => {
+      setLineStyle()
+      initWapper()
+      refresh()
+    })
+
+    onBeforeUnmount(() => {
+      scroll.destroy()
+    })
+
+    return {
+      heightPx,
+      handlerClick,
+      tabbar,
+      scrollContent,
+      refresh,
+      barWidth,
+      style,
+    }
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .TABBER {

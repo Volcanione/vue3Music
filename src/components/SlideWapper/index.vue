@@ -1,59 +1,63 @@
 <template>
-  <div class="slideWapper" ref="slide" :style="{ height, width }">
+  <div class="slideWapper" ref="slideRef" :style="{ height, width }">
     <div class="slide-banner-content">
-      <div v-if="!list.length"></div>
+      <div v-if="!data.length"></div>
       <slot />
     </div>
   </div>
 </template>
 <script lang="ts">
-import BScroll from "@better-scroll/core";
-import Slide from "@better-scroll/slide";
-import { defineComponent, PropType } from "vue";
-import { BScrollType } from "@/interface/index";
-BScroll.use(Slide);
+import BScroll from '@better-scroll/core'
+import Slide from '@better-scroll/slide'
+import {
+  defineComponent,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  PropType,
+  ref,
+  toRefs,
+  watch,
+} from 'vue'
+import { BScrollType } from '@/interface/index'
+BScroll.use(Slide)
 export default defineComponent({
   props: {
-    list: {
+    data: {
       type: Array as PropType<Array<any>>,
-      default() {
-        return [];
+      default: () => {
+        return []
       },
     },
     height: {
       type: String as PropType<string>,
-      default: "100%",
+      default: '100%',
     },
     width: {
       type: String as PropType<string>,
-      default: "100%",
+      default: '100%',
     },
     loop: {
       type: Boolean as PropType<boolean>,
       default: false,
     },
   },
-  data() {
-    return {
-      nums: 4,
-      slide: {} as BScrollType,
-      currentPageIndex: 0,
-    };
-  },
-  watch: {
-    list() {
-      this.refresh();
-    },
-  },
-  mounted() {
-    this.init();
-  },
-  beforeUnmount() {
-    this.slide.destroy();
-  },
-  methods: {
-    init() {
-      this.slide = new BScroll(this.$refs.slide as HTMLElement, {
+  setup(props) {
+    const { data } = toRefs(props)
+    let slide = {} as BScrollType
+    const slideRef = ref(null) as any
+    const currentPageIndex = ref(0)
+
+    onMounted(() => {
+      init()
+    })
+
+    onBeforeUnmount(() => {
+      slide.destroy()
+    })
+
+    const init = () => {
+      slide = new BScroll(slideRef.value as HTMLElement, {
         scrollX: true,
         scrollY: false,
         slide: {
@@ -61,20 +65,33 @@ export default defineComponent({
           loop: false,
           autoplay: false,
         },
-        tap: "tap",
+        tap: 'tap',
         momentum: false,
-      }) as any;
-      this.slide.on("slideWillChange", (page) => {
-        this.currentPageIndex = page.pageX;
-      });
-    },
-    refresh() {
-      this.$nextTick(() => {
-        this.slide.refresh();
-      });
-    },
+      }) as any
+      slide.on('slideWillChange', (page) => {
+        currentPageIndex.value = page.pageX
+      })
+    }
+
+    const refresh = async () => {
+      await nextTick()
+      slide.refresh()
+    }
+
+    watch(
+      () => data,
+      () => {
+        refresh()
+      },
+      { deep: true }
+    )
+
+    return {
+      currentPageIndex,
+      slideRef,
+    }
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

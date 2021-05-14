@@ -6,7 +6,7 @@
         <i class="iconfont">&#xe603;</i></span
       >
     </div>
-    <div class="content">
+    <div class="content ellipsis">
       <slot />
     </div>
     <div class="right" v-if="right">
@@ -55,7 +55,7 @@ export default defineComponent({
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .back {
     width: 44px;

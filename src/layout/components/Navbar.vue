@@ -4,15 +4,11 @@
       <i class="iconfont">&#xe63b;</i>
     </span>
     <div class="content">
-      <TabBar
-        v-model="menuActive"
-        :list="list"
-        @change="
+      <TabBar v-model="menuActive" :list="list" @change="
           (val) => {
             $emit('changeRoute', val);
           }
-        "
-      />
+        " />
     </div>
     <span class="right-btn" @click="setRouter('/setting')">
       <i class="iconfont">&#xe643;</i>
@@ -21,62 +17,70 @@
 </template>
 
 <script lang="ts">
-import { TabBar } from "@/components/Tab/index";
-import { defineComponent, watch } from "vue";
-import { playerSetup } from "../components/Player/setup";
+import { TabBar } from '@/components/Tab/index'
+import { defineComponent, ref, watch } from 'vue'
+import { playerSetup } from '../components/Player/setup'
+import { useRouter, useRoute } from 'vue-router'
 export default defineComponent({
   components: { TabBar },
   data() {
-    return {
-      menuActive: "/recom",
-      list: [
-        {
-          label: "推荐",
-          value: "/recom",
-        },
-        {
-          label: "音乐馆",
-          value: "/hall",
-        },
-        {
-          label: "电台",
-          value: "/radio",
-        },
-      ],
-    };
+    return {}
   },
   setup() {
-    const { setPlayerShow } = playerSetup();
+    const router = useRouter()
+    const route = useRoute()
+    const menuActive = ref('/recom')
+    const list = [
+      {
+        label: '推荐',
+        value: '/recom',
+      },
+      {
+        label: '音乐馆',
+        value: '/hall',
+      },
+      {
+        label: '电台',
+        value: '/radio',
+      },
+    ]
+    const { setPlayerShow } = playerSetup()
+
+    const setRouter = (val: string) => {
+      router.push({ path: val })
+    }
+
+    watch(
+      () => menuActive.value,
+      (val) => {
+        setRouter(val)
+      },
+      { immediate: true }
+    )
+
+    watch(
+      () => route,
+      (val) => {
+        if (!list.find((item) => item.value === val.path)) {
+          return
+        }
+        menuActive.value = val.path
+      },
+      { deep: true }
+    )
+
     return {
       openPlayer: setPlayerShow,
-    };
+      list,
+      menuActive,
+      setRouter
+    }
   },
-  watch: {
-    menuActive: {
-      immediate: true,
-      handler(val) {
-        this.setRouter(val);
-      },
-    },
-    $route: {
-      handler(val) {
-        if (!this.list.find((item) => item.value === val.path)) {
-          return;
-        }
-        this.menuActive = val.path;
-      },
-    },
-  },
-  methods: {
-    setRouter(val: string) {
-      this.$router.push({ path: val });
-    },
-  },
-});
+})
 </script>
 
 <style lang="scss" scoped>
-@import "~@/style/layout.scss";
+@import '~@/style/layout.scss';
 .navbar {
   height: #{$navbarHeight};
   background: #{$appBackColor};

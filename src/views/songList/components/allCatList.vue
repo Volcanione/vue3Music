@@ -1,11 +1,11 @@
 <template>
-  <transition name="fade" @after-enter="afterEnter">
+  <transition name="fade" >
     <div class="songListCat" v-if="modelValue" v-loading="loadingState">
       <ScrollPage ref="ScrollPage">
         <div class="cat" v-for="cat in catList" :key="cat.cat">
           <div class="name">{{cat.cat}}</div>
           <div class="catContent">
-            <span class="item" v-for="item in cat.list" :key="item.name">{{item.name}}</span>
+            <span class="item" v-for="item in cat.list" :key="item.name" @click="checkCat(item)">{{item.name}}</span>
           </div>
         </div>
       </ScrollPage>
@@ -13,10 +13,11 @@
   </transition>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, watch, ref, nextTick } from 'vue'
+import { defineComponent, PropType, watch, ref } from 'vue'
 import ScrollPage from '@/components/ScrollPage/index.vue'
 import api from '@/api/index'
 export default defineComponent({
+  emits: ['confirm', 'update:modelValue'],
   name: 'searchTip',
   components: { ScrollPage },
   props: {
@@ -60,13 +61,22 @@ export default defineComponent({
       ScrollPage?.value?.refresh()
     }
 
-    const afterEnter = () => {}
+
+    //点击分类
+    const checkCat = (item: any) => {
+      emit('confirm', item)
+      close()
+    }
+    //关闭窗口
+    const close = () => {
+      emit('update:modelValue', false)
+    }
 
     return {
-      afterEnter,
       loadingState,
       ScrollPage,
       catList,
+      checkCat,
     }
   },
 })
