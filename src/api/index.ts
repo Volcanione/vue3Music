@@ -4,7 +4,8 @@ import {
   APISearchSuggest,
   APISearchResult,
   APIGetMusicUrl,
-  APIGetTopSongList
+  APIGetTopSongList,
+  APIGetSongDetail
 } from "@/interface/index";
 export default {
   //获取banner
@@ -142,11 +143,19 @@ export default {
   },
 
   //获取歌单列表
-  geSongList(data: APIGetTopSongList) {
+  getSongListAll(data: APIGetTopSongList) {
     return request({
       url: '/top/playlist',
       method: "post",
       data
+    })
+  },
+  //获取歌单详情
+  getSongDetail(data: APIGetSongDetail) {
+    return request({
+      url: '/playlist/detail',
+      method: "post",
+      data 
     })
   }
 };

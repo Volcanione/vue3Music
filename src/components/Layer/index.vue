@@ -31,8 +31,8 @@ export default defineComponent({
     const routeBack = ref(false)
     const route = useRoute()
     const layerRef = ref(null) as any
-    const fromParent = ref([]) as any
-    const toName = ref(null) as any
+    // const fromParent = ref([]) as any
+    // const toName = ref(null) as any
 
     const comId = computed(() => {
       const Param = Object.values(route.params).length

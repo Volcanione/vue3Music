@@ -19,7 +19,7 @@ export function songlistSetup(catType: any) {
 
   const getSongList = async (state = false, refresh?: boolean) => {//请求数据
     loadingState.value = false
-    const { code, playlists, total: sum } = await api.geSongList(searchParam)
+    const { code, playlists, total: sum } = await api.getSongListAll(searchParam)
     loadingState.value = true
     if (code !== 200) {
       return;

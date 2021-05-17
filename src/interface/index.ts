@@ -41,7 +41,14 @@ export interface APIGetMusicUrl {
 }
 
 
+
+
 export interface APIGetTopSongList extends APIGetSongList {
   cat: string
   offset: number
+}
+
+
+export interface APIGetSongDetail {
+  id: string | number;
 }

@@ -64,7 +64,7 @@ import SongItem from './components/Item/SongItem.vue'
 import MusicItem from './components/Item/MusicItem.vue'
 import MvItem from './components/Item/MvItem.vue'
 import { defineComponent, nextTick, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { $msg } from '@/components/Msg/index'
 import { getPublicDate, getPrivateDate } from './steup'
 import { musicSetup } from '@/layout/components/Player/setup'
@@ -169,6 +169,12 @@ export default defineComponent({
     const checkMusicItem = (data: any) => {
       setPlayerNow(data)
     }
+
+    onBeforeRouteLeave((to) => {
+      if (to.name === 'SongListDetail') {
+        to.meta.parent = null
+      }
+    })
 
     return {
       ...PUBLIC,

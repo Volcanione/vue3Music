@@ -82,7 +82,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     meta: {
       parent: ["SongList", "SearchResult", 'SongListCat'],
-      reuse:true//多层级页面多次使用并包含首页直接跳转的二级
     },
   },
   {
