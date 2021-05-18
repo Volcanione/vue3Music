@@ -75,9 +75,6 @@ export default defineComponent({
       ],
     };
   },
-  created() {
-    this.init();
-  },
   setup(props) {
     const { search, searchSuggest, clearSearch, } = searchFn();
 
@@ -96,12 +93,12 @@ export default defineComponent({
       pullUp,
       confirmItem
     } = searchResult();
+    init()
     return {
       search,
       searchSuggest,
       clearSearch,
       type,
-      init,
       changeType,
       resultList,
       loadingState,

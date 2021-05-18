@@ -76,9 +76,6 @@ export default defineComponent({
     MusicItem,
     MvItem,
   },
-  async created() {
-    this.init()
-  },
   setup() {
     //初始化路由
     const router = useRouter()
@@ -176,10 +173,11 @@ export default defineComponent({
       }
     })
 
+    init()
+
     return {
       ...PUBLIC,
       ...PRIVATE,
-      init,
       handlerClick,
       pullDownrefresh,
       pullUploading,

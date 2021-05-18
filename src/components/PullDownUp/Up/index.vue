@@ -1,11 +1,7 @@
 <template>
   <div class="pullDown">
     <transition name="fade">
-      <img
-        class="icon"
-        src="@/style/icons/svg-loaders/oval.svg"
-        v-if="setloading"
-      />
+      <img class="icon" src="@/style/icons/svg-loaders/oval.svg" v-if="setloading" />
       <span v-else class="tip">
         <slot />
       </span>
@@ -14,22 +10,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, computed, toRefs } from 'vue'
 export default defineComponent({
   props: {
     state: {
       type: Number as PropType<number>,
     },
   },
-  computed: {
-    setloading() {
-      if (this.state === 0) {
-        return true;
+  setup(props) {
+    const { state } = toRefs(props)
+    const setloading = computed(() => {
+      if (state?.value === 0) {
+        return true
       }
-      return false;
-    },
+      return false
+    })
+    return {
+      setloading,
+    }
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .pullDown {

@@ -1,5 +1,5 @@
 <template>
-  <div class="Nav" :style="styleObject">
+  <div class="Nav">
     <div class="left">
       <slot name="left" />
       <span class="back" v-if="!$slots.left" @click="handlerBack">
@@ -13,6 +13,7 @@
     <div class="right" v-if="right">
       <slot name="right" />
     </div>
+    <div class="bgImg" v-if="bgImgStyle" :style="bgImgStyle"></div>
   </div>
 </template>
 <script lang="ts">
@@ -28,18 +29,13 @@ export default defineComponent({
       type: Function as PropType<() => void>,
       required: false,
     },
-    background: {
-      type: String as PropType<string>,
-      default: '',
+    bgImgStyle: {
+      type: Object as PropType<object>,
+      required: false,
     },
   },
   setup(props) {
     const router = useRouter()
-    const styleObject = computed(() => {
-      return props.background
-        ? { background: props.background, color: '#fff' }
-        : null
-    })
     const handlerBack = () => {
       if (props.back) {
         return props.back()
@@ -48,7 +44,6 @@ export default defineComponent({
     }
     return {
       handlerBack,
-      styleObject,
     }
   },
 })
@@ -61,6 +56,20 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   width: 100%;
+  position: relative;
+  .bgImg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-position: center calc(50% - 44px);
+    background-size: 100% auto;
+    opacity: 0;
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+    overflow: hidden;
+    background-color:#{$appBackColor};
+  }
   .left,
   .right {
     width: 44px;

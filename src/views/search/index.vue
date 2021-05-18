@@ -70,9 +70,6 @@ import SearchTip from "./components/SearchTip.vue";
 export default defineComponent({
   name: "search",
   components: { SearchTip },
-  created() {
-    this.init();
-  },
   setup() {
     const init = () => {
       getSearchKey();
@@ -100,11 +97,10 @@ export default defineComponent({
         });
       }
     );
-
+    init()
     return {
       search,
       searchSuggest,
-      init,
       searchHistoryList,
       searchTipRef,
       searchHotList,

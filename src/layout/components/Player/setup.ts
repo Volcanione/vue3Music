@@ -15,7 +15,7 @@ export function playerSetup() {
   // const playerListShow = toRef(player, "playerListShow");
   const playerNow = toRef(playerGetter, "player/nowPlay");
 
-  const { playerMode, playerState, playerShow, playerListShow,playerProgess } = toRefs(player)
+  const { playerMode, playerState, playerShow, playerListShow, playerProgess } = toRefs(player)
   //打开关闭页面
   const setPlayerShow = (state = false) => {
     store.commit("player/setPlayerShow", state);
@@ -106,8 +106,9 @@ export function playerSetup() {
 export function musicSetup() {
   const store: any = useStore();
   //添加至当前播放
-  const setPlayerNow = (data: PlayListType) => {
-    store.commit("player/addToPlayerList", data);
+  const setPlayerNow = (data: PlayListType[] | PlayListType) => {
+    // store.commit("player/addToPlayerList", data);
+    store.dispatch("player/addListPlaying",data)
   }
   //删除歌曲
   const removePlayList = (data?: PlayListType) => {

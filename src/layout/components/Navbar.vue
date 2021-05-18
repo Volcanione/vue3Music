@@ -10,7 +10,7 @@
           }
         " />
     </div>
-    <span class="right-btn" @click="setRouter('/setting')">
+    <span class="right-btn" @click="setRouter('/my')">
       <i class="iconfont">&#xe643;</i>
     </span>
   </div>

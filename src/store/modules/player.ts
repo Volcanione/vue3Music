@@ -13,7 +13,7 @@ import { getIdx, getrandomData } from "@/utils/index";
 
 const state: STATETYPE = {
   playerShow: false,
-  playerMode: "alone",
+  playerMode: "list",
   playerState: false,
   playerList: [
   ],//所有加入播放列表的音乐
@@ -43,7 +43,6 @@ const mutations = {
       });
     } else {
       //打开播放器
-      mutations.setPlayerShow(state, true)
       const idx = getIdx<PlayListType>(state.playerList, data, "id");
       if (idx === -1) {
         // state.playerList.splice(idx, 1);
@@ -51,9 +50,10 @@ const mutations = {
       }
       // state.playerList.unshift(data);
       //添加歌曲为对象时 会自动播切换当前放音乐
-      mutations.setNowPlaye_History(state, data)
-      mutations.setPlayerState(state, true)
     }
+    mutations.setNowPlaye_History(state, data instanceof Array ? data[0] : data)
+    mutations.setPlayerShow(state, true)
+    mutations.setPlayerState(state, true)
   },
   setPlayerListShow(state: STATETYPE, data: boolean) {
     state.playerListShow = data;
@@ -67,7 +67,6 @@ const mutations = {
 
     const lidx = getIdx<PlayListType>(state.playerHistory, data, "id");
     state.playerHistory.splice(lidx, 1);
-
 
   },
   setNowPlaye_History(state: STATETYPE, data: PlayListType) {
@@ -154,6 +153,13 @@ const actions = {
       commit('setPrevPlaye_History')
       return res({ code: 200, msg: '上一首' })
     })
+  },
+
+  async addListPlaying({ commit, }: any, data: PlayListType[] | PlayListType) {
+    commit('addToPlayerList', data)
+    commit('setNowPlaye_History', data instanceof Array ? data[0] : data)
+    commit('setPlayerState', true)
+    commit('setPlayerShow', true)
   }
 };
 

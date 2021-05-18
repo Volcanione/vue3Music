@@ -51,10 +51,10 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/setting",
-    name: "Setting",
+    path: "/my",
+    name: "My",
     components: {
-      layer: () => import("@/views/setting/index.vue"),
+      layer: () => import("@/views/my/index.vue"),
     },
   },
   {
@@ -82,26 +82,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     meta: {
       parent: ["SongList", "SearchResult", 'SongListCat'],
-    },
-  },
-  {
-    path: "/test",
-    name: "Test",
-    components: {
-      layer: () => import("@/views/setting/test.vue"),
-    },
-    meta: {
-      parent: "Setting",
-    },
-  },
-  {
-    path: "/test2",
-    name: "Test2",
-    components: {
-      layer: () => import("@/views/setting/test2.vue"),
-    },
-    meta: {
-      parent: "Test",
     },
   },
 ];

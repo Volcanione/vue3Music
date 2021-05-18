@@ -20,4 +20,10 @@ export default {
       method: "post",
     });
   },
+  getUserInfo() {
+    return request({
+      url: "/user/account",
+      method: "post",
+    });
+  }
 };

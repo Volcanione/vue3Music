@@ -2,16 +2,21 @@ import user from "@/api/user";
 interface STATETYPE {
   loginStatus: boolean;
   token: string;
+  userInfo: any
 }
 const state: STATETYPE = {
   loginStatus: false,
   token: "",
+  userInfo: {}
 };
 
 const mutations = {
   setLastPath(state: STATETYPE, data: any) {
     state.loginStatus = data;
   },
+  setUserInfo(state: STATETYPE, data: any) {
+    Object.assign(state.userInfo, data)
+  }
 };
 
 const actions = {

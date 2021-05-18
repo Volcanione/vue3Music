@@ -32,9 +32,6 @@ import { searchFn } from "../search/setup";
 import { useRouter } from "vue-router";
 export default defineComponent({
   name: "Hall",
-  created() {
-    this.init();
-  },
   setup() {
     const router = useRouter();
     const { getSearchDefault, search } = searchFn();
@@ -55,8 +52,8 @@ export default defineComponent({
       done();
     };
 
+    init()
     return {
-      init,
       pullDownrefresh,
       pullUploading,
       getSearchDefault,

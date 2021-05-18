@@ -34,9 +34,6 @@ import { songlistSetup } from './setup'
 export default defineComponent({
   components: { TabBar, AllCatList, SongItem },
   name: 'songList',
-  created() {
-    this.init()
-  },
   setup() {
     const router = useRouter()
     const catlist = ref([]) //歌单分类
@@ -51,7 +48,7 @@ export default defineComponent({
       pullUp,
       songListRef,
       changeType,
-      getSongDetaile
+      getSongDetaile,
     } = songlistSetup(catType)
 
     const init = async () => {
@@ -90,11 +87,10 @@ export default defineComponent({
         router.push({ name: 'SongListCat', params: { cat: name } })
       }
     }
-
+    init()
     return {
       catlist,
       catType,
-      init,
       allCatListshow,
       moreCatList,
       confirmCheckCat,
@@ -104,7 +100,7 @@ export default defineComponent({
       pullUp,
       songListRef,
       changeType,
-      getSongDetaile
+      getSongDetaile,
     }
   },
 })

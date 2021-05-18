@@ -52,3 +52,7 @@ export interface APIGetTopSongList extends APIGetSongList {
 export interface APIGetSongDetail {
   id: string | number;
 }
+
+export interface APIGetSongMusicDetail {
+  ids: string;
+}

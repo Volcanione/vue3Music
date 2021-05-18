@@ -3,6 +3,7 @@ import api from "@/api/index";
 import { LS_set, LS_get, LS_remove } from "@/utils/index";
 import { useRouter, useRoute } from "vue-router";
 import { $msg } from "@/components/Msg/index";
+import { musicSetup } from '@/layout/components/Player/setup'
 export function searchFn() {
   const router = useRouter();
   const route = useRoute();
@@ -119,6 +120,7 @@ export function searchResult() {
     offset: 0,
   }) as any
   //请求搜索结果
+  const { setPlayerNow } = musicSetup()
 
   const getsearchResult = async (state = false, refresh?: boolean) => {
     const { code, result } = await api.searchResult(searchParam);
@@ -190,24 +192,44 @@ export function searchResult() {
 
   //点击item
   const confirmItem = (data: any) => {
-    console.log(type.value);
-    let name = ''
+
+    let routename = ''
     switch (type.value) {
+      case 1:
+        return playMusic(data)
       case 1000:
-        name = 'SongListDetail'
+        routename = 'SongListDetail'
         break
     }
-    if (!name) {
+
+    if (!routename) {
       return
     }
     router.push({
-      name, params: {
+      name: routename, params: {
         cat: '搜索',
         id: data.id,
       },
       query: {
         name: data.name
       }
+    })
+  }
+
+  //点击单曲
+  const playMusic = async (data: any) => {
+    const { code, songs } = await api.getSongMusicDetail({ ids: data.id + '' })
+    if (code !== 200) {
+      return
+    }
+    const { id, name, ar, dt, al } = songs[0]
+    setPlayerNow({
+      id,
+      name,
+      album: { name: ar[0].name },
+      artists: ar[0].name,
+      duration: dt,
+      img: al.picUrl,
     })
   }
 

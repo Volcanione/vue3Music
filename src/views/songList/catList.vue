@@ -8,7 +8,7 @@
     <template #content>
       <div class="content">
         <div class="songlist" v-for="item in songList" :key="item.id">
-          <SongItem :key="item.id" :data="item" @click="getSongDetaile(item)"/>
+          <SongItem :key="item.id" :data="item" @click="getSongDetaile(item)" />
         </div>
       </div>
     </template>
@@ -22,9 +22,6 @@ import { songlistSetup } from './setup'
 export default defineComponent({
   name: 'songList',
   components: { SongItem },
-  created() {
-    this.init()
-  },
   setup() {
     const route = useRoute()
     const catType = ref(route.params.cat)
@@ -36,23 +33,22 @@ export default defineComponent({
       pullDown,
       pullUp,
       songListRef,
-      getSongDetaile
+      getSongDetaile,
     } = songlistSetup(catType)
 
     const init = async () => {
       //初始化
       initData()
     }
-
+    init()
     return {
       title,
-      init,
       songList,
       loadingState,
       pullDown,
       pullUp,
       songListRef,
-      getSongDetaile
+      getSongDetaile,
     }
   },
 })

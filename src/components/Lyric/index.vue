@@ -4,10 +4,10 @@
       <div class="box">
         <ScrollPage ref="scrollPageRef" :disabled="line" :key="key" :scrollBack="false">
           <template v-if="!checkLyricState">
-            <div class="item  ellipsis" :class="{active: activeIdx===index}" v-for="(item,index) in lyric_0" :key="item.time" :ref="lyricItemRef">{{item.lyricText}}</div>
+            <div class="item  ellipsis" :class="{active: activeIdx===index}" v-for="(item,index) in lyric_0" :key="item.time" :ref="lyricItemRef">{{item.lyricText||'••••••'}}</div>
           </template>
           <template v-else>
-            <div class="item  ellipsis" :class="{active: activeIdx===index}" v-for="(item,index) in lyric_1" :key="item.time" :ref="lyricItemRef">{{item.lyricText}}</div>
+            <div class="item  ellipsis" :class="{active: activeIdx===index}" v-for="(item,index) in lyric_1" :key="item.time" :ref="lyricItemRef">{{item.lyricText || '••••••'}}</div>
           </template>
         </ScrollPage>
       </div>
@@ -15,6 +15,7 @@
       </div>
     </div>
   </transition>
+  <div :class="{nodata:!line}" v-if="lyricData && !lyricData.lyric_0 && !lyricData.lyric_1">暂无歌词</div>
 </template>
 
 <script lang="ts">
@@ -125,7 +126,6 @@ export default defineComponent({
       }
     )
 
-
     return {
       scrollPageRef,
       lyricItemRef,
@@ -205,5 +205,13 @@ export default defineComponent({
       margin-left: 10px;
     }
   }
+}
+.nodata {
+  color: #fff;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

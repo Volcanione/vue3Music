@@ -1,96 +1,47 @@
 <template>
   <LayerPage ref="songDetailRef" :loading="loadingState" @pullDown="pullDown" class="songDetaile">
+    <template #pullDown="{ state }">
+      <PullDownSlot :state="state" white />
+    </template>
     <template #header>
-      <Nav background="transparent" class="Nav">
+      <Nav class="Nav" :bgImgStyle="bgImgStyle">
         {{name}}
       </Nav>
     </template>
     <template #content>
-      <div class="content"></div>
+      <div class="info">
+        <div class="imgBox"><img v-if="info?.coverImgUrl" v-layz="info?.coverImgUrl || ''" alt=""></div>
+        <div class="infoBox">
+          <span class="name">{{info.name}}</span>
+          <span class="subscribe"><i class="iconfont">&#xe870;</i> {{info.subscribedCount}}</span>
+          <span class="ellipsis">简介：{{info.description}}</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="toolBar">
+          <span class="playAll" @click="playAll"> <i class="iconfont">&#xe65b;</i>播放全部</span>
+          <span>{{info.trackCount}}</span>
+        </div>
+        <Item :data="songList" :type="1" v-if="songList.length" @confirm="checkMusicItem" />
+      </div>
     </template>
     <template #fixed>
-      <div class="top">
+      <div class="top" :style="topStyle">
         <img :src="`${info.coverImgUrl}?param=300y300`" :style="imgStyle">
       </div>
     </template>
   </LayerPage>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  onMounted,
-  nextTick,
-  onBeforeUnmount,
-  ref,
-} from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import api from '@/api/index'
+import { defineComponent } from 'vue'
+import Item from '@/views/search/components/Item/item.vue'
+import { songlistDetailSetup } from './setup'
 export default defineComponent({
-  name: 'songList',
-  created() {
-    this.init()
-  },
+  components: { Item },
   setup() {
-    const store: any = useStore()
-    const route = useRoute()
-    const name = route.query.name
-    const loadingState = ref(false)
-    const imgStyle = reactive({ opacity: 1, transform: `scale(1) translateY(-50%)` })
-    let scroll = null as any
-    const info = reactive({})
-    const init = () => {
-      getSongDetail()
-    }
-
-    const getSongDetail = async () => {
-      loadingState.value = false
-      const { code, playlist, privileges } = await api.getSongDetail({
-        id: route.params.id + '',
-      })
-      loadingState.value = true
-      if (code !== 200) {
-        return
-      }
-      Object.assign(info, playlist)
-    }
-
-    const setTopImg = () => {
-      scroll.on('scroll', scrollHandler)
-    }
-
-    const scrollHandler = ({ x, y }: any) => {
-      imgStyle.opacity = y > 0 ? 1 : Math.max(300 - Math.abs(y), 0) / 300
-      imgStyle.transform =
-        y > 0 ? ` scale(${1 + Math.abs(y) / 300}) translateY(-50%)` : ` scale(1) translateY(-50%)`
-
-      console.log(imgStyle.transform)
-    }
-
-    onMounted(async () => {
-      scroll = store.state.route.routerScroll
-      await nextTick()
-      setTopImg()
-    })
-
-    onBeforeUnmount(() => {
-      scroll.off('scroll', scrollHandler)
-      scroll = null
-    })
-
-    const pullDown = (done: () => void) => {
-      done()
-    }
-
-    return {
-      name,
-      init,
-      info,
-      loadingState,
-      pullDown,
-      imgStyle,
-    }
+    const data = songlistDetailSetup()
+    data.init()
+    return data
   },
 })
 </script>
@@ -103,13 +54,17 @@ export default defineComponent({
   .Nav {
     position: fixed;
     z-index: 1;
+    background: transparent;
+    color: #333;
   }
   .top {
     width: 100%;
     position: absolute;
     top: 0;
     z-index: -1;
-    height: 300px;
+    height: 200px;
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
     img {
       width: 100%;
       height: auto;
@@ -119,12 +74,64 @@ export default defineComponent({
       transform: translateY(-50%);
     }
   }
+  .info {
+    height: 200px;
+    padding: 44px 10px 10px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    .imgBox {
+      width: 110px;
+      height: 110px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      // border: 4px solid rgba(219, 214, 214, 0.1);
+      padding: 4px;
+      img {
+        display: block;
+        border-radius: 8px;
+      }
+    }
+    .infoBox {
+      flex: 1;
+      overflow: hidden;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      color: #fff;
+      .name {
+        font-size: 18px;
+        margin-bottom: 20px;
+        line-height: 24px;
+      }
+      .subscribe {
+        margin-bottom: 10px;
+      }
+    }
+  }
   .content {
-    height: 1000px;
     position: relative;
     z-index: 1;
-    margin-top: 300px;
     background: #{$appBackColor};
+    overflow: hidden;
+    min-height: calc(100vh - 200px);
+    flex: 1;
+    .toolBar {
+      height: 40px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      span {
+        .iconfont {
+          margin-right: 10px;
+          font-size: 12px !important;
+        }
+        font-size: 12px !important;
+      }
+    }
   }
 }
 </style>

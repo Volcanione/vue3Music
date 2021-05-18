@@ -6,7 +6,8 @@
     <div class="content" v-loading="loading">
       <ScrollPage @refresh="pullDownrefresh" :pull-down="pullDown" @loading="pullUploading" :pull-Up="pullUp" ref="ScrollPage" :forcedUpdates="forcedUpdates">
         <template #pullDown="{ state }">
-          <PullDownSlot :state="state" />
+          <PullDownSlot :state="state" v-if="!$slots.pullDown" />
+          <slot name="pullDown" :state="state" />
         </template>
         <div class="viewContent">
           <slot name="content" />
