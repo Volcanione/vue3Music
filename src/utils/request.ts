@@ -16,15 +16,6 @@ let loginState = true
 // request interceptor
 service.interceptors.request.use(
   async (config: any) => {
-    // do something before request is sent
-    // if (store.getters.token) {
-    //   config.data = config.data || {}
-    //   config.data['usertoken'] = store.getters.token
-    //   // let each request carry token
-    //   // ['X-Token'] is a custom headers key
-    //   // please modify it according to the actual situation
-    //   // config.headers['X-Token'] = getToken()
-    // }
     const { method, params = {} } = config;
     const cookie = getCookie('cookie')
     if (method === "post") {

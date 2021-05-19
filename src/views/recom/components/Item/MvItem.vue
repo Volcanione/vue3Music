@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <div class="box">
-      <div class="imgBox"> <img v-layz="data.picUrl" alt="" /></div>
+      <div class="imgBox"> <img v-layz="data.picUrl+'?param=110y110'" alt="" /></div>
       <span class="tip"> <i></i>10万 </span>
     </div>
     <div class="info">{{ data.name }}</div>

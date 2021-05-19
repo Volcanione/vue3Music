@@ -165,7 +165,6 @@ export function songlistDetailSetup() {
     const { code, playlist } = await api.getSongDetail({
       id: route.params.id + '',
     })
-    loadingState.value = true
     if (code !== 200) {
       return
     }
@@ -177,6 +176,7 @@ export function songlistDetailSetup() {
       return id
     }).join(',')
     const data = await getSongMusicDetail(ids)
+    loadingState.value = true
     songList.value = data.map(({ id, name, ar, dt, al }: any) => {
       return {
         id,
@@ -188,6 +188,10 @@ export function songlistDetailSetup() {
       }
     })
     await nextTick()
+    refreshScroll()
+  }
+
+  const refreshScroll = () => {
     scroll.refresh()
   }
 
@@ -257,5 +261,6 @@ export function songlistDetailSetup() {
     songList,
     checkMusicItem,
     playAll,
+    refreshScroll
   }
 }

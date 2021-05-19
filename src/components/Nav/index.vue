@@ -65,8 +65,8 @@ export default defineComponent({
     background-position: center calc(50% - 44px);
     background-size: 100% auto;
     opacity: 0;
-    -webkit-filter: blur(2px);
-    filter: blur(2px);
+    // -webkit-filter: blur(2px);
+    // filter: blur(2px);
     overflow: hidden;
     background-color:#{$appBackColor};
   }

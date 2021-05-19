@@ -1,4 +1,5 @@
 export const apiAuthlist = [
     '/recommend/resource',
-    '/recommend/songs'
+    '/recommend/songs',
+    '/user/playlist',
 ];

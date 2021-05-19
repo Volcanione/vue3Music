@@ -1,9 +1,21 @@
+
 import router from "./router";
 import store from "./store";
 
 const WHITElIST = ["Hall", "Recom", "Radio"];
 
-router.beforeEach(async (to: any, from: any, next: () => void) => {
+router.beforeEach(async (to: any, from: any, next: (path?: any) => void) => {
+
+
+  if (to.name === 'My') {
+    try {
+      await store.dispatch("user/getLoginStatus");
+    } catch (error) {
+      return next('login');
+    }
+
+  }
+
   if (
     !WHITElIST.includes(from.name) &&
     from.name &&

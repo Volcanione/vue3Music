@@ -39,7 +39,7 @@ export default defineComponent({
       return (
         <div class="album" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="imgBox">
-            <img v-layz={item.blurPicUrl} />
+            <img v-layz={item.blurPicUrl+'?param=100y100'} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -53,7 +53,7 @@ export default defineComponent({
       return (
         <div class="arts" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
-            <img v-layz={item.img1v1Url} />
+            <img v-layz={item.img1v1Url+'?param=100y100'} />
           </div>
           <div class="right">
             <span class="ellipsis">{item.name}</span>
@@ -67,11 +67,11 @@ export default defineComponent({
       return (
         <div class="songList" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
-            <img v-layz={item.coverImgUrl} />
+            <img v-layz={item.coverImgUrl+'?param=100y100'} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
-            <span class="count">{item.bookCount}首</span>
+            <span class="count">{item.bookCount || item.trackCount}首</span>
           </div>
         </div>
       )
@@ -81,7 +81,7 @@ export default defineComponent({
       return (
         <div class="Mv" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
-            <img v-layz={item.cover} />
+            <img v-layz={item.cover+'?param=100y100'} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -98,7 +98,7 @@ export default defineComponent({
       return (
         <div class="radio" key={item.id} onClick={()=>{emit('confirm',item)}}>
           <div class="ImgBox">
-            <img v-layz={item.picUrl} />
+            <img v-layz={item.picUrl+'?param=100y100'} />
           </div>
           <div class="right">
             <span>{item.name}</span>

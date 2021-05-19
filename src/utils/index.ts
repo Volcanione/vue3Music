@@ -57,3 +57,7 @@ export const setCookie = (name: string, data: string) => {
 export const getCookie = (name: string) => {
   return Cookies.get(name)
 }
+
+export const removeCookie = (name: string) => {
+  return Cookies.remove(name)
+}

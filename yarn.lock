@@ -873,12 +873,26 @@
   dependencies:
     "@better-scroll/shared-utils" "^2.2.1"
 
+"@better-scroll/core@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@better-scroll/core/-/core-2.3.1.tgz#4c29a3b7ea462c659dba0a288a060ddb1a4dde14"
+  integrity sha512-X/10f+1Rxxpad4h8NmToVToED3+vRJIAhMaoXDIOUJ6Glq+ruImxpKStuZ663Ceu+yk2j3TtBwHeOBHWtx8rxA==
+  dependencies:
+    "@better-scroll/shared-utils" "^2.3.1"
+
 "@better-scroll/infinity@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@better-scroll/infinity/-/infinity-2.2.1.tgz#d5aa9efdc37fe5bc388c62fe1d723826cf911d7c"
   integrity sha512-z2TspGWE3MnN9p2r19mn5JP7I6sXZt6cwVGZtjW98T1dpJCq0gkLEfXBpD8KvLfNMuwTR8QP3TCPe9ERnDaT7Q==
   dependencies:
     "@better-scroll/core" "^2.2.1"
+
+"@better-scroll/nested-scroll@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@better-scroll/nested-scroll/-/nested-scroll-2.3.1.tgz#d8ca13cec7e36449a1536c26b52fe633dc68c914"
+  integrity sha512-w/qbUtZRoeTZTHQ3KlMCDB0rA51jiJpWvJKsM8k/wM5WC+hin5VE2jq90PP8vIrNhH5gJlRbrK70Da12hd4lbQ==
+  dependencies:
+    "@better-scroll/core" "^2.3.1"
 
 "@better-scroll/pull-down@^2.2.1":
   version "2.2.1"
@@ -898,6 +912,11 @@
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@better-scroll/shared-utils/-/shared-utils-2.2.1.tgz#eb024feee1d37598a9b04fc18ca0d8b31f34f704"
   integrity sha512-EDkIp/93CcdMYyVfdIqga1edErmolEQvi9xI0lmBxYl1dSBGZxVQgAmBunqw7zXODwJOAWcS7mhcIGu0H/oS5Q==
+
+"@better-scroll/shared-utils@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@better-scroll/shared-utils/-/shared-utils-2.3.1.tgz#e863a6ed32aa79d37870dafe26b052827017a88f"
+  integrity sha512-w0VjSDAYArTnq1PyDoikdHlOTNrNVgWeYZCej3iVC/JQuhHH/wpROPUFjdF9hz8REF4+ACluX9Y+fMYy5do5vA==
 
 "@better-scroll/slide@^2.2.1":
   version "2.2.1"

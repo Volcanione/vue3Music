@@ -14,6 +14,11 @@ export interface BScrollType {
   [propName: string]: any;
 }
 
+interface LimitOffset {
+  limit?: number;
+  offset?: number;
+}
+
 export interface APIGetSongList {
   limit: number;
 }
@@ -28,10 +33,11 @@ export interface APISearchSuggest {
   type?: string | number;
 }
 
-export interface APISearchResult extends APISearchSuggest {
-  limit?: number;
-  offset?: number;
-}
+
+
+
+
+export interface APISearchResult extends APISearchSuggest, LimitOffset { }
 
 
 
@@ -55,4 +61,17 @@ export interface APIGetSongDetail {
 
 export interface APIGetSongMusicDetail {
   ids: string;
+}
+
+export interface APIGetSongMusicDetail {
+  ids: string;
+}
+
+export interface APIGetUserPlaylist extends LimitOffset {
+  uid: number | string;
+}
+
+export interface APIGetUserRecord {
+  uid: number | string;
+  type?: number
 }

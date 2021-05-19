@@ -10,7 +10,7 @@
     </template>
     <template #content>
       <div class="info">
-        <div class="imgBox"><img v-if="info?.coverImgUrl" v-layz="info?.coverImgUrl || ''" alt=""></div>
+        <div class="imgBox"><img v-if="info?.coverImgUrl"  v-layz="info?.coverImgUrl" alt=""></div>
         <div class="infoBox">
           <span class="name">{{info.name}}</span>
           <span class="subscribe"><i class="iconfont">&#xe870;</i> {{info.subscribedCount}}</span>
@@ -63,8 +63,14 @@ export default defineComponent({
     top: 0;
     z-index: -1;
     height: 200px;
-    -webkit-filter: blur(10px);
-    filter: blur(10px);
+    &::after {
+      position: absolute;
+      content: '';
+      width: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      top: -100%;
+      bottom: 0;
+    }
     img {
       width: 100%;
       height: auto;
@@ -72,6 +78,8 @@ export default defineComponent({
       display: block;
       top: 50%;
       transform: translateY(-50%);
+      -webkit-filter: blur(10px);
+      filter: blur(10px);
     }
   }
   .info {
