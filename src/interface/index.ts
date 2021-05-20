@@ -33,7 +33,9 @@ export interface APISearchSuggest {
   type?: string | number;
 }
 
-
+export interface ApiGetBanner {
+  type?: number
+}
 
 
 
@@ -51,6 +53,7 @@ export interface APIGetMusicUrl {
 
 export interface APIGetTopSongList extends APIGetSongList {
   cat: string
+  order?: string
   offset: number
 }
 
@@ -67,11 +70,16 @@ export interface APIGetSongMusicDetail {
   ids: string;
 }
 
-export interface APIGetUserPlaylist extends LimitOffset {
-  uid: number | string;
-}
+export interface APIGetUserPlaylist extends LimitOffset,APIUid {}
 
 export interface APIGetUserRecord {
   uid: number | string;
   type?: number
+}
+export interface APIGetTopSong {
+  type: number
+}
+
+export interface APIUid {
+  uid: number | string
 }

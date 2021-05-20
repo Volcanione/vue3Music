@@ -13,7 +13,7 @@
         type="animation"
         :duration="300"
       >
-        <component :is="Component" ref="page" />
+        <component :is="Component" ref="pageRef" />
       </transition>
     </router-view>
   </div>
@@ -46,19 +46,19 @@ export default defineComponent({
     return setTabRouteView(props, context);
   },
   methods: {
-    afterEnter() {
-      const RouterView: any = this.$refs.page;
-      const refresh = RouterView.$refs?.ScrollPage?.refresh;
-      refresh && refresh();
-    },
-    //下拉
-    async pullDownrefresh(done: () => void) {
-      //组件请求数据的方法
-      const pageCom: any = this.$refs.page;
-      pageCom.init();
+    // afterEnter() {
+    //   const RouterView: any = this.$refs.page;
+    //   const refresh = RouterView.$refs?.ScrollPage?.refresh;
+    //   refresh && refresh();
+    // },
+    // //下拉
+    // async pullDownrefresh(done: () => void) {
+    //   //组件请求数据的方法
+    //   const pageCom: any = this.$refs.page;
+    //   pageCom.init();
 
-      await done();
-    },
+    //   await done();
+    // },
   },
 });
 </script>

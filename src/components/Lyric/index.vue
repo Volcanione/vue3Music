@@ -19,11 +19,9 @@
 </template>
 
 <script lang="ts">
-import ScrollPage from '@/components/ScrollPage/index.vue'
 import { defineComponent, PropType, ref, watch, nextTick } from 'vue'
 import { lyricRegular, NextTimeArray } from '@/utils/player'
 export default defineComponent({
-  components: { ScrollPage },
   props: {
     line: {
       type: Boolean as PropType<boolean>,

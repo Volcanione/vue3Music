@@ -23,11 +23,9 @@
   </div>
 </template>
 <script lang="ts">
-import ScrollPage from '@/components/ScrollPage/index.vue'
 import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
-  components: { ScrollPage },
   props: {
     loading: {
       type: Boolean as PropType<boolean>,

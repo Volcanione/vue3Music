@@ -18,9 +18,9 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive,getCurrentInstance } from "vue";
 import { getUserType } from "@/utils/index";
-import { $msg } from "@/components/Msg/index";
+// import { $msg } from "@/components/Msg/index";
 import api from "@/api/user";
 import { useRouter } from "vue-router";
 import {setCookie} from '@/utils'
@@ -30,6 +30,7 @@ export default defineComponent({
     return {};
   },
   setup() {
+     const { ctx }: any = getCurrentInstance()
     const router = useRouter();
     const form = reactive({
       user: "",
@@ -37,11 +38,11 @@ export default defineComponent({
     });
     const login = async () => {
       if (!form.user || !form.password) {
-        return $msg({ title: "账号或密码不能为空" });
+        return ctx.$msg({ title: "账号或密码不能为空" });
       }
       const type = getUserType(form.user);
       if (!type) {
-        return $msg({ title: "账号格式错误" });
+        return ctx.$msg({ title: "账号格式错误" });
       }
       const param = {
         [type]: form.user,
@@ -52,7 +53,7 @@ export default defineComponent({
         return;
       }
       setCookie('cookie',res.cookie)
-      await $msg({ title: "登录成功" });
+      await ctx.$msg({ title: "登录成功" });
       router.replace("/");
     };
     return {

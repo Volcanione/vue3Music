@@ -6,14 +6,18 @@ import {
   APIGetMusicUrl,
   APIGetTopSongList,
   APIGetSongDetail,
-  APIGetSongMusicDetail
+  APIGetSongMusicDetail,
+  ApiGetBanner,
+  APIGetTopSong,
+  APIUid
 } from "@/interface/index";
 export default {
   //获取banner
-  getBanner() {
+  getBanner(params?: ApiGetBanner) {
     return request({
       url: "/banner",
       method: "get",
+      params
     });
   },
 
@@ -163,6 +167,28 @@ export default {
   getSongMusicDetail(data: APIGetSongMusicDetail) {
     return request({
       url: '/song/detail',
+      method: "post",
+      data
+    })
+  },
+  //最新专辑
+  getAlbumNewest() {
+    return request({
+      url: '/album/newest',
+      method: "post",
+    })
+  },
+  //榜单摘要
+  getToplistDetail() {
+    return request({
+      url: '/toplist/artist',
+      method: "post",
+    })
+  },
+  //喜欢音乐列表
+  getLikelist(data: APIUid) {
+    return request({
+      url: '/likelist',
       method: "post",
       data
     })

@@ -3,7 +3,7 @@
     <div class="slide-banner-wrapper" ref="slideRef">
       <div class="slide-banner-content">
         <div v-for="(item, index) in data" class="slide-page" :key="index">
-          <div class="pageconent"><img :src="item.imageUrl" alt="" /></div>
+          <div class="pageconent"><img :src="item.imageUrl||item.pic" alt="" /></div>
         </div>
         <div class="slide-page" v-if="!data.length"></div>
       </div>

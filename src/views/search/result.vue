@@ -36,11 +36,10 @@
 import { defineComponent } from "vue";
 import { searchFn, searchResult } from "./setup";
 import SearchTip from "./components/SearchTip.vue";
-import { TabBar } from "@/components/Tab/index";
 import Item from "./components/Item/item.vue";
 export default defineComponent({
   name: "searchResult",
-  components: { SearchTip, TabBar, Item },
+  components: { SearchTip, Item },
   data() {
     return {
       list: [

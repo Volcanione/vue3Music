@@ -1,10 +1,10 @@
-import { ref, nextTick, reactive } from "vue";
+import { ref, nextTick, reactive, getCurrentInstance } from "vue";
 import { playerSetup } from '@/layout/components/Player/setup'
 import { getMusicPlayUrl, getMusicLyric } from './data'
-import { $msg } from '@/components/Msg/index'
+// import { $msg } from '@/components/Msg/index'
 
 export default () => {
-
+  const { ctx }: any = getCurrentInstance()
   const { playerState, playerNow, setPlayerState, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
     playerListShow, setProgess, playerProgess: progess, setPlayerShow } = playerSetup()
 
@@ -15,7 +15,6 @@ export default () => {
   // const progess = ref(0) //进度
   const duration = ref(0) //长度
   const musicLyric = reactive({})
-
 
   const getMusicDuration = () => {
     audioElement.value.onloadeddata = null
@@ -67,8 +66,8 @@ export default () => {
   }
 
 
-  const delErorr = async () => {
-    await $msg({ title: '暂无版权' })
+  const delErorr = async (type = false) => {
+    await ctx.$msg({ title: '暂无版权' })
     setProessDuration(0)
     if (playerList.length <= 1) {
       return setPlayerState(false)
@@ -77,7 +76,11 @@ export default () => {
     //跳转下一首
     //处理跳转逻辑
     //执行
-    playerState.value && updatePlayState(playerState.value)
+
+    setPlayerState(type)
+    await nextTick()
+    playerState.value && updatePlayState(type)
+
   }
 
 
@@ -101,7 +104,7 @@ export default () => {
     resetPlayState()
     const url = await getMusicPlayUrl(playerNow.value.id)
     if (!url) {
-      return delErorr()
+      return delErorr(type)
     }
     getLyric()
     setPlaySrc(url)
@@ -115,7 +118,7 @@ export default () => {
     } catch (error) {
       //错误处理
       console.log(1111, error);
-      delErorr()
+      delErorr(type)
     }
   }
 
@@ -129,14 +132,13 @@ export default () => {
   }
 
   //重置
-  const resetPlayState = () => {
+  const resetPlayState = async () => {
     audioElement.value?.load()
     currentTime.value = 0
     progess.value = 0
     duration.value = 0
     Object.assign(musicLyric, { lyric_0: null, lyric_1: null })
     setPlayerState(false)
-
   }
 
   //下一首

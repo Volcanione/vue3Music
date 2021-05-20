@@ -19,11 +19,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, watch, ref, nextTick } from "vue";
-import ScrollPage from "@/components/ScrollPage/index.vue";
 import api from "@/api/index";
 export default defineComponent({
   name: "searchTip",
-  components: { ScrollPage },
   props: {
     keyword: {
       type: String as PropType<string>,

@@ -16,9 +16,7 @@
 <script lang="ts">
 import { defineComponent, ref, PropType, watch } from 'vue'
 import { playerSetup } from '../setup'
-import { TabBar } from '@/components/Tab/index'
 export default defineComponent({
-  components: { TabBar },
   props: {
     active: {
       type: Number as PropType<number>,
@@ -35,7 +33,7 @@ export default defineComponent({
       {
         label: '歌词',
         value: 1,
-      }
+      },
     ]
     watch(
       () => props.active,
@@ -47,7 +45,7 @@ export default defineComponent({
     return {
       setPlayerShow,
       active,
-      list
+      list,
     }
   },
 })
@@ -72,17 +70,19 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     height: 35px;
-    ::v-deep(.TABBER) {
+    ::v-deep .TABBER {
       width: 100px;
       justify-content: space-between;
-      .item {
-        color: rgba(255, 255, 255, 0.5);
-        &.active {
-          color: #fff !important;
+      .root {
+        .item {
+          color: rgba(255, 255, 255, 0.5);
+          &.active {
+            color: #fff !important;
+          }
         }
-      }
-      .linetip {
-        background: transparent;
+        .linetip {
+          background: transparent;
+        }
       }
     }
   }

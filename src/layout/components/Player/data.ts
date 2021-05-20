@@ -1,5 +1,4 @@
 import api from '@/api/index'
-
 export async function getMusicPlayUrl(id: string | number) {
   let url = ''
   try {
@@ -25,4 +24,9 @@ export async function getMusicLyric(params: string | number) {
   const lyric_0 = lrc?.lyric || null
   const lyric_1 = tlyric?.lyric || null
   return { lyric_0, lyric_1 }
+}
+
+export async function getLikeList(uid: any) {
+  const res = await api.getLikelist({ uid })
+  console.log(res);
 }

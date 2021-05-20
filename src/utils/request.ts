@@ -16,11 +16,25 @@ let loginState = true
 // request interceptor
 service.interceptors.request.use(
   async (config: any) => {
-    const { method, params = {} } = config;
+    const { method, params = {}, data } = config;
     const cookie = getCookie('cookie')
     if (method === "post") {
       params["timestamp"] = +new Date();
     }
+
+
+
+    if (data?.limit && data?.offset) {
+      data.offset = data.offset * data.limit
+    }
+
+
+    if (params?.limit && params?.offset) {
+      params.offset = params.offset * params.limit
+    }
+
+
+
     cookie && (params['cookie'] = cookie)
     config.params = params
     if (apiAuthlist.includes(config.url)) {

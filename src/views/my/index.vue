@@ -45,7 +45,13 @@
 </template>
 <script lang="ts">
 import Item from '@/views/search/components/Item/item.vue'
-import { defineComponent, reactive, ref, nextTick } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  ref,
+  nextTick,
+  getCurrentInstance,
+} from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import user from '@/api/user'
@@ -54,6 +60,7 @@ export default defineComponent({
   components: { Item },
   name: 'my',
   setup() {
+    const { ctx }: any = getCurrentInstance()
     const store = useStore()
     const router = useRouter()
     const userInfo = reactive(store.getters.userInfo)
@@ -123,9 +130,9 @@ export default defineComponent({
 
     const logOut = async () => {
       //存在bug  登出后用户token等store信息未清空bug
-      return
       try {
         await store.dispatch('user/logOut')
+        ctx.$msg({ title: '当前账号已退出' })
         router.replace({
           path: '/recom',
         })

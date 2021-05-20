@@ -63,9 +63,9 @@ import Slide from '@/components/Slide/index.vue'
 import SongItem from './components/Item/SongItem.vue'
 import MusicItem from './components/Item/MusicItem.vue'
 import MvItem from './components/Item/MvItem.vue'
-import { defineComponent, nextTick, ref } from 'vue'
+import { defineComponent, nextTick, ref,getCurrentInstance } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
-import { $msg } from '@/components/Msg/index'
+// import { $msg } from '@/components/Msg/index'
 import { getPublicDate, getPrivateDate } from './steup'
 import { musicSetup } from '@/layout/components/Player/setup'
 export default defineComponent({
@@ -78,6 +78,7 @@ export default defineComponent({
   },
   setup() {
     //初始化路由
+    const { ctx }: any = getCurrentInstance()
     const router = useRouter()
     const PUBLIC = getPublicDate()
     const PRIVATE = getPrivateDate()
@@ -130,7 +131,7 @@ export default defineComponent({
             .map((fn: any) => fn())
         )
         await done(true)
-        $msg({ title: '更新成功' })
+        ctx.$msg({ title: '更新成功' })
       } catch (error) {
         await done(false)
       }
@@ -141,7 +142,7 @@ export default defineComponent({
     const pullUploading = async (done: (state?: number) => void) => {
       if (PrivateState.value) {
         await done(2)
-        $msg({ title: '没有内容了' })
+        ctx.$msg({ title: '没有内容了' })
         return
       }
       try {

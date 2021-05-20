@@ -11,7 +11,7 @@ import layz from "@/components/Layz/index";
 import msg from "@/components/Msg/index";
 const app = createApp(App);
 
-app.use(store).use(router).mount("#app");
+app.use(store).use(router)
 app.use(MyCom);
 app.use(msg);
 app.use(loading);
@@ -20,3 +20,4 @@ app.use(layz, {
   errorImg: loadImg,
   loadImg: loadImg,
 });
+app.mount("#app");

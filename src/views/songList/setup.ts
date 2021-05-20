@@ -1,18 +1,20 @@
 
 import api from '@/api/index'
-import { ref, reactive, nextTick, onMounted, onBeforeUnmount } from 'vue'
-import { $msg } from "@/components/Msg/index";
+import { ref, reactive, nextTick, onMounted, onBeforeUnmount,getCurrentInstance } from 'vue'
+// import { $msg } from "@/components/Msg/index";
 import ResizeObserver from 'resize-observer-polyfill'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { musicSetup } from '@/layout/components/Player/setup'
 export function songlistSetup(catType: any) {
+ const { ctx }: any = getCurrentInstance()
   const router = useRouter()
   const songList = ref(<any>[])//歌单
   const searchParam = reactive({ //搜索条件
     cat: catType,
     limit: 30,
-    offset: 0
+    offset: 0,
+    order:'hot'
   })
 
   const loadingState = ref(false)
@@ -56,7 +58,7 @@ export function songlistSetup(catType: any) {
     searchParam.offset++
     if (total.value <= songList.value.length) {
       await done(2);
-      return $msg({ title: "真的到底了" });
+      return ctx.$msg({ title: "真的到底了" });
     }
     try {
       await getSongList(true)

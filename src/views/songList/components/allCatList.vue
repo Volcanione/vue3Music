@@ -14,12 +14,10 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, watch, ref } from 'vue'
-import ScrollPage from '@/components/ScrollPage/index.vue'
 import api from '@/api/index'
 export default defineComponent({
   emits: ['confirm', 'update:modelValue'],
   name: 'searchTip',
-  components: { ScrollPage },
   props: {
     modelValue: {
       type: Boolean as PropType<boolean>,

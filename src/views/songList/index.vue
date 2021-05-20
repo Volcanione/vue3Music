@@ -24,15 +24,14 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref } from 'vue'
 import SongItem from '@/views/recom/components/Item/SongItem.vue'
-import { TabBar } from '@/components/Tab/index'
 import api from '@/api'
 import AllCatList from './components/allCatList.vue'
 import { useRouter } from 'vue-router'
 import { songlistSetup } from './setup'
 export default defineComponent({
-  components: { TabBar, AllCatList, SongItem },
+  components: {  AllCatList, SongItem },
   name: 'songList',
   setup() {
     const router = useRouter()

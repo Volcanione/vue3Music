@@ -33,7 +33,7 @@
                 最近没有播放过音乐哟
               </div>
             </div>
-            <div class="playList">
+            <div class="playList" v-loading="loadingState">
               <ScrollPage :scrollBack="false" v-if="userPlayList.length">
                 <div class="item" v-for="item in userPlayList" :key="item.id">
                   <span class="name ellipsis" @click.self="addPlayRecord(item)">{{item.name}}</span>
@@ -59,12 +59,11 @@
 import { defineComponent, ref, watch, nextTick } from 'vue'
 import { TweenMax } from 'gsap'
 import { playerSetup, musicSetup } from '@/layout/components/Player/setup'
-import ScrollPage from '@/components/ScrollPage/index.vue'
 import SlideWapper from '@/components/SlideWapper/wapper.vue'
 import { listSetUp } from './setup'
 import { useRouter } from 'vue-router'
 export default defineComponent({
-  components: { ScrollPage, SlideWapper },
+  components: {  SlideWapper },
   setup() {
     const router = useRouter()
     const {
@@ -84,6 +83,7 @@ export default defineComponent({
     const slideWapperRef = ref(null) as any
     const currentPage = ref(0)
     const wappperShow = ref(false)
+    const loadingState = ref(false)
 
     const beforeEnter = async (el: HTMLElement, done: any) => {
       wappperShow.value = true
@@ -113,7 +113,7 @@ export default defineComponent({
     }
 
     const addplay = (item: any) => {
-      console.log(11);
+      console.log(11)
       const state = playerShow.value
       setPlayerNow(item)
       setPlayerShow(state)
@@ -143,7 +143,9 @@ export default defineComponent({
         if (!val) {
           return
         }
-        getUserRecord()
+        loadingState.value = false
+        await getUserRecord()
+        loadingState.value = true
         await nextTick()
 
         refresh()
@@ -185,6 +187,7 @@ export default defineComponent({
       userPlayList,
       addPlayRecord,
       goLogin,
+      loadingState,
     }
   },
 })

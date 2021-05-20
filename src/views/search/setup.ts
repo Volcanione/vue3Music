@@ -1,8 +1,8 @@
-import { nextTick, ref, reactive } from "vue";
+import { nextTick, ref, reactive,getCurrentInstance } from "vue";
 import api from "@/api/index";
 import { LS_set, LS_get, LS_remove } from "@/utils/index";
 import { useRouter, useRoute } from "vue-router";
-import { $msg } from "@/components/Msg/index";
+// import { $msg } from "@/components/Msg/index";
 import { musicSetup } from '@/layout/components/Player/setup'
 export function searchFn() {
   const router = useRouter();
@@ -105,6 +105,7 @@ export function searchFn() {
 }
 
 export function searchResult() {
+ const { ctx }: any = getCurrentInstance()
   const type = ref(1);
   const route = useRoute();
   const router = useRouter();
@@ -180,7 +181,7 @@ export function searchResult() {
     searchParam.offset++
     if (total.value <= resultList.value.length) {
       await done(2);
-      return $msg({ title: "真的到底了" });
+      return ctx.$msg({ title: "真的到底了" });
     }
     try {
       await getsearchResult(true)
