@@ -1,5 +1,5 @@
 import Layz from "./index.vue";
-import { createVNode, render, App, watch, ref } from "vue";
+import { createVNode, render, App, watch, ref, computed, nextTick } from "vue";
 
 interface Options {
   errorImg?: string;
@@ -11,97 +11,113 @@ interface ImgConfig extends Options {
 }
 
 
-const config = (el: any, binding: any, options: Options, update?: boolean) => {
+
+const config = async (el: any, binding: any, options: Options, update = false) => {
+
   if (el.tagName !== "IMG") {
     return console.error("'Element tagName is not 'IMG'");
   }
 
-  const loadState = ref(0)
-  //load
-  const setloadImg = () => {
-    !update && setElStyle();
-    if (typeof binding?.value === "string") {
-      if (!options.errorImg || !options.loadImg) {
-        console.warn(
-          "When the layz config is a string, the global configuration is missing errorImg or loadImg,This may bring unnecessary errors!"
-        );
-      }
-      // el.src = options.loadImg
-      !update && loadConfig(options?.loadImg, options?.errorImg);
-    } else {
-      const Binding: ImgConfig = Object.assign(binding?.value || {}, {});
-      if (!Binding?.loadImg && !options?.loadImg) {
-        console.warn(
-          "When the layz config  is a Object,the global and local configuration must exist,Local weight is more than the global weight!"
-        );
-      }
-      // el.src = Binding.loadImg || options.loadImg
-      !update && loadConfig(Binding.loadImg || options.loadImg, Binding.errorImg || options.errorImg);
+  if (typeof binding?.value === "string") {
+    if (!options.errorImg || !options.loadImg) {
+      return console.warn(
+        "When the layz config is a string, the global configuration is missing errorImg or loadImg,This may bring unnecessary errors!"
+      );
     }
-  };
-
-  const loadConfig = (loadImg: any, errorImg: any) => {
-    const container = document.createElement("div");
-    const vnode = createVNode(Layz);
-    render(vnode, container);
-    el.appendChild(container);
-    const { props }: any = vnode.component
-    props.loadImg = loadImg
-    props.errorImg = errorImg
-    watch(() => loadState, () => {
-      props.loadState = loadState.value
-    }, { deep: true })
-
-    intersectionObserver.observe(el);
-  };
-
-  const setElStyle = () => {
-    const cloneDom = el.cloneNode(false);
-    const width = el.width
-    const height = el.height
-    const ImgDom = document.createElement("div") as any;
-    ImgDom.appendChild(cloneDom);
-    const ParentDom = el.parentElement;
-    if (ParentDom) {
-      ParentDom.replaceChild(ImgDom, el);
-      ImgDom.style.position = "relative";
-      width && (ImgDom.style.width = width + 'px')
-      height && (ImgDom.style.height = height + 'px')
-      el = ImgDom
+  } else {
+    const Binding: ImgConfig = Object.assign(binding?.value || {}, {});
+    if (!Binding?.loadImg && !options?.loadImg) {
+      return console.warn(
+        "When the layz config  is a Object,the global and local configuration must exist,Local weight is more than the global weight!"
+      );
     }
-  };
+  }
+
+  let parentDom = el
+
+  if (!update) {
+    parentDom = createImageBitmap(el, binding, options)
+  } else {
+    //图片路径为空到赋值时 存在bug 无法显示
+  }
 
 
-  //loading
-
-  const setImgUrl = () => {
-    const IMG = el.firstChild
-    IMG.src = binding.value?.src || binding.value
-    IMG.onload = () => {
-      loadState.value = 1
-    }
-    IMG.onerror = () => {
-      loadState.value = -1
-    }
-  };
-
+  //开启监听器
   const intersectionObserver = new IntersectionObserver(function (entries) {
     if (entries[0].intersectionRatio <= 0) return;
-    getElposition();
-  });
-  const getElposition = () => {
-    const { x, y } = el.getBoundingClientRect();
+    const { x, y } = parentDom.getBoundingClientRect();
     if (x > 0 || y > 0) {
-      if (loadState.value) {
-        return
-      }
-      setImgUrl();
+      setImg(parentDom, binding, options)
     }
-  };
-  //调用方法
-  setloadImg();
+  });
+  intersectionObserver.observe(parentDom);
 
 }
+
+//创建Dom
+const createImageBitmap = (el: any, binding: any, options: Options) => {
+  const cloneDom = el.cloneNode(false);
+  //创建dom
+  const container = document.createElement("div");
+  const LAYZNODE = createVNode(Layz);
+  render(LAYZNODE, container);
+  container.style.height = el.height + 'px'
+  container.style.width = el.width + 'px'
+  container.style.position = 'relative'
+  cloneDom.style.position = 'relative'
+  cloneDom.style.zIndex = 99
+  container.appendChild(cloneDom)
+  // el = container
+  el.parentNode.replaceChild(container, el)
+  // console.log(el.parentNode);
+  //创建数据
+
+
+
+  const { props, ctx }: any = LAYZNODE.component
+  props.loadImg = binding.value?.loadImg || options.loadImg
+  props.errorImg = binding.value?.errorImg || options.errorImg
+
+
+
+  const setImgState = (state: number) => {
+    ctx.setloadState(state)
+  }
+
+  Object.assign(binding.instance, {
+    _hub: {
+      setImgState: setImgState
+    }
+  })
+  return container
+}
+
+
+const setImg = (el: any, binding: any, options: any) => {
+  console.log(binding.value);
+  //设置图片路径
+  const imgUrl = computed(() => {
+    return binding.value?.src || binding.value
+  })
+
+
+  if (!imgUrl.value) {
+    return
+  }
+  const setImgState = binding.instance._hub.setImgState
+  el.lastChild.src = binding.value?.src || binding.value
+
+  el.lastChild.onload = () => {
+    setImgState(1)
+  }
+  el.lastChild.onerror = () => {
+    setImgState(-1)
+  }
+
+}
+
+
+
 
 
 const directive_layz = (app: App, options: Options) => {
@@ -111,6 +127,9 @@ const directive_layz = (app: App, options: Options) => {
     },
     updated(el: HTMLElement, binding: any) {
       // config(el, binding, options, true)
+      if (binding.value || binding.value?.src) {
+        config(el, binding, options, true)
+      }
     },
   });
 };

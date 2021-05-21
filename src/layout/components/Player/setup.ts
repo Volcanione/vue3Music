@@ -1,11 +1,10 @@
-import { nextTick, toRef, toRefs,getCurrentInstance } from "vue";
+import { toRef, toRefs } from "vue";
 import { useStore } from "vuex";
-// import { $msg } from "@/components/Msg/index";
+import { $msg } from "@/components/Msg/index";
 import { PlayListType } from "@/interface/music";
 const MODELIST = ["alone", "list", "random"];
 export function playerSetup() {
   //不要在这里用钩子函数 或者watch监听函数  会重复调用
-   const { ctx }: any = getCurrentInstance()
   const store: any = useStore();
   const player = store.state.player;
   const playerGetter = store.getters
@@ -38,7 +37,7 @@ export function playerSetup() {
   const setPlayerState = (state = false) => {
     if (!playerNow.value) {
       store.commit("player/setPlayerState", false);
-      return ctx.$msg({ title: "音乐列表空空如也" });
+      return $msg({ title: "音乐列表空空如也" });
     }
     store.commit("player/setPlayerState", state);
   };
@@ -49,7 +48,7 @@ export function playerSetup() {
     try {
       return await store.dispatch("player/prevPlayer");
     } catch (error) {
-      ctx.$msg({ title: error.msg })
+      $msg({ title: error.msg })
       return error
     }
   }
@@ -60,7 +59,7 @@ export function playerSetup() {
     try {
       return await store.dispatch("player/nextPlayer", update);
     } catch (error) {
-      ctx.$msg({ title: error.msg })
+      $msg({ title: error.msg })
       return error
     }
   }
@@ -108,7 +107,7 @@ export function musicSetup() {
   //添加至当前播放
   const setPlayerNow = (data: PlayListType[] | PlayListType) => {
     // store.commit("player/addToPlayerList", data);
-    store.dispatch("player/addListPlaying",data)
+    store.dispatch("player/addListPlaying", data)
   }
   //删除歌曲
   const removePlayList = (data?: PlayListType) => {

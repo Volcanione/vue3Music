@@ -8,25 +8,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 export default defineComponent({
   props: {
-    loadState: {
-      type: Number as PropType<number>,
-      default: 0,
-    },
     loadImg: {
-      type: String as PropType<string>,
-      default: '',
+      type: Number as PropType<number>,
+      default: 0
     },
     errorImg: {
       type: String as PropType<string>,
       default: '',
     },
   },
-  data() {
+  setup() {
+    const loadState = ref(0)
+    const setloadState = (code: number) => {
+      // loadState.value = code
+    }
     return {
-      loading: true,
+      loadState,
+      setloadState,
     }
   },
 })

@@ -13,7 +13,7 @@
     <template #content>
       <div class="infoBox">
         <div class="avatar">
-          <img :src="`${userInfo.avatarUrl}?param=100y100`">
+          <img v-layz="userInfo?.avatarUrl?`${userInfo?.avatarUrl}?param=100y100`:''">
         </div>
         <div class="infoText">
           <span class="nickname">{{userInfo.nickname}}</span>
@@ -38,29 +38,23 @@
     </template>
     <template #fixed>
       <div class="top" :style="topStyle">
-        <img :src="`${userInfo.backgroundUrl}?param=300y300`" :style="imgStyle">
+        <img  v-layz="userInfo?.backgroundUrl?`${userInfo?.backgroundUrl}?param=300y300`:''" :style="imgStyle">
       </div>
     </template>
   </LayerPage>
 </template>
 <script lang="ts">
 import Item from '@/views/search/components/Item/item.vue'
-import {
-  defineComponent,
-  reactive,
-  ref,
-  nextTick,
-  getCurrentInstance,
-} from 'vue'
+import { defineComponent, reactive, ref, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import user from '@/api/user'
 import { songlistDetailSetup } from '@/views/songList/setup'
+import { $msg } from '@/components/Msg/index'
 export default defineComponent({
   components: { Item },
   name: 'my',
   setup() {
-    const { ctx }: any = getCurrentInstance()
     const store = useStore()
     const router = useRouter()
     const userInfo = reactive(store.getters.userInfo)
@@ -132,7 +126,7 @@ export default defineComponent({
       //存在bug  登出后用户token等store信息未清空bug
       try {
         await store.dispatch('user/logOut')
-        ctx.$msg({ title: '当前账号已退出' })
+        $msg({ title: '当前账号已退出' })
         router.replace({
           path: '/recom',
         })

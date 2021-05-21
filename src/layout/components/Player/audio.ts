@@ -1,10 +1,9 @@
-import { ref, nextTick, reactive, getCurrentInstance } from "vue";
+import { ref, nextTick, reactive } from "vue";
 import { playerSetup } from '@/layout/components/Player/setup'
 import { getMusicPlayUrl, getMusicLyric } from './data'
-// import { $msg } from '@/components/Msg/index'
+import { $msg } from '@/components/Msg/index'
 
 export default () => {
-  const { ctx }: any = getCurrentInstance()
   const { playerState, playerNow, setPlayerState, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
     playerListShow, setProgess, playerProgess: progess, setPlayerShow } = playerSetup()
 
@@ -67,7 +66,7 @@ export default () => {
 
 
   const delErorr = async (type = false) => {
-    await ctx.$msg({ title: '暂无版权' })
+    await $msg({ title: '暂无版权' })
     setProessDuration(0)
     if (playerList.length <= 1) {
       return setPlayerState(false)
