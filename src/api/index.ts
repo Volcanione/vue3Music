@@ -9,7 +9,8 @@ import {
   APIGetSongMusicDetail,
   ApiGetBanner,
   APIGetTopSong,
-  APIUid
+  APIUid,
+  APIGetArtistList
 } from "@/interface/index";
 export default {
   //获取banner
@@ -189,6 +190,14 @@ export default {
   getLikelist(data: APIUid) {
     return request({
       url: '/likelist',
+      method: "post",
+      data
+    })
+  },
+    //喜欢音乐列表
+  getArtistList(data: APIGetArtistList) {
+    return request({
+      url: '/artist/list',
       method: "post",
       data
     })

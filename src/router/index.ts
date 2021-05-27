@@ -81,8 +81,15 @@ const routes: Array<RouteRecordRaw> = [
       layer: () => import("@/views/songList/detaile.vue"),
     },
     meta: {
-      parent: ["SongList", "SearchResult", 'SongListCat','My'],
+      parent: ["SongList", "SearchResult", 'SongListCat', 'My'],
     },
+  },
+  {
+    path: "/singer",
+    name: "SingerList",
+    components: {
+      layer: () => import("@/views/singer/index.vue"),
+    }
   },
 ];
 

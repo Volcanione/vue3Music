@@ -44,7 +44,7 @@
           <ScrollBox title="私人歌单" direction="x" height="170px" :update="PrivateSongList.length">
             <template #content>
               <div class="RadioList" v-for="item in PrivateSongList" :key="item.id">
-                <MvItem :data="item" :key="item.id" />
+                <MvItem :data="item" :key="item.id"  @click="handlerClick(item)" />
               </div>
             </template>
           </ScrollBox>

@@ -38,7 +38,9 @@
     </template>
     <template #fixed>
       <div class="top" :style="topStyle">
-        <img  v-layz="userInfo?.backgroundUrl?`${userInfo?.backgroundUrl}?param=300y300`:''" :style="imgStyle">
+        <div :style="imgStyle">
+          <img :src="userInfo?.backgroundUrl?`${userInfo?.backgroundUrl}?param=300y300`:''">
+        </div>
       </div>
     </template>
   </LayerPage>
@@ -206,12 +208,10 @@ export default defineComponent({
       height: 60px;
       border-radius: 50%;
       overflow: hidden;
-      padding: 2px;
       background: rgba(0, 0, 0, 0.3);
       img {
         width: 100%;
         height: 100%;
-        border-radius: 50%;
         display: block;
       }
     }

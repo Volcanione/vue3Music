@@ -30,11 +30,16 @@ export function hallSetup() {
     albumList.value = code === 200 ? albums : []
   }
 
-  const clickAlbum = ( item:any ) => {
-      console.log(item);
+  const clickAlbum = (item: any) => {
+    console.log(item);
   }
 
+  //跳转歌手
+  const gotoSinger = () => {
+    router.push("/singer");
+  }
 
+  //搜索
 
   const goSeach = () => {
     router.push("/search");
@@ -57,6 +62,7 @@ export function hallSetup() {
     goSeach,
     bannerList,
     albumList,
-    clickAlbum
+    clickAlbum,
+    gotoSinger
   }
 }

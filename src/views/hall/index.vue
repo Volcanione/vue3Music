@@ -31,7 +31,7 @@
           </span>
           <span class="title">榜单</span>
         </div>
-        <div class="item">
+        <div class="item" @click="gotoSinger">
           <span class="icon">
             <img src="@/style/icons/animal/lion.svg" alt="">
           </span>

@@ -70,7 +70,7 @@ export interface APIGetSongMusicDetail {
   ids: string;
 }
 
-export interface APIGetUserPlaylist extends LimitOffset,APIUid {}
+export interface APIGetUserPlaylist extends LimitOffset, APIUid { }
 
 export interface APIGetUserRecord {
   uid: number | string;
@@ -82,4 +82,9 @@ export interface APIGetTopSong {
 
 export interface APIUid {
   uid: number | string
+}
+
+export interface APIGetArtistList extends LimitOffset {
+  type?: number
+  area?: number
 }

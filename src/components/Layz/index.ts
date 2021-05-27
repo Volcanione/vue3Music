@@ -68,7 +68,8 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
   cloneDom.style.zIndex = 99
   container.appendChild(cloneDom)
   // el = container
-  el.parentNode.replaceChild(container, el)
+    // console.dir( el.parentNode,11);
+   el.parentNode && el.parentNode.replaceChild(container, el)
   // console.log(el.parentNode);
   //创建数据
 
@@ -94,7 +95,6 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
 
 
 const setImg = (el: any, binding: any, options: any) => {
-  console.log(binding.value);
   //设置图片路径
   const imgUrl = computed(() => {
     return binding.value?.src || binding.value
@@ -123,12 +123,16 @@ const setImg = (el: any, binding: any, options: any) => {
 const directive_layz = (app: App, options: Options) => {
   app.directive("Layz", {
     mounted(el: any, binding: any) {
-      config(el, binding, options)
+      if (binding.value || binding.value?.src) {
+        config(el, binding, options)
+      }else{
+        el.src = options.loadImg
+      }
     },
     updated(el: HTMLElement, binding: any) {
       // config(el, binding, options, true)
       if (binding.value || binding.value?.src) {
-        config(el, binding, options, true)
+        config(el, binding, options)
       }
     },
   });

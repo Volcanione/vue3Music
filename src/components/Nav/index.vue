@@ -57,6 +57,7 @@ export default defineComponent({
   justify-content: space-between;
   width: 100%;
   position: relative;
+  z-index: 1;
   .bgImg {
     position: absolute;
     width: 100%;
