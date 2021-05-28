@@ -194,7 +194,7 @@ export default {
       data
     })
   },
-    //喜欢音乐列表
+    //作者列表
   getArtistList(data: APIGetArtistList) {
     return request({
       url: '/artist/list',

@@ -23,7 +23,7 @@ export default defineComponent({
   setup() {
     const loadState = ref(0)
     const setloadState = (code: number) => {
-      // loadState.value = code
+      loadState.value = code
     }
     return {
       loadState,
@@ -42,7 +42,7 @@ export default defineComponent({
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 1;
   background: red;
   img {
     display: block;

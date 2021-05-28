@@ -126,7 +126,7 @@ export default defineComponent({
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255,1);
+    background: rgba(255, 255, 255, 1);
     -webkit-filter: blur(10px);
     filter: blur(10px);
     z-index: -1;
@@ -135,7 +135,7 @@ export default defineComponent({
     width: 40px;
     height: 40px;
     overflow: hidden;
-    ::v-deep .discBox .border {
+    :deep(.discBox .border) {
       border-width: 2px;
     }
   }

@@ -1,11 +1,11 @@
 <template></template>
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 dayjs.extend(duration)
 export default defineComponent({
-  emits:['confirm'],
+  emits: ['confirm'],
   props: {
     type: {
       type: Number as PropType<number>,
@@ -18,12 +18,18 @@ export default defineComponent({
       },
     },
   },
-  setup(props: any,{emit}) {
-    const data = props.data
-    const type = props.type
+  setup(props: any, { emit }) {
+    const data = computed(() => props.data) as any
+    const type = computed(() => props.type) as any
     const SongItem = (item: any) => {
       return (
-        <div class="song" key={item.id} onClick={()=>{emit('confirm',item)}}>
+        <div
+          class="song"
+          key={item.id}
+          onClick={() => {
+            emit('confirm', item)
+          }}
+        >
           <div class="left">
             <span class="name ellipsis">{item.name}</span>
             <span class="art">{item.album.name}</span>
@@ -37,9 +43,15 @@ export default defineComponent({
 
     const AlbumItem = (item: any) => {
       return (
-        <div class="album" key={item.id} onClick={()=>{emit('confirm',item)}}>
+        <div
+          class="album"
+          key={item.id}
+          onClick={() => {
+            emit('confirm', item)
+          }}
+        >
           <div class="imgBox">
-            <img v-layz={item.blurPicUrl+'?param=100y100'} />
+            <img v-layz={item.blurPicUrl + '?param=100y100'} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -49,11 +61,17 @@ export default defineComponent({
       )
     }
 
-    const artsItem = (item: any) => {
+    const artsItem = (item: any, idx: number) => {
       return (
-        <div class="arts" key={item.id} onClick={()=>{emit('confirm',item)}}>
+        <div
+          class="arts"
+          key={item.id}
+          onClick={() => {
+            emit('confirm', item)
+          }}
+        >
           <div class="ImgBox">
-            <img v-layz={item.img1v1Url+'?param=100y100'} />
+            <img v-layz={item.img1v1Url + '?param=100y100'} />
           </div>
           <div class="right">
             <span class="ellipsis">{item.name}</span>
@@ -65,9 +83,15 @@ export default defineComponent({
 
     const songList = (item: any) => {
       return (
-        <div class="songList" key={item.id} onClick={()=>{emit('confirm',item)}}>
+        <div
+          class="songList"
+          key={item.id}
+          onClick={() => {
+            emit('confirm', item)
+          }}
+        >
           <div class="ImgBox">
-            <img v-layz={item.coverImgUrl+'?param=100y100'} />
+            <img v-layz={item.coverImgUrl + '?param=100y100'} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -79,9 +103,15 @@ export default defineComponent({
 
     const MVlist = (item: any) => {
       return (
-        <div class="Mv" key={item.id} onClick={()=>{emit('confirm',item)}}>
+        <div
+          class="Mv"
+          key={item.id}
+          onClick={() => {
+            emit('confirm', item)
+          }}
+        >
           <div class="ImgBox">
-            <img v-layz={item.cover+'?param=100y100'} />
+            <img v-layz={item.cover + '?param=100y100'} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -96,9 +126,15 @@ export default defineComponent({
 
     const radio = (item: any) => {
       return (
-        <div class="radio" key={item.id} onClick={()=>{emit('confirm',item)}}>
+        <div
+          class="radio"
+          key={item.id}
+          onClick={() => {
+            emit('confirm', item)
+          }}
+        >
           <div class="ImgBox">
-            <img v-layz={item.picUrl+'?param=100y100'} />
+            <img v-layz={item.picUrl + '?param=100y100'} />
           </div>
           <div class="right">
             <span>{item.name}</span>
@@ -111,29 +147,29 @@ export default defineComponent({
     }
 
     return () => {
-      switch (type) {
+      switch (type.value) {
         case 1:
-          return data.map((item: any) => {
+          return data.value.map((item: any) => {
             return SongItem(item)
           })
         case 10:
-          return data.map((item: any) => {
+          return data.value.map((item: any) => {
             return AlbumItem(item)
           })
         case 100:
-          return data.map((item: any) => {
-            return artsItem(item)
+          return data.value.map((item: any, idx: number) => {
+            return artsItem(item, idx)
           })
         case 1000:
-          return data.map((item: any) => {
+          return data.value.map((item: any) => {
             return songList(item)
           })
         case 1004:
-          return data.map((item: any) => {
+          return data.value.map((item: any) => {
             return MVlist(item)
           })
         case 1009:
-          return data.map((item: any) => {
+          return data.value.map((item: any) => {
             return radio(item)
           })
         default:
@@ -290,6 +326,13 @@ export default defineComponent({
       font-size: 12px;
       color: #999;
     }
+  }
+}
+.ImgBox {
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 }
 </style>

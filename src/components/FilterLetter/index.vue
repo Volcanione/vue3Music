@@ -132,6 +132,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+    z-index: 1;
   .letter {
     width: 100%;
     font-size: 12px;

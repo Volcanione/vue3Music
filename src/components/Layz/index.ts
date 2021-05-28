@@ -39,6 +39,7 @@ const config = async (el: any, binding: any, options: Options, update = false) =
     parentDom = createImageBitmap(el, binding, options)
   } else {
     //图片路径为空到赋值时 存在bug 无法显示
+
   }
 
 
@@ -56,26 +57,36 @@ const config = async (el: any, binding: any, options: Options, update = false) =
 
 //创建Dom
 const createImageBitmap = (el: any, binding: any, options: Options) => {
+  if (!el.offsetWidth) {
+    el.style.width = '100%'
+    el.style.display = 'block'
+  }
+  if (!el.offsetHeight) {
+    el.style.height = '100%'
+    el.style.display = 'block'
+  }
+
+
   const cloneDom = el.cloneNode(false);
   //创建dom
-  const container = document.createElement("div");
+  const container = document.createElement("div") as any;
   const LAYZNODE = createVNode(Layz);
   render(LAYZNODE, container);
   container.style.height = el.height + 'px'
   container.style.width = el.width + 'px'
   container.style.position = 'relative'
   cloneDom.style.position = 'relative'
-  cloneDom.style.zIndex = 99
+  cloneDom.style.zIndex = 1
   container.appendChild(cloneDom)
   // el = container
-    // console.dir( el.parentNode,11);
-   el.parentNode && el.parentNode.replaceChild(container, el)
+  // console.dir( el.parentNode,11);
+  el.parentNode && el.parentNode.replaceChild(container, el)
   // console.log(el.parentNode);
   //创建数据
 
 
 
-  const { props, ctx }: any = LAYZNODE.component
+  const { props, ctx, uid }: any = LAYZNODE.component
   props.loadImg = binding.value?.loadImg || options.loadImg
   props.errorImg = binding.value?.errorImg || options.errorImg
 
@@ -85,11 +96,7 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
     ctx.setloadState(state)
   }
 
-  Object.assign(binding.instance, {
-    _hub: {
-      setImgState: setImgState
-    }
-  })
+  container.setImgState = setImgState
   return container
 }
 
@@ -104,7 +111,7 @@ const setImg = (el: any, binding: any, options: any) => {
   if (!imgUrl.value) {
     return
   }
-  const setImgState = binding.instance._hub.setImgState
+  const setImgState = el.setImgState
   el.lastChild.src = binding.value?.src || binding.value
 
   el.lastChild.onload = () => {
@@ -125,7 +132,7 @@ const directive_layz = (app: App, options: Options) => {
     mounted(el: any, binding: any) {
       if (binding.value || binding.value?.src) {
         config(el, binding, options)
-      }else{
+      } else {
         el.src = options.loadImg
       }
     },
@@ -134,7 +141,8 @@ const directive_layz = (app: App, options: Options) => {
       if (binding.value || binding.value?.src) {
         config(el, binding, options)
       }
-    },
+    }
+
   });
 };
 

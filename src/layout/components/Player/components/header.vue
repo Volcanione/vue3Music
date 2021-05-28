@@ -70,7 +70,7 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     height: 35px;
-    ::v-deep .TABBER {
+    :deep(.TABBER) {
       width: 100px;
       justify-content: space-between;
       .root {

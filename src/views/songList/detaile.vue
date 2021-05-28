@@ -48,7 +48,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '~@/style/layout.scss';
 .songDetaile {
-  ::v-deep .viewContent {
+  :deep(.viewContent) {
     background: transparent;
   }
   .Nav {

@@ -66,7 +66,7 @@ export default defineComponent({
     max-height: 250px;
     margin: 5px;
     flex-shrink: 0;
-    ::v-deep .imgBox {
+    :deep( .imgBox) {
       flex: 1;
       img {
         height: 100%;

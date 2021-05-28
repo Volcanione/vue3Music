@@ -86,5 +86,6 @@ export interface APIUid {
 
 export interface APIGetArtistList extends LimitOffset {
   type?: number
-  area?: number
+  area?: number,
+  initial?:number | string
 }

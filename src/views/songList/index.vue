@@ -31,7 +31,7 @@ import AllCatList from './components/allCatList.vue'
 import { useRouter } from 'vue-router'
 import { songlistSetup } from './setup'
 export default defineComponent({
-  components: {  AllCatList, SongItem },
+  components: { AllCatList, SongItem },
   name: 'songList',
   setup() {
     const router = useRouter()
@@ -128,7 +128,7 @@ export default defineComponent({
     max-height: 250px;
     margin: 5px;
     flex-shrink: 0;
-    ::v-deep .imgBox {
+    :deep(.imgBox) {
       flex: 1;
       img {
         height: 100%;
