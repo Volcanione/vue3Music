@@ -1,7 +1,12 @@
 <template>
-  <transition name="fade" >
-    <div class="songListCat" v-if="modelValue" v-loading="loadingState">
-      <ScrollPage ref="ScrollPage">
+
+  <Drawer v-model="modelValue" direction="left" size="100%" target="#MUSICAPP" :mask="false">
+    <div class="songListCat" v-loading="loadingState">
+      <Nav :back="close">
+        全部分类
+      </Nav>
+
+      <ScrollPage ref="ScrollPage" class="ScrollPage">
         <div class="cat" v-for="cat in catList" :key="cat.cat">
           <div class="name">{{cat.cat}}</div>
           <div class="catContent">
@@ -10,7 +15,7 @@
         </div>
       </ScrollPage>
     </div>
-  </transition>
+  </Drawer>
 </template>
 <script lang="ts">
 import { defineComponent, PropType, watch, ref } from 'vue'
@@ -59,7 +64,6 @@ export default defineComponent({
       ScrollPage?.value?.refresh()
     }
 
-
     //点击分类
     const checkCat = (item: any) => {
       emit('confirm', item)
@@ -75,6 +79,7 @@ export default defineComponent({
       ScrollPage,
       catList,
       checkCat,
+      close
     }
   },
 })
@@ -82,13 +87,14 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '~@/style/layout.scss';
 .songListCat {
-  height: calc(100% - 44px);
+  height: 100%;
   width: 100%;
-  position: absolute !important;
   background: #{$appBackColor};
-  top: 44px;
-  left: 0;
-  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  .ScrollPage {
+    flex: 1;
+  }
   .cat {
     margin-bottom: 10px;
     overflow: hidden;

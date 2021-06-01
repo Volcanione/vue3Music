@@ -1,5 +1,5 @@
 <template>
-  <LayerPage class="my" :loading="loadingState" ref="singerResultRef" @pullDown="pullDown" @pullUp="pullUp">
+  <LayerPage :loading="loadingState" ref="singerResultRef" @pullDown="pullDown" @pullUp="pullUp">
     <template #pullDown="{ state }">
       <PullDownSlot :state="state" />
     </template>
@@ -11,7 +11,7 @@
       </Nav>
     </template>
     <template #content>
-      <Item :data="dataList" :type="100" v-if="dataList.length" />
+      <Item :data="dataList" :type="100" v-if="dataList.length" @confirm="getDetail" />
     </template>
     <template #fixed>
       <FilterLetter v-model="letter" />
@@ -27,6 +27,7 @@ import FilterLetter from '@/components/FilterLetter/index.vue'
 import FilterType from './components/FilterType.vue'
 import Item from '@/views/search/components/Item/item.vue'
 import api from '@/api/index'
+import {useRouter} from 'vue-router'
 export default defineComponent({
   components: { FilterLetter, FilterType, Item },
   setup(props) {
@@ -34,6 +35,7 @@ export default defineComponent({
     const loadingState = ref(false)
     const filterSingerVisible = ref(false)
     const singerResultRef = ref(null) as any
+    const router = useRouter()
     const filterData = reactive({
       type: -1,
       area: -1,
@@ -50,6 +52,7 @@ export default defineComponent({
     watch(
       () => filterData,
       () => {
+        offsetLimit.offset = 0
         getData()
       },
       { deep: true }
@@ -57,7 +60,8 @@ export default defineComponent({
 
     watch(
       () => letter,
-      (val) => {
+      () => {
+        offsetLimit.offset = 0
         getData()
       },
       { deep: true }
@@ -111,6 +115,13 @@ export default defineComponent({
       }
     }
 
+    const getDetail = (item: any) => {
+      router.push({
+        name:'SingerDetail',
+        params:{id:item.id,name:item.name}
+      })
+    }
+
     //初始化
     const init = () => {
       getData()
@@ -128,6 +139,7 @@ export default defineComponent({
       pullDown,
       pullUp,
       singerResultRef,
+      getDetail,
     }
   },
 })

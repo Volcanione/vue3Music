@@ -1,69 +1,64 @@
 <template>
-  <teleport to="body">
-    <transition name="fade">
-      <div class="bg" v-if="playerListShow" @click.self="setPlayerListShow(false)"></div>
-    </transition>
-    <transition @before-enter="beforeEnter" @enter="enter" @leave="leave" @after-leave="afterLeave" type="animation" :css="false">
-      <div class="contentList" v-show="playerListShow">
-        <div class="top">
-          <span @click="setPlayerMode" class="mode">
-            <i class="iconfont" v-if="playerMode === 'alone'">&#xe6a2;</i>
-            <i class="iconfont" v-if="playerMode === 'list'">&#xe6a3;</i>
-            <i class="iconfont" v-if="playerMode === 'random'">&#xe624;</i>
-          </span>
-          <span class="modeType">
-            {{playerMode === 'alone'?'单曲循环':playerMode === 'list'?'顺序播放':'随机播放'}} - {{playerList.length}}
-          </span>
-          <span class="remove" @click="removePlayList()" v-show="!currentPage">
-            <i class="iconfont">&#xe601;</i>
-          </span>
-        </div>
-        <div class="center">
-          <SlideWapper v-if="wappperShow" ref="slideWapperRef">
-            <div class="playList">
-              <ScrollPage ref="scrollPageRef" :scrollBack="false" v-if="playerList.length">
-                <div class="item" :class="{playing:playerNow?.id===item.id}" v-for="item in playerList" :key="item.id">
-                  <span class="name ellipsis" @click.self="addplay(item)">{{item.name}}</span>
-                  <span class="artists ellipsis" @click.self="addplay(item)">{{item.artists}}</span>
-                  <span class="play" v-if="playerNow?.id===item.id"> <i class="iconfont">&#xe610;</i></span>
-                  <span class="remove" @click="removePlayList(item)"><i class="iconfont">&#xe600;</i></span>
-                </div>
-              </ScrollPage>
-              <div v-if="!playerList.length" class="noData">
-                最近没有播放过音乐哟
-              </div>
-            </div>
-            <div class="playList" v-loading="loadingState">
-              <ScrollPage :scrollBack="false" v-if="userPlayList.length">
-                <div class="item" v-for="item in userPlayList" :key="item.id">
-                  <span class="name ellipsis" @click.self="addPlayRecord(item)">{{item.name}}</span>
-                  <span class="artists ellipsis" @click.self="addPlayRecord(item)">{{item.artists}}</span>
-                </div>
-              </ScrollPage>
-              <div v-if="!userPlayList.length" class="noData">
-                还没登录 <span class="loginBtn" @click="goLogin"> 点我登录</span>
-              </div>
-            </div>
-          </SlideWapper>
-        </div>
-        <div class="bottom">
-          <span class="btn" :class="{active:!currentPage}" @click="changeList(0)">当前列表</span>
-          <span class="btn" :class="{active:currentPage}" @click="changeList(1)">播放记录</span>
-        </div>
+  <Drawer v-model="playerListShow" direction="bottom" @change="val=>wappperShow=val" contentClass="drawerContent"  >
+    <div class="contentList">
+      <div class="top">
+        <span @click="setPlayerMode" class="mode">
+          <i class="iconfont" v-if="playerMode === 'alone'">&#xe6a2;</i>
+          <i class="iconfont" v-if="playerMode === 'list'">&#xe6a3;</i>
+          <i class="iconfont" v-if="playerMode === 'random'">&#xe624;</i>
+        </span>
+        <span class="modeType">
+          {{playerMode === 'alone'?'单曲循环':playerMode === 'list'?'顺序播放':'随机播放'}} - {{playerList.length}}
+        </span>
+        <span class="remove" @click="removePlayList()" v-show="!currentPage">
+          <i class="iconfont">&#xe601;</i>
+        </span>
       </div>
-    </transition>
-  </teleport>
+      <div class="center">
+        <SlideWapper v-if="wappperShow" ref="slideWapperRef">
+          <div class="playList">
+            <ScrollPage ref="scrollPageRef" :scrollBack="false" v-if="playerList.length">
+              <div class="item" :class="{playing:playerNow?.id===item.id}" v-for="item in playerList" :key="item.id">
+                <span class="name ellipsis" @click.self="addplay(item)">{{item.name}}</span>
+                <span class="artists ellipsis" @click.self="addplay(item)">{{item.artists}}</span>
+                <span class="play" v-if="playerNow?.id===item.id"> <i class="iconfont">&#xe610;</i></span>
+                <span class="remove" @click="removePlayList(item)"><i class="iconfont">&#xe600;</i></span>
+              </div>
+            </ScrollPage>
+            <div v-if="!playerList.length" class="noData">
+              最近没有播放过音乐哟
+            </div>
+          </div>
+          <div class="playList" v-loading="loadingState">
+            <ScrollPage :scrollBack="false" v-if="userPlayList.length">
+              <div class="item" v-for="item in userPlayList" :key="item.id">
+                <span class="name ellipsis" @click.self="addPlayRecord(item)">{{item.name}}</span>
+                <span class="artists ellipsis" @click.self="addPlayRecord(item)">{{item.artists}}</span>
+              </div>
+            </ScrollPage>
+            <div v-if="!userPlayList.length" class="noData">
+              还没登录 <span class="loginBtn" @click="goLogin"> 点我登录</span>
+            </div>
+          </div>
+        </SlideWapper>
+      </div>
+      <div class="bottom">
+        <span class="btn" :class="{active:!currentPage}" @click="changeList(0)">当前列表</span>
+        <span class="btn" :class="{active:currentPage}" @click="changeList(1)">播放记录</span>
+      </div>
+    </div>
+  </Drawer>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch, nextTick } from 'vue'
-import { TweenMax } from 'gsap'
+// import { TweenMax } from 'gsap'
 import { playerSetup, musicSetup } from '@/layout/components/Player/setup'
 import SlideWapper from '@/components/SlideWapper/wapper.vue'
 import { listSetUp } from './setup'
 import { useRouter } from 'vue-router'
 export default defineComponent({
-  components: {  SlideWapper },
+  components: { SlideWapper },
   setup() {
     const router = useRouter()
     const {
@@ -84,33 +79,6 @@ export default defineComponent({
     const currentPage = ref(0)
     const wappperShow = ref(false)
     const loadingState = ref(false)
-
-    const beforeEnter = async (el: HTMLElement, done: any) => {
-      wappperShow.value = true
-      TweenMax.to(el, 0, {
-        y: '100%',
-        onComplete: done,
-      })
-    }
-    const enter = (el: HTMLElement, done: any) => {
-      TweenMax.to(el, 0.4, {
-        y: '0',
-        onComplete: done,
-      })
-    }
-    const leave = (el: HTMLElement, done: any) => {
-      TweenMax.to(el, 0.4, {
-        y: '100%',
-        onComplete: done,
-      })
-    }
-    const afterLeave = (el: HTMLElement, done: any) => {
-      wappperShow.value = false
-      TweenMax.to(el, 0, {
-        y: '100%',
-        onComplete: done,
-      })
-    }
 
     const addplay = (item: any) => {
       console.log(11)
@@ -162,14 +130,11 @@ export default defineComponent({
 
     //切换播放列表
     const changeList = (type: number) => {
+      console.log(slideWapperRef.value)
       currentPage.value = slideWapperRef.value?.goToPage(type)
     }
 
     return {
-      beforeEnter,
-      enter,
-      leave,
-      afterLeave,
       setPlayerMode,
       playerMode,
       playerListShow,
@@ -194,21 +159,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.bg {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.5);
-}
 .contentList {
-  position: fixed;
-  z-index: 10;
-  width: 100%;
-  bottom: 0;
-  height: 80%;
-  background: #fff;
-  border-radius: 10px 10px 0 0;
+  height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -284,5 +236,10 @@ export default defineComponent({
       }
     }
   }
+}
+</style>
+<style lang="scss">
+.drawerContent {
+  border-radius: 10px 10px 0 0 !important;
 }
 </style>

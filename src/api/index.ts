@@ -8,7 +8,7 @@ import {
   APIGetSongDetail,
   APIGetSongMusicDetail,
   ApiGetBanner,
-  APIGetTopSong,
+  APIGetMusicComment,
   APIUid,
   APIGetArtistList
 } from "@/interface/index";
@@ -132,6 +132,22 @@ export default {
       params
     })
   },
+  //获取歌曲评论
+  getMusicComment(params: APIGetMusicComment) {
+    return request({
+      url: '/comment/music',
+      method: "get",
+      params
+    })
+  },
+      //获取热门歌曲评论
+  getMusicCommentHot(params: APIGetMusicComment) {
+    return request({
+      url: '/comment/hot',
+      method: "get",
+      params
+    })
+  },
   //获取歌单分类
   getSongListCatList() {
     return request({
@@ -194,10 +210,19 @@ export default {
       data
     })
   },
-    //作者列表
+  //作者列表
   getArtistList(data: APIGetArtistList) {
     return request({
       url: '/artist/list',
+      method: "post",
+      data
+    })
+  },
+
+  //获取歌手详情
+  getArtistDetail(data: APIGetSongDetail) {
+    return request({
+      url: '/artist/detail',
       method: "post",
       data
     })

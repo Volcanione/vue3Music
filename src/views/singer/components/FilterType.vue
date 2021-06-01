@@ -1,9 +1,6 @@
 <template>
-  <transition name="fade" @click.self="$emit('update:visible',false)">
-    <div class="filterSingerBg" v-if="visible"></div>
-  </transition>
-  <transition @before-enter="beforeEnter" @enter="enter" @leave="leave" @after-leave="afterLeave" type="animation" :css="false">
-    <div class="filterSinger" v-if="visible">
+  <Drawer v-model="show" direction="bottom" size="150px">
+    <div class="filterSinger">
       <div class="type">
         <span v-for="item in typeList" :key="item.value" :class="{active:config.type === item.value}" @click="config.type=item.value">{{item.label}}</span>
       </div>
@@ -11,18 +8,10 @@
         <span v-for="item in languageList" :key="item.value" :class="{active:config.area === item.value}" @click="config.area=item.value">{{item.label}}</span>
       </div>
     </div>
-  </transition>
+  </Drawer>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  ref,
-  nextTick,
-  PropType,
-  computed,
-  watch,
-} from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 import { TweenMax } from 'gsap'
 export default defineComponent({
   props: {
@@ -34,16 +23,23 @@ export default defineComponent({
       type: Object as PropType<any>,
       required: true,
     },
-    
   },
-  emits:['update:modelValue','update:visible'],
-  setup(props,{emit}) {
+  emits: ['update:modelValue', 'update:visible'],
+  setup(props, { emit }) {
     const config = computed(() => props.modelValue)
+    const show = computed({
+      get() {
+        return props.visible
+      },
+      set(val) {
+        emit('update:visible', val)
+      },
+    })
 
     watch(
       () => config,
       (val) => {
-          emit('update:modelValue',val)
+        emit('update:modelValue', val)
       },
       { deep: true }
     )
@@ -127,28 +123,19 @@ export default defineComponent({
       typeList,
       languageList,
       config,
+      show,
     }
   },
 })
 </script>
 
 <style lang="scss" scoped>
-.filterSingerBg {
-  position: absolute;
-  top: 44px;
-  width: 100%;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1;
-}
 .filterSinger {
   z-index: 1;
-  position: absolute;
-  top: 44px;
-  width: 100%;
   background: #fff;
   padding: 10px;
   overflow: hidden;
+  height: 100%;
   .type,
   .language {
     display: flex;

@@ -78,15 +78,9 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
   cloneDom.style.position = 'relative'
   cloneDom.style.zIndex = 1
   container.appendChild(cloneDom)
-  // el = container
-  // console.dir( el.parentNode,11);
   el.parentNode && el.parentNode.replaceChild(container, el)
-  // console.log(el.parentNode);
   //创建数据
-
-
-
-  const { props, ctx, uid }: any = LAYZNODE.component
+  const { props, ctx }: any = LAYZNODE.component
   props.loadImg = binding.value?.loadImg || options.loadImg
   props.errorImg = binding.value?.errorImg || options.errorImg
 

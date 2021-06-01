@@ -10,7 +10,7 @@
           }
         " />
     </div>
-    <div class="right">-</div>
+    <div class="right" @click="$emit('comment')"><i class="iconfont">&#xe6d3;</i></div>
   </div>
 </template>
 <script lang="ts">
@@ -23,6 +23,7 @@ export default defineComponent({
       default: 0,
     },
   },
+  emits:['comment','switch'],
   setup(props) {
     const active = ref(0)
     const list = [

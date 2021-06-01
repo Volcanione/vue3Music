@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/songList/:cat/:id",
     name: "SongListDetail",
     components: {
-      layer: () => import("@/views/songList/detaile.vue"),
+      layer: () => import("@/views/songList/detail.vue"),
     },
     meta: {
       parent: ["SongList", "SearchResult", 'SongListCat', 'My'],
@@ -90,6 +90,16 @@ const routes: Array<RouteRecordRaw> = [
     components: {
       layer: () => import("@/views/singer/index.vue"),
     }
+  },
+  {
+    path: "/singerDetail/:id",
+    name: "SingerDetail",
+    components: {
+      layer: () => import("@/views/singer/detail.vue"),
+    },
+      meta: {
+      parent: 'SingerList',
+    },
   },
 ];
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="MUSICAPP">
     <Layout />
     <Layer />
   </div>
@@ -18,7 +18,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-#app {
+#MUSICAPP {
   position: relative;
 }
 </style>

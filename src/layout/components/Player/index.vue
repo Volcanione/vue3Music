@@ -1,78 +1,63 @@
 <template>
-  <teleport to="body">
-    <transition @before-enter="beforeEnter" @enter="enter" @leave="leave" @after-leave="afterLeave" type="animation" :css="false">
-      <div class="player" v-show="playerShow">
-        <div class="header">
-          <PlayerHeader @switch="switchLRY" :active="switchConfig.value" />
-        </div>
-        <div class="content">
-          <PlayContriller :config="switchConfig" />
-        </div>
-        <div class="playBg">
-          <div class="filter" :style="{
+  <Drawer v-model="playerShow" direction="bottom" size="100%" @change="changeDrawer" :destroyOnclose="false" :mask="false">
+    <div class="player">
+      <div class="header">
+        <PlayerHeader @switch="switchLRY" :active="switchConfig.value" @comment="openComment" />
+      </div>
+      <div class="content">
+        <PlayContriller :config="switchConfig" />
+      </div>
+      <div class="playBg">
+        <div class="filter" :style="{
               'background-image':`url('${playerNow?.img||bgImg}?param=500y500')`
             }"></div>
-        </div>
       </div>
-    </transition>
-  </teleport>
+    </div>
+  </Drawer>
+  <Comment v-model:visible="commentShow" />
 </template>
 <script lang="ts">
-import { defineComponent, reactive, nextTick } from 'vue'
+import { defineComponent, reactive, nextTick, ref } from 'vue'
 import { playerSetup } from '../Player/setup'
-import { TweenMax } from 'gsap'
 import PlayerHeader from '../Player/components/header.vue'
 import PlayContriller from '../Player/components/controller.vue'
+import Comment from './components/Comment/index.vue'
 export default defineComponent({
-  components: { PlayerHeader, PlayContriller },
+  components: { PlayerHeader, PlayContriller, Comment },
   setup() {
     const switchConfig = reactive({ type: 0, value: 0 })
+    const commentShow = ref(false)
     const bgImg = require('@/assets/bg.jpg')
-    const beforeEnter = async (el: HTMLElement, done: any) => {
-      TweenMax.to(el, 0, {
-        y: '100%',
-        onComplete: done,
-      })
-      await nextTick()
-      switchConfig.type = 0
-      switchConfig.value = 0
-    }
-    const enter = (el: HTMLElement, done: any) => {
-      TweenMax.to(el, 0.4, {
-        y: '0',
-        onComplete: done,
-      })
-    }
-    const leave = (el: HTMLElement, done: any) => {
-      TweenMax.to(el, 0.4, {
-        y: '100%',
-        onComplete: done,
-      })
-    }
-    const afterLeave = (el: HTMLElement, done: any) => {
-      TweenMax.to(el, 0, {
-        y: '100%',
-        onComplete: done,
-      })
-    }
-
     const switchLRY = ({ type, value }: any) => {
       switchConfig.type = type
       switchConfig.value = value
+    }
+
+    //评论
+    const openComment = () => {
+      commentShow.value = !commentShow.value
+    }
+
+    const changeDrawer = async (val: boolean) => {
+      if (!val) {
+        return
+      }
+      await nextTick()
+      switchConfig.type = 0
+      switchConfig.value = 0
     }
 
     const { playerShow, playerNow } = playerSetup()
 
     return {
       playerShow,
-      beforeEnter,
-      enter,
-      leave,
-      afterLeave,
       switchLRY,
       switchConfig,
       playerNow,
       bgImg,
+      openComment,
+      commentShow,
+      changeDrawer,
     }
   },
 })
