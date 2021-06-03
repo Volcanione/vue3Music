@@ -52,6 +52,7 @@ export default defineComponent({
         return;
       }
       setCookie('cookie',res.cookie)
+      setCookie('userId',res.account.id)
       await $msg({ title: "登录成功" });
       router.replace("/");
     };

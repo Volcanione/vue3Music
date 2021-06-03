@@ -1,8 +1,8 @@
 import { ref, nextTick, reactive } from "vue";
 import { playerSetup } from '@/layout/components/Player/setup'
-import { getMusicPlayUrl, getMusicLyric } from './data'
+import { getMusicPlayUrl, getMusicLyric, getLikeList } from './data'
 import { $msg } from '@/components/Msg/index'
-
+import { getCookie } from '@/utils'
 export default () => {
   const { playerState, playerNow, setPlayerState, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
     playerListShow, setProgess, playerProgess: progess, setPlayerShow } = playerSetup()
@@ -101,6 +101,7 @@ export default () => {
   //更新
   const updatePlayState = async (type?: boolean) => {
     resetPlayState()
+    setLikeList()
     const url = await getMusicPlayUrl(playerNow.value.id)
     if (!url) {
       return delErorr(type)
@@ -119,6 +120,15 @@ export default () => {
       console.log(1111, error);
       delErorr(type)
     }
+  }
+
+  //获取喜欢列表
+  const setLikeList = () => {
+    const uid = getCookie('userId')
+    if(!uid){
+      return 
+    }
+    getLikeList(uid)
   }
 
   //获取歌词
@@ -176,6 +186,7 @@ export default () => {
     setPlayerListShow,
     playerListShow,
     setPlayerState,
-    setPlayerShow
+    setPlayerShow,
+    setLikeList
   }
 }

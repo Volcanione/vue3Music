@@ -3,7 +3,7 @@ import store from "@/store";
 import router from "@/router";
 import { apiAuthlist } from "./whitelist";
 import { $msg } from "@/components/Msg/index";
-import { getCookie } from '@/utils/'
+import { getCookie, removeCookie } from '@/utils/'
 // create an axios instance
 const service: any = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -46,6 +46,8 @@ service.interceptors.request.use(
           } catch (error) {
             await $msg({ title: error?.msg });
             loginState = true
+            removeCookie('userId')
+            removeCookie('cookie')
             router.push({
               path: "/login",
             });
@@ -56,6 +58,8 @@ service.interceptors.request.use(
           await store.dispatch("user/refreshLoginState");
         } catch (error) {
           await $msg({ title: error.response?.data?.msg });
+          removeCookie('userId')
+          removeCookie('cookie')
           router.push({
             path: "/login",
           });

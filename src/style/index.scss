@@ -44,11 +44,10 @@ img {
 }
 @font-face {
   font-family: 'iconfont';  /* Project id 1294292 */
-  src: url('//at.alicdn.com/t/font_1294292_p54ww51glss.woff2?t=1622452170958') format('woff2'),
-       url('//at.alicdn.com/t/font_1294292_p54ww51glss.woff?t=1622452170958') format('woff'),
-       url('//at.alicdn.com/t/font_1294292_p54ww51glss.ttf?t=1622452170958') format('truetype');
+  src: url('//at.alicdn.com/t/font_1294292_p1vkxt5711n.woff2?t=1622626966716') format('woff2'),
+       url('//at.alicdn.com/t/font_1294292_p1vkxt5711n.woff?t=1622626966716') format('woff'),
+       url('//at.alicdn.com/t/font_1294292_p1vkxt5711n.ttf?t=1622626966716') format('truetype');
 }
-
 .viewContent {
   @include viewContent;
 }

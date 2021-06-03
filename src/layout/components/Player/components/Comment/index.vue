@@ -2,11 +2,20 @@
   <Drawer v-model="show" direction="bottom" size="80%">
     <div class="commentContent">
       <div class="header"><span>歌曲评论</span>
-        <TabBar class="TabBar" v-model="active" :list="typeList" @change="getData" />
+        <TabBar class="TabBar" v-model="active" :list="typeList" @change="changeType" />
       </div>
-      <ScrollPage class="ScrollPage" ref="ScrollPageRef">
-        <CommentItem v-for="item in commentList" :key="item.id" :data="item"/>
+      <ScrollPage v-if="commentList.length" class="ScrollPage" ref="ScrollPageRef" v-loading="loadingState" :pull-down="true" @refresh="pullDownrefresh" @loading="pullUploading" :pull-Up="true">
+        <template #pullDown="{ state }">
+          <PullDownSlot :state="state" />
+        </template>
+        <CommentItem v-for="item in commentList" :key="item.id" :data="item" />
+        <template #pullUp="{ state }">
+          <PullUpSlot :state="state">
+            <span class="tip">到底了</span>
+          </PullUpSlot>
+        </template>
       </ScrollPage>
+      <div v-if="!count" class="nodata"><span>没有评论</span></div>
     </div>
   </Drawer>
 </template>
@@ -25,8 +34,9 @@ import {
 import api from '@/api/index'
 import { useStore } from 'vuex'
 import CommentItem from './item.vue'
+import { $msg } from '@/components/Msg/index'
 export default defineComponent({
-  components:{CommentItem},
+  components: { CommentItem },
   props: {
     visible: {
       type: Boolean as PropType<boolean>,
@@ -53,9 +63,11 @@ export default defineComponent({
 
     const active = ref(0)
 
-    const commentList = ref([])
+    const commentList = ref([]) as any
 
     const ScrollPageRef = ref(null) as any
+
+    const loadingState = ref(false)
 
     const show = computed({
       get() {
@@ -66,21 +78,71 @@ export default defineComponent({
       },
     })
 
-    const getData = async () => {
+    const initParam = () => {
+      Object.assign(param, {
+        limit: 30,
+        offset: 0,
+      })
+    }
+
+    const getData = async (status = false) => {
+      loadingState.value = false
       const Api = !active.value ? api.getMusicCommentHot : api.getMusicComment
       if (!param.id) {
+        loadingState.value = true
         return (commentList.value = [])
       }
       const { code, hotComments, comments, total } = await Api(param)
-      commentList.value = code === 200 ? comments || hotComments : []
+      loadingState.value = true
+      if (code !== 200) {
+        return (commentList.value = [])
+      }
+
+      // commentList.value = code === 200 ? comments || hotComments : []
       count.value = total
-      await nextTick()
+      if (!status) {
+        commentList.value = comments || hotComments
+      } else {
+        const data = comments || hotComments
+        commentList.value.push(...data)
+      }
+
       refresh()
     }
 
     //更新组件
     const refresh = async () => {
+      await nextTick()
       ScrollPageRef.value?.refresh()
+    }
+
+    const changeType = () => {
+      param.offset = 0
+      commentList.value = []
+      getData()
+    }
+
+    //下拉刷新
+    const pullDownrefresh = async (done: (state?: boolean) => void) => {
+      initParam()
+      getData()
+      await done()
+    }
+
+    //上拉加载
+    const pullUploading = async (done: (state?: number) => void) => {
+      param.offset++
+      if (count.value <= commentList.value.length) {
+        await done(2)
+        return $msg({ title: '真的到底了' })
+      }
+
+      try {
+        getData(true)
+        await done(1)
+      } catch (error) {
+        await done(0)
+      }
     }
 
     watch(
@@ -89,6 +151,7 @@ export default defineComponent({
         if (!val) {
           return
         }
+        param.offset = 0
         getData()
       },
       { deep: true }
@@ -109,6 +172,11 @@ export default defineComponent({
       getData,
       commentList,
       ScrollPageRef,
+      loadingState,
+      changeType,
+      pullDownrefresh,
+      pullUploading,
+      count,
     }
   },
 })
@@ -135,5 +203,17 @@ export default defineComponent({
   .ScrollPage {
     flex: 1;
   }
+}
+.tip {
+  color: #999;
+}
+.nodata {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #cecece;
+  height: 100%;
 }
 </style>

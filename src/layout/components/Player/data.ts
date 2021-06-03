@@ -28,5 +28,5 @@ export async function getMusicLyric(params: string | number) {
 
 export async function getLikeList(uid: any) {
   const res = await api.getLikelist({ uid })
-  console.log(res);
+  console.log(res); 
 }

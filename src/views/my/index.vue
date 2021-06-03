@@ -53,6 +53,7 @@ import { useRouter } from 'vue-router'
 import user from '@/api/user'
 import { songlistDetailSetup } from '@/views/songList/setup'
 import { $msg } from '@/components/Msg/index'
+import {removeCookie} from '@/utils'
 export default defineComponent({
   components: { Item },
   name: 'my',
@@ -128,6 +129,8 @@ export default defineComponent({
       //存在bug  登出后用户token等store信息未清空bug
       try {
         await store.dispatch('user/logOut')
+        removeCookie('userId')
+        removeCookie('cookie')
         $msg({ title: '当前账号已退出' })
         router.replace({
           path: '/recom',
