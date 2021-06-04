@@ -55,15 +55,18 @@ export default defineComponent({
       type: Number,
       required: false,
     },
+    scrollDisabled: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
   setup(props, { emit }) {
-    const { height, modelValue, list } = toRefs(props)
+    const { height, modelValue, list, scrollDisabled } = toRefs(props)
     const style = reactive({ width: '', transform: '' })
     const tabbar = ref(null) as any
     const scrollContent = ref(null) as any
     let scroll = {} as BScrollType
     const barWidth = ref(0)
-
     const heightPx = computed(() => {
       return height ? height.value + 'px' : '100%'
     })
@@ -127,7 +130,21 @@ export default defineComponent({
         click: true,
         tap: 'tap',
       }) as any
+
+      scrollDisabled.value && scroll.disable()
     }
+
+    watch(
+      () => scrollDisabled.value,
+      (val) => {
+        if (val) {
+          scroll.disable && scroll.disable()
+        } else {
+          scroll.disable && scroll.enable()
+        }
+      },
+      { deep: true }
+    )
 
     const refresh = async () => {
       await nextTick()
@@ -142,9 +159,6 @@ export default defineComponent({
     const setScroll = (el: HTMLElement) => {
       scroll.scrollToElement && scroll.scrollToElement(el, 300, 0, 0, undefined)
     }
-
-
-    
 
     onMounted(() => {
       setLineStyle()

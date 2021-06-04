@@ -1,7 +1,7 @@
 <template>
   <LayerPage class="singerDetail" @pullDown="pullDown">
     <template #pullDown="{ state }">
-      <PullDownSlot :state="state" />
+      <PullDownSlot :state="state" white />
     </template>
     <template #header>
       <Nav class="nav" :bgImgStyle="bgImgStyle">
@@ -17,7 +17,14 @@
           <span class="nickname">{{info.name}}</span>
         </div>
       </div>
-      <div class="content"></div>
+      <div class="content">
+        <Thumbtack :offset="44">
+          <div class="typeTab" style="height:40px;">
+            <TabBar v-model="catType" :list="catlist" class="TabBar" />
+          </div>
+        </Thumbtack>
+        <div style="height:1200px">111</div>
+      </div>
     </template>
     <template #fixed>
       <div class="top" :style="topStyle">
@@ -27,15 +34,45 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/index'
 import { songlistDetailSetup } from '@/views/songList/setup'
+import Thumbtack from '@/components/Thumbtack/index.vue'
 export default defineComponent({
+  components: { Thumbtack },
   setup() {
     const route = useRoute()
     const name = route.params.name
     const info = reactive({})
+    const catlist: any[] = [
+      {
+        label: '主页',
+        value: '0',
+      },
+      {
+        label: '热门歌曲',
+        value: '1',
+      },
+      {
+        label: '单曲',
+        value: '2',
+      },
+      {
+        label: '专辑',
+        value: '3',
+      },
+      {
+        label: 'MV',
+        value: '4',
+      },
+      {
+        label: '相似歌手',
+        value: '7',
+      },
+    ]
+
+    const catType = ref('0')
 
     const {
       topStyle,
@@ -55,6 +92,7 @@ export default defineComponent({
         bgCover: data?.user?.backgroundUrl || data.artist.cover,
         name: data?.artist.name,
       })
+      console.log(data)
     }
 
     const pullDown = async (done: () => void) => {
@@ -75,6 +113,8 @@ export default defineComponent({
       imgStyle,
       bgImgStyle,
       pullDown,
+      catlist,
+      catType,
     }
   },
 })
@@ -149,6 +189,13 @@ export default defineComponent({
     min-height: calc(100vh - 200px);
     background: #{$appBackColor};
     overflow: hidden;
+    position: relative;
+    .typeTab {
+      width: 100%;
+    }
   }
+}
+.TabBar {
+  background: #{$appBackColor};
 }
 </style>

@@ -18,9 +18,7 @@ service.interceptors.request.use(
   async (config: any) => {
     const { method, params = {}, data } = config;
     const cookie = getCookie('cookie')
-    if (method === "post") {
-      params["timestamp"] = +new Date();
-    }
+    params["timestamp"] = +new Date();
 
 
 

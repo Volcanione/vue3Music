@@ -10,7 +10,8 @@ import {
   ApiGetBanner,
   APIGetMusicComment,
   APIUid,
-  APIGetArtistList
+  APIGetArtistList,
+  APISetLikeMusic
 } from "@/interface/index";
 export default {
   //获取banner
@@ -140,7 +141,7 @@ export default {
       params
     })
   },
-      //获取热门歌曲评论
+  //获取热门歌曲评论
   getMusicCommentHot(params: APIGetMusicComment) {
     return request({
       url: '/comment/hot',
@@ -208,6 +209,14 @@ export default {
       url: '/likelist',
       method: "post",
       data
+    })
+  },
+  //喜欢音乐
+  likeMusic(params: APISetLikeMusic) {
+    return request({
+      url: '/like',
+      method: "get",
+      params
     })
   },
   //作者列表

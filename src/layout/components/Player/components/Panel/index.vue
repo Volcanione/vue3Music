@@ -10,7 +10,8 @@
           <span class="arts">{{playerNow?.artists || '-'}}</span>
         </div>
         <div class="icons">
-          <i class="iconfont">&#xe870;</i>
+          <i class="iconfont" v-if="!playerNow?.like" @click="setLikeMusic()">&#xe870;</i>
+          <i class="iconfont" v-else @click="setLikeMusic()">&#xe86f;</i>
         </div>
       </div>
       <div class="lyricBar">
@@ -18,7 +19,7 @@
       </div>
       <div class="time">
         <span>{{curTime || '00:00'}}</span>
-        <span>{{totalTime || '00:00'}}</span>
+        <span>{{totalTime || '00:00'}}</span> 
       </div>
       <div class="progess">
         <Progess v-model="progess" @changeProgess="changeProgess" :disabled="!duration" />
@@ -62,6 +63,8 @@ export default defineComponent({
       playerShow,
       resetPlayState,
       musicLyric,
+      setLikeList,
+      setLikeMusic
     } = createAudio()
 
     const SongDiscRef = ref(null)
@@ -88,6 +91,7 @@ export default defineComponent({
       )
       //监听当前播放应用变化重置播放器
       await nextTick()
+      
       watch(
         () => playerNow.value,
         (val) => {
@@ -118,7 +122,6 @@ export default defineComponent({
         { immediate: true, deep: true }
       )
 
-
       watch(
         () => ended.value,
         (val) => {
@@ -129,6 +132,17 @@ export default defineComponent({
         { immediate: true }
       )
     })
+
+    watch(
+      () => playerShow.value,
+      (val) => {
+        if (!val) {
+          return
+        }
+        setLikeList()
+      }
+    )
+
     const curTime = computed(() => {
       return dayjs.duration((currentTime.value || 0) * 1000).format('mm:ss')
     })
@@ -149,6 +163,7 @@ export default defineComponent({
       currentTime,
       SongDiscRef,
       lyricRef,
+      setLikeMusic
     }
   },
 })

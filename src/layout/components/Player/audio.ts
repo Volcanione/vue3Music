@@ -1,6 +1,6 @@
 import { ref, nextTick, reactive } from "vue";
 import { playerSetup } from '@/layout/components/Player/setup'
-import { getMusicPlayUrl, getMusicLyric, getLikeList } from './data'
+import { getMusicPlayUrl, getMusicLyric, getLikeList, setLike } from './data'
 import { $msg } from '@/components/Msg/index'
 import { getCookie } from '@/utils'
 export default () => {
@@ -14,6 +14,8 @@ export default () => {
   // const progess = ref(0) //进度
   const duration = ref(0) //长度
   const musicLyric = reactive({})
+
+  const getlike = ref(false)
 
   const getMusicDuration = () => {
     audioElement.value.onloadeddata = null
@@ -123,12 +125,37 @@ export default () => {
   }
 
   //获取喜欢列表
-  const setLikeList = () => {
-    const uid = getCookie('userId')
-    if(!uid){
-      return 
+  const setLikeList = async () => {
+    if (getlike.value) {
+      return
     }
-    getLikeList(uid)
+    const uid = getCookie('userId')
+    getlike.value = true
+    if (!uid) {
+      getlike.value = false
+      playerNow.value.like = false
+      return
+    }
+    const ids = await getLikeList(uid)
+    getlike.value = false
+    playerNow.value.like = ids.includes(playerNow.value.id)
+  }
+
+  //喜欢该音乐
+  const setLikeMusic = async () => {
+    const uid = getCookie('userId')
+    if (!uid) {
+      return
+    }
+    if (!playerNow.value.id) {
+      return
+    }
+    const like = await setLike(playerNow.value.id, !playerNow.value.like)
+
+    if (typeof like !== 'boolean') {
+      return
+    }
+    playerNow.value.like = like
   }
 
   //获取歌词
@@ -187,6 +214,7 @@ export default () => {
     playerListShow,
     setPlayerState,
     setPlayerShow,
-    setLikeList
+    setLikeList,
+    setLikeMusic
   }
 }

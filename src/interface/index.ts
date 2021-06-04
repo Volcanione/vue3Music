@@ -93,5 +93,9 @@ export interface APIGetArtistList extends LimitOffset {
 export interface APIGetMusicComment extends LimitOffset {
   id: number | string
   before?: number | string
-  type?:number | string
+  type?: number | string
+}
+
+export interface APISetLikeMusic extends APIGetSongDetail {
+  like: boolean
 }

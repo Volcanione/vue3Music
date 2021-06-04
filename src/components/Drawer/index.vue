@@ -25,8 +25,8 @@ import { TweenMax } from 'gsap'
 import { computed, defineComponent, PropType, reactive, toRefs } from 'vue'
 
 type StyleType = {
-  width?: string
-  height?: string
+  width?: string | number
+  height?: string | number
   bottom?: string | number
   top?: string | number
   left?: string | number
@@ -42,7 +42,7 @@ export default defineComponent({
     target: {
       type: String as PropType<string>,
       default: 'body',
-      validator(value: string) {
+      validator:(value: string) =>{
         const dom = document.querySelector(value)
         return !!dom
       },
@@ -59,7 +59,7 @@ export default defineComponent({
     direction: {
       type: String as PropType<string>,
       default: 'bottom',
-      validator(value: string) {
+      validator:(value: string)=> {
         return ['bottom', 'top', 'left', 'right'].includes(value)
       },
     },
@@ -82,7 +82,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue', 'change'],
   setup(props, { emit }) {
-    const { modelValue, size, direction } = toRefs(props) as any
+    const { modelValue, size, direction } = toRefs(props)  
     const contentStyle: StyleType = reactive({})
     const config: SetType = reactive({})
 
@@ -98,7 +98,7 @@ export default defineComponent({
     const init = () => {
       if (direction.value === 'bottom' || direction.value === 'top') {
         contentStyle.width = '100%'
-        contentStyle.height = size
+         contentStyle.height = size.value
         if (direction.value === 'bottom') {
           contentStyle.bottom = 0
           config.y = '100%'
@@ -107,7 +107,7 @@ export default defineComponent({
           config.y = '-100%'
         }
       } else {
-        contentStyle.width = size
+        contentStyle.width = size.value
         contentStyle.height = '100%'
         if (direction.value === 'left') {
           contentStyle.left = 0

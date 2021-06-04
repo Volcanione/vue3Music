@@ -97,7 +97,7 @@ export function playerSetup() {
     setPlayerListShow,
     playerListShow,
     setProgess,
-    playerProgess
+    playerProgess,
   };
 }
 
@@ -116,7 +116,8 @@ export function musicSetup() {
 
   return {
     setPlayerNow,
-    removePlayList
+    removePlayList,
+    
   }
 
 }

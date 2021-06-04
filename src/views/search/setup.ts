@@ -194,22 +194,32 @@ export function searchResult() {
   const confirmItem = (data: any) => {
 
     let routename = ''
+    let params = {}
+    console.log(type.value, data);
     switch (type.value) {
       case 1:
         return playMusic(data)
       case 1000:
         routename = 'SongListDetail'
+        params = {
+          cat: '搜索',
+          id: data.id,
+        }
         break
+      case 100:
+        routename = 'SingerDetail'
+        params = {
+          cat: '搜索',
+          name: data.name,
+          id: data.id,
+        }
     }
 
     if (!routename) {
       return
     }
     router.push({
-      name: routename, params: {
-        cat: '搜索',
-        id: data.id,
-      },
+      name: routename, params,
       query: {
         name: data.name
       }

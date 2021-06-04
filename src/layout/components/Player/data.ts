@@ -26,7 +26,21 @@ export async function getMusicLyric(params: string | number) {
   return { lyric_0, lyric_1 }
 }
 
-export async function getLikeList(uid: any) {
-  const res = await api.getLikelist({ uid })
-  console.log(res); 
+export async function getLikeList(uid: string | number) {
+  try {
+    const { code, ids } = await api.getLikelist({ uid })
+    return code === 200 ? ids : []
+  } catch (error) {
+    return []
+  }
+}
+
+
+export async function setLike(id: number | string, like: boolean) {
+  try {
+    const { code } = await api.likeMusic({ id, like })
+    return code === 200 ? like : null
+  } catch (error) {
+    return null
+  }
 }
