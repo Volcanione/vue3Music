@@ -1,53 +1,69 @@
 <template>
-  <Drawer v-model="playerShow" direction="bottom" size="100%" @change="changeDrawer" :destroyOnclose="false" :mask="false">
+  <Drawer
+    v-model="playerShow"
+    direction="bottom"
+    size="100%"
+    @change="changeDrawer"
+    :destroyOnclose="false"
+    :mask="false"
+  >
     <div class="player">
       <div class="header">
-        <PlayerHeader @switch="switchLRY" :active="switchConfig.value" @comment="openComment" />
+        <PlayerHeader
+          @switch="switchLRY"
+          :active="switchConfig.value"
+          @comment="openComment"
+        />
       </div>
       <div class="content">
         <PlayContriller :config="switchConfig" />
       </div>
       <div class="playBg">
-        <div class="filter" :style="{
-              'background-image':`url('${playerNow?.img||bgImg}?param=500y500')`
-            }"></div>
+        <div
+          class="filter"
+          :style="{
+            'background-image': `url('${
+              playerNow?.img || bgImg
+            }?param=500y500')`,
+          }"
+        ></div>
       </div>
     </div>
   </Drawer>
   <Comment v-model:visible="commentShow" />
 </template>
 <script lang="ts">
-import { defineComponent, reactive, nextTick, ref } from 'vue'
-import { playerSetup } from '../Player/setup'
-import PlayerHeader from '../Player/components/header.vue'
-import PlayContriller from '../Player/components/controller.vue'
-import Comment from './components/Comment/index.vue'
+import { defineComponent, reactive, nextTick, ref } from "vue";
+import { playerSetup } from "../Player/setup";
+import PlayerHeader from "../Player/components/header.vue";
+import PlayContriller from "../Player/components/controller.vue";
+import Comment from "./components/Comment/index.vue";
 export default defineComponent({
   components: { PlayerHeader, PlayContriller, Comment },
   setup() {
-    const switchConfig = reactive({ type: 0, value: 0 })
-    const commentShow = ref(false)
-    const bgImg = require('@/assets/bg.jpg')
+    const switchConfig = reactive({ type: 0, value: 0 });
+    const commentShow = ref(false);
+    const bgImg = require("@/assets/bg.jpg");
     const switchLRY = ({ type, value }: any) => {
-      switchConfig.type = type
-      switchConfig.value = value
-    }
+      switchConfig.type = type;
+      switchConfig.value = value;
+    };
 
     //评论
     const openComment = () => {
-      commentShow.value = !commentShow.value
-    }
+      commentShow.value = !commentShow.value;
+    };
 
     const changeDrawer = async (val: boolean) => {
       if (!val) {
-        return
+        return;
       }
-      await nextTick()
-      switchConfig.type = 0
-      switchConfig.value = 0
-    }
+      await nextTick();
+      switchConfig.type = 0;
+      switchConfig.value = 0;
+    };
 
-    const { playerShow, playerNow } = playerSetup()
+    const { playerShow, playerNow } = playerSetup();
 
     return {
       playerShow,
@@ -58,9 +74,9 @@ export default defineComponent({
       openComment,
       commentShow,
       changeDrawer,
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .player {

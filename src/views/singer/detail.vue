@@ -5,74 +5,79 @@
     </template>
     <template #header>
       <Nav class="nav" :bgImgStyle="bgImgStyle">
-        {{name}}
+        {{ name }}
       </Nav>
     </template>
     <template #content>
       <div class="infoBox">
         <div class="avatar">
-          <img v-layz="info?.cover?`${info?.cover}?param=100y100`:''">
+          <img v-layz="info?.cover ? `${info?.cover}?param=100y100` : ''" />
         </div>
         <div class="infoText">
-          <span class="nickname">{{info.name}}</span>
+          <span class="nickname">{{ info.name }}</span>
+          <p>
+            <span>单曲 {{ info.musicSize }}</span>
+            <span>MV {{ info.mvSize }}</span>
+          </p>
         </div>
       </div>
-      <div class="content">
+      <div class="content" ref="contentRef">
         <Thumbtack :offset="44">
-          <div class="typeTab" style="height:40px;">
+          <div class="typeTab" style="height: 40px">
             <TabBar v-model="catType" :list="catlist" class="TabBar" />
           </div>
         </Thumbtack>
-        <div style="height:1200px">111</div>
+        <div style="height: 1200px">111</div>
       </div>
     </template>
     <template #fixed>
       <div class="top" :style="topStyle">
-        <img :src="`${info.bgCover}?param=300y300`" :style="imgStyle">
+        <img :src="`${info.bgCover}?param=300y300`" :style="imgStyle" />
       </div>
     </template>
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import api from '@/api/index'
-import { songlistDetailSetup } from '@/views/songList/setup'
-import Thumbtack from '@/components/Thumbtack/index.vue'
+import { defineComponent, reactive, ref, watch } from "vue"
+import { useRoute } from "vue-router"
+import api from "@/api/index"
+import { songlistDetailSetup } from "@/views/songList/setup"
+import Thumbtack from "@/components/Thumbtack/index.vue"
 export default defineComponent({
   components: { Thumbtack },
   setup() {
     const route = useRoute()
     const name = route.params.name
     const info = reactive({})
+    const contentRef = ref(null)
     const catlist: any[] = [
       {
-        label: '主页',
-        value: '0',
+        label: "主页",
+        value: "0",
       },
       {
-        label: '热门歌曲',
-        value: '1',
+        label: "热门歌曲",
+        value: "1",
       },
       {
-        label: '单曲',
-        value: '2',
+        label: "单曲",
+        value: "2",
       },
       {
-        label: '专辑',
-        value: '3',
+        label: "专辑",
+        value: "3",
       },
       {
-        label: 'MV',
-        value: '4',
+        label: "MV",
+        value: "4",
       },
       {
-        label: '相似歌手',
-        value: '7',
+        label: "相似歌手",
+        value: "7",
       },
     ]
 
-    const catType = ref('0')
+    const catType = ref("0")
 
     const {
       topStyle,
@@ -82,7 +87,9 @@ export default defineComponent({
     } = songlistDetailSetup()
 
     const getData = async () => {
-      const { code, data } = await api.getArtistDetail({ id: +route.params.id })
+      const { code, data } = await api.getArtistDetail({
+        id: +route.params.id,
+      })
       if (code !== 200) {
         return
       }
@@ -91,18 +98,36 @@ export default defineComponent({
         briefDesc: data.artist.briefDesc,
         bgCover: data?.user?.backgroundUrl || data.artist.cover,
         name: data?.artist.name,
+        musicSize: data?.artist.musicSize,
+        mvSize: data?.artist.mvSize,
       })
-      console.log(data)
-    }
+    };
+
+    //获取歌手描述
+    const getDescData = async () => {
+      const res = await api.getArtistDesc({ id: +route.params.id })
+      console.log(res)
+    };
+
+    watch(
+      () => catType.value,
+      (val) => {
+        switch (val) {
+          case "0":
+            return getDescData()
+        }
+      },
+      { immediate: true }
+    )
 
     const pullDown = async (done: () => void) => {
       await init()
       done()
-    }
+    };
 
     const init = () => {
       getData()
-    }
+    };
 
     init()
 
@@ -115,13 +140,14 @@ export default defineComponent({
       pullDown,
       catlist,
       catType,
+      contentRef,
     }
   },
 })
-</script>  
+</script>
 
 <style lang="scss" scoped>
-@import '~@/style/layout.scss';
+@import "~@/style/layout.scss";
 .singerDetail {
   :deep(.viewContent) {
     background: transparent;
@@ -140,7 +166,7 @@ export default defineComponent({
     height: 200px;
     &::after {
       position: absolute;
-      content: '';
+      content: "";
       width: 100%;
       background: rgba(255, 255, 255, 0.3);
       top: -100vh;
@@ -179,9 +205,20 @@ export default defineComponent({
     .infoText {
       flex: 1;
       padding-left: 20px;
+      display: flex;
+      flex-direction: column;
       .nickname {
         font-size: 16px;
         color: #fff;
+        margin-bottom: 10px;
+      }
+      p {
+        margin: 0;
+        color: #fff;
+        span {
+          font-size: 12px;
+          margin-right: 10px;
+        }
       }
     }
   }

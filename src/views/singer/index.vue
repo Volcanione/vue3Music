@@ -1,37 +1,52 @@
 <template>
-  <LayerPage :loading="loadingState" ref="singerResultRef" @pullDown="pullDown" @pullUp="pullUp">
+  <LayerPage
+    :loading="loadingState"
+    ref="singerResultRef"
+    @pullDown="pullDown"
+    @pullUp="pullUp"
+  >
     <template #pullDown="{ state }">
       <PullDownSlot :state="state" />
     </template>
     <template #header>
-      <Nav class="nav"> 歌手
+      <Nav class="nav">
+        歌手
         <template #right>
-          <span class="filter" @click="filterSingerVisible = !filterSingerVisible"><i class="iconfont">&#xe60a;</i></span>
+          <span
+            class="filter"
+            @click="filterSingerVisible = !filterSingerVisible"
+            ><i class="iconfont">&#xe60a;</i></span
+          >
         </template>
       </Nav>
     </template>
     <template #content>
-      <Item :data="dataList" :type="100" v-if="dataList.length" @confirm="getDetail" />
+      <Item
+        :data="dataList"
+        :type="100"
+        v-if="dataList.length"
+        @confirm="getDetail"
+      />
     </template>
     <template #fixed>
       <FilterLetter v-model="letter" />
       <FilterType v-model:visible="filterSingerVisible" v-model="filterData" />
-      <div class="letterBar">{{letter}}</div>
+      <div class="letterBar">{{ letter }}</div>
     </template>
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, nextTick, watch } from 'vue'
-import { $msg } from '@/components/Msg/index'
-import FilterLetter from '@/components/FilterLetter/index.vue'
-import FilterType from './components/FilterType.vue'
-import Item from '@/views/search/components/Item/item.vue'
-import api from '@/api/index'
-import {useRouter} from 'vue-router'
+import { defineComponent, reactive, ref, nextTick, watch } from "vue"
+import { $msg } from "@/components/Msg/index"
+import FilterLetter from "@/components/FilterLetter/index.vue"
+import FilterType from "./components/FilterType.vue"
+import Item from "@/views/search/components/Item/item.vue"
+import api from "@/api/index"
+import { useRouter } from "vue-router"
 export default defineComponent({
   components: { FilterLetter, FilterType, Item },
   setup(props) {
-    const letter = ref('热')
+    const letter = ref("热")
     const loadingState = ref(false)
     const filterSingerVisible = ref(false)
     const singerResultRef = ref(null) as any
@@ -73,7 +88,7 @@ export default defineComponent({
         ...filterData,
         ...offsetLimit,
         initial:
-          letter.value === '热' ? -1 : letter.value === '#' ? 0 : letter.value,
+          letter.value === "热" ? -1 : letter.value === "#" ? 0 : letter.value,
       })
       moreData.value = more
       if (code !== 200) {
@@ -86,12 +101,12 @@ export default defineComponent({
       }
       loadingState.value = true
       refreshScroll()
-    }
+    };
 
     const refreshScroll = async () => {
       await nextTick()
       singerResultRef?.value?.refresh()
-    }
+    };
 
     const pullDown = async (done: () => void) => {
       offsetLimit.offset = 0
@@ -99,13 +114,13 @@ export default defineComponent({
         await getData()
       } catch (error) {}
       await done()
-    }
+    };
 
     const pullUp = async (done: (state?: number) => void) => {
       offsetLimit.offset++
       if (!moreData.value) {
         await done(2)
-        return $msg({ title: '真的到底了' })
+        return $msg({ title: "真的到底了" })
       }
       try {
         await getData(true)
@@ -117,15 +132,15 @@ export default defineComponent({
 
     const getDetail = (item: any) => {
       router.push({
-        name:'SingerDetail',
-        params:{id:item.id,name:item.name}
+        name: "SingerDetail",
+        params: { id: item.id, name: item.name },
       })
-    }
+    };
 
     //初始化
     const init = () => {
       getData()
-    }
+    };
 
     //初始化
     init()

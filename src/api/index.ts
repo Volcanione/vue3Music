@@ -11,7 +11,7 @@ import {
   APIGetMusicComment,
   APIUid,
   APIGetArtistList,
-  APISetLikeMusic
+  APISetLikeMusic,
 } from "@/interface/index";
 export default {
   //获取banner
@@ -19,7 +19,7 @@ export default {
     return request({
       url: "/banner",
       method: "get",
-      params
+      params,
     });
   },
 
@@ -101,7 +101,7 @@ export default {
     return request({
       url: "/check/music",
       method: "post",
-      data
+      data,
     });
   },
   ///获取音乐地址
@@ -109,7 +109,7 @@ export default {
     return request({
       url: "/song/url",
       method: "post",
-      data
+      data,
     });
   },
   checkMusicByUrl(url: string) {
@@ -128,31 +128,31 @@ export default {
   //获取歌词
   getlyric(params: APIGetMusicUrl) {
     return request({
-      url: '/lyric',
+      url: "/lyric",
       method: "get",
-      params
+      params,
     })
   },
   //获取歌曲评论
   getMusicComment(params: APIGetMusicComment) {
     return request({
-      url: '/comment/music',
+      url: "/comment/music",
       method: "get",
-      params
+      params,
     })
   },
   //获取热门歌曲评论
   getMusicCommentHot(params: APIGetMusicComment) {
     return request({
-      url: '/comment/hot',
+      url: "/comment/hot",
       method: "get",
-      params
+      params,
     })
   },
   //获取歌单分类
   getSongListCatList() {
     return request({
-      url: '/playlist/catlist',
+      url: "/playlist/catlist",
       method: "get",
     })
   },
@@ -160,7 +160,7 @@ export default {
   //获取歌单分类(hot)
   getSongListCatListHOT() {
     return request({
-      url: '/playlist/hot',
+      url: "/playlist/hot",
       method: "get",
     })
   },
@@ -168,72 +168,81 @@ export default {
   //获取歌单列表
   getSongListAll(data: APIGetTopSongList) {
     return request({
-      url: '/top/playlist',
+      url: "/top/playlist",
       method: "post",
-      data
+      data,
     })
   },
   //获取歌单详情
   getSongDetail(data: APIGetSongDetail) {
     return request({
-      url: '/playlist/detail',
+      url: "/playlist/detail",
       method: "post",
-      data
+      data,
     })
   },
   //获取歌曲详情
   getSongMusicDetail(data: APIGetSongMusicDetail) {
     return request({
-      url: '/song/detail',
+      url: "/song/detail",
       method: "post",
-      data
+      data,
     })
   },
   //最新专辑
   getAlbumNewest() {
     return request({
-      url: '/album/newest',
+      url: "/album/newest",
       method: "post",
     })
   },
   //榜单摘要
   getToplistDetail() {
     return request({
-      url: '/toplist/artist',
+      url: "/toplist/artist",
       method: "post",
     })
   },
   //喜欢音乐列表
   getLikelist(data: APIUid) {
     return request({
-      url: '/likelist',
+      url: "/likelist",
       method: "post",
-      data
+      data,
     })
   },
   //喜欢音乐
   likeMusic(params: APISetLikeMusic) {
     return request({
-      url: '/like',
+      url: "/like",
       method: "get",
-      params
+      params,
     })
   },
   //作者列表
   getArtistList(data: APIGetArtistList) {
     return request({
-      url: '/artist/list',
+      url: "/artist/list",
       method: "post",
-      data
+      data,
     })
   },
 
   //获取歌手详情
   getArtistDetail(data: APIGetSongDetail) {
     return request({
-      url: '/artist/detail',
+      url: "/artist/detail",
       method: "post",
-      data
+      data,
+    })
+  },
+
+  //获取歌手描述
+  getArtistDesc(data: APIGetSongDetail) {
+    return request({
+      url: "/artist/desc",
+      method: "post",
+      data,
     })
   },
 };

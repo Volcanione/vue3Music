@@ -1,14 +1,16 @@
 <template>
   <div class="item">
     <div class="box">
-      <div class="imgBox"> <img v-layz="data.picUrl+'?param=110y110'" alt="" /></div>
+      <div class="imgBox">
+        <img v-layz="data.picUrl + '?param=110y110'" alt="" />
+      </div>
       <span class="tip"> <i></i>10万 </span>
     </div>
     <div class="info">{{ data.name }}</div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from "vue"
 export default defineComponent({
   props: {
     data: {
@@ -37,9 +39,9 @@ export default defineComponent({
       font-size: 12px;
       color: #fff;
       display: flex;
-      align-items: center; 
+      align-items: center;
       justify-content: center;
-      z-index:999;
+      z-index: 999;
     }
   }
   .imgBox {

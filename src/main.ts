@@ -9,12 +9,14 @@ import MyCom from "@/utils/components";
 import loading from "@/components/Loading/index";
 import layz from "@/components/Layz/index";
 import msg from "@/components/Msg/index";
+import longList from "@/components/Longlist";
 const app = createApp(App);
 
 app.use(store).use(router)
 app.use(MyCom);
 app.use(msg);
 app.use(loading);
+app.use(longList);
 const loadImg = require("./assets/songListBG.png");
 app.use(layz, {
   errorImg: loadImg,

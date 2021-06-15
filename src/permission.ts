@@ -1,19 +1,15 @@
-
-import router from "./router";
+import router from "./router"
 import store from "./store";
 
 const WHITElIST = ["Hall", "Recom", "Radio"];
 
 router.beforeEach(async (to: any, from: any, next: (path?: any) => void) => {
-
-
-  if (to.name === 'My') {
+  if (to.name === "My") {
     try {
       await store.dispatch("user/getLoginStatus");
     } catch (error) {
-      return next('login');
+      return next("login")
     }
-
   }
 
   if (
@@ -25,7 +21,7 @@ router.beforeEach(async (to: any, from: any, next: (path?: any) => void) => {
     setRoutePage(to, from);
   }
   next();
-});
+})
 
 const routePage: Array<any> = [];
 function setRoutePage(to: any, from: any) {

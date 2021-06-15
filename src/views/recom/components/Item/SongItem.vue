@@ -1,13 +1,16 @@
 <template>
   <div class="item">
     <div class="imgBox">
-      <img alt="" v-layz="(data?.picUrl || data?.coverImgUrl)+'?param=110y110'" />
+      <img
+        alt=""
+        v-layz="(data?.picUrl || data?.coverImgUrl) + '?param=110y110'"
+      />
     </div>
     <div class="info">{{ data.name }}</div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from "vue"
 export default defineComponent({
   props: {
     data: {

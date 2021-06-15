@@ -56,7 +56,6 @@ export default defineComponent({
     //   //组件请求数据的方法
     //   const pageCom: any = this.$refs.page;
     //   pageCom.init();
-
     //   await done();
     // },
   },

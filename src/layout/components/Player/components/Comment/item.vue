@@ -1,25 +1,26 @@
 <template>
-  <div class="item">
+  <div class="item" v-longList="getCommit">
     <div class="avatar">
-      <img v-layz="data.user.avatarUrl + '?param=100y100'" alt="">
+      <img v-layz="data.user.avatarUrl + '?param=100y100'" alt="" />
     </div>
     <div class="content">
       <div class="userInfo">
         <p class="name">
-          <span>{{data.user.nickname}}</span>
-          <span class="zan"><i class="iconfont">&#xe78a;</i>{{data.likedCount}}</span>
+          <span>{{ data.user.nickname }}</span>
+          <span class="zan"
+            ><i class="iconfont">&#xe78a;</i>{{ data.likedCount }}</span
+          >
         </p>
-        <p class="time">{{showtime}}</p>
+        <p class="time">{{ showtime }}</p>
       </div>
-      <div class="text">{{data.content}}</div>
+      <div class="text">{{ data.content }}</div>
     </div>
   </div>
 </template>
 
-  
 <script lang="ts">
-import { defineComponent, PropType, watch, ref } from 'vue'
-import dayjs from 'dayjs'
+import { defineComponent, PropType, watch, ref, toRefs } from "vue";
+import dayjs from "dayjs";
 export default defineComponent({
   props: {
     data: {
@@ -28,12 +29,16 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { data }: any = props
-    const showtime = dayjs(data.time).format('YYYY-MM-DD HH:mm:ss')
+    const { data }: any = toRefs(props);
+    const showtime = dayjs(data.value.time).format("YYYY-MM-DD HH:mm:ss");
 
-    return { showtime }
+    const getCommit = () => {
+      console.log(111);
+    };
+
+    return { showtime, getCommit };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .item {
@@ -55,14 +60,14 @@ export default defineComponent({
     flex: 1;
     padding-left: 10px;
     display: flex;
-    flex-direction: column; 
-    &::after{
-        position: absolute;
-        content: '';
-        width: 100%;
-        height: 1px;
-        background: #f0f0f0;
-        bottom: -10px;
+    flex-direction: column;
+    &::after {
+      position: absolute;
+      content: "";
+      width: 100%;
+      height: 1px;
+      background: #f0f0f0;
+      bottom: -10px;
     }
     .userInfo {
       height: 40px;

@@ -1,28 +1,31 @@
-
-import api from '@/api/index'
-import { ref, reactive, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import api from "@/api/index"
+import { ref, reactive, nextTick, onMounted, onBeforeUnmount } from "vue"
 import { $msg } from "@/components/Msg/index";
-import ResizeObserver from 'resize-observer-polyfill'
-import { useRouter, useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import { musicSetup } from '@/layout/components/Player/setup'
+import ResizeObserver from "resize-observer-polyfill"
+import { useRouter, useRoute } from "vue-router"
+import { useStore } from "vuex"
+import { musicSetup } from "@/layout/components/Player/setup"
 export function songlistSetup(catType: any) {
   const router = useRouter()
-  const songList = ref(<any>[])//歌单
-  const searchParam = reactive({ //搜索条件
+  const songList = ref(<any>[]) //歌单
+  const searchParam = reactive({
+    //搜索条件
     cat: catType,
     limit: 30,
     offset: 0,
-    order:'hot'
+    order: "hot",
   })
 
   const loadingState = ref(false)
   const songListRef = ref(null) as any
   const total = ref(0)
 
-  const getSongList = async (state = false, refresh?: boolean) => {//请求数据
+  const getSongList = async (state = false, refresh?: boolean) => {
+    //请求数据
     loadingState.value = false
-    const { code, playlists, total: sum } = await api.getSongListAll(searchParam)
+    const { code, playlists, total: sum } = await api.getSongListAll(
+      searchParam
+    )
     loadingState.value = true
     if (code !== 200) {
       return;
@@ -36,22 +39,22 @@ export function songlistSetup(catType: any) {
       songList.value.push(...playlists)
     }
     refreshScroll()
-  }
+  };
 
-  const refreshScroll = async () => {//刷新Dom
+  const refreshScroll = async () => {
+    //刷新Dom
     await nextTick();
     songListRef?.value?.refresh();
-  }
+  };
 
   //下拉
   const pullDown = async (done: () => void) => {
     searchParam.offset = 0
     try {
       await getSongList()
-    } catch (error) {
-    }
+    } catch (error) {}
     await done()
-  }
+  };
   //上拉
   const pullUp = async (done: (state?: number) => void) => {
     searchParam.offset++
@@ -77,7 +80,7 @@ export function songlistSetup(catType: any) {
     await getSongList()
     refreshScroll()
     songListRef?.value?.scrollTo()
-  }
+  };
 
   //改变类别
 
@@ -88,13 +91,11 @@ export function songlistSetup(catType: any) {
     await getSongList();
     refreshScroll()
     songListRef?.value?.scrollTo()
-  };
-
+  }
 
   const initData = () => {
-
     getSongList()
-  }
+  };
 
   //更新宽度
   //监听器
@@ -108,24 +109,25 @@ export function songlistSetup(catType: any) {
     const y = Math.ceil(el.offsetHeight / 170)
     const l = x * (y + Math.ceil(y / 2))
     setLimit(l)
-  })
+  });
 
   onMounted(() => {
     intersectionObserver.observe(songListRef.value?.$el as any)
-  })
+  });
 
   //歌单详细
   const getSongDetaile = (item: any) => {
     router.push({
-      name: 'SongListDetail', params: {
-        cat: '11',
-        id: item.id
+      name: "SongListDetail",
+      params: {
+        cat: "11",
+        id: item.id,
       },
       query: {
-        name: item.name
-      }
+        name: item.name,
+      },
     })
-  }
+  };
 
   return {
     songList,
@@ -135,7 +137,7 @@ export function songlistSetup(catType: any) {
     pullUp,
     songListRef,
     changeType,
-    getSongDetaile
+    getSongDetaile,
   }
 }
 
@@ -159,12 +161,12 @@ export function songlistDetailSetup() {
 
   const init = () => {
     getSongDetail()
-  }
+  };
 
   const getSongDetail = async () => {
     loadingState.value = false
     const { code, playlist } = await api.getSongDetail({
-      id: route.params.id + '',
+      id: route.params.id + "",
     })
     if (code !== 200) {
       return
@@ -173,9 +175,11 @@ export function songlistDetailSetup() {
     Object.assign(bgImgStyle, {
       // backgroundImage: `url(${playlist.coverImgUrl}?param=300y300)`,
     })
-    const ids = info.trackIds.map(({ id }: any) => {
-      return id
-    }).join(',')
+    const ids = info.trackIds
+      .map(({ id }: any) => {
+        return id
+      })
+      .join(",")
     const data = await getSongMusicDetail(ids)
     loadingState.value = true
     songList.value = data.map(({ id, name, ar, dt, al }: any) => {
@@ -187,14 +191,14 @@ export function songlistDetailSetup() {
         duration: dt,
         img: al.picUrl,
       }
-    })
+    });
     await nextTick()
     refreshScroll()
-  }
+  };
 
   const refreshScroll = () => {
     scroll.refresh()
-  }
+  };
 
   //获取歌曲详情
   const getSongMusicDetail = async (ids: string) => {
@@ -210,8 +214,8 @@ export function songlistDetailSetup() {
   }
 
   const setTopImg = () => {
-    scroll.on('scroll', scrollHandler)
-  }
+    scroll.on("scroll", scrollHandler)
+  };
 
   const scrollHandler = ({ y }: any) => {
     imgStyle.opacity = y > 0 ? 1 : Math.max(200 - Math.abs(y), 0) / 200
@@ -222,33 +226,33 @@ export function songlistDetailSetup() {
 
     bgImgStyle.opacity = y > 0 ? 0 : Math.max(Math.abs(y), 1) / 200
     topStyle.top = `${y}px`
-  }
+  };
 
   //点击单曲
   const checkMusicItem = (data: any) => {
     setPlayerNow(data)
-  }
+  };
 
   //全部播放
   const playAll = () => {
     setPlayerNow(songList.value)
-  }
+  };
 
   const pullDown = async (done: () => void) => {
     await getSongDetail()
     done()
-  }
+  };
 
   onMounted(async () => {
     scroll = store.state.route.routerScroll
     await nextTick()
     setTopImg()
-  })
+  });
 
   onBeforeUnmount(() => {
-    scroll.off('scroll', scrollHandler)
+    scroll.off("scroll", scrollHandler)
     scroll = null
-  })
+  });
 
   return {
     name,
@@ -262,6 +266,6 @@ export function songlistDetailSetup() {
     songList,
     checkMusicItem,
     playAll,
-    refreshScroll
+    refreshScroll,
   }
 }

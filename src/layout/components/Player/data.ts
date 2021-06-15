@@ -1,20 +1,21 @@
-import api from '@/api/index'
+import api from "@/api/index"
+import user from "@/api/user"
+import { getCookie, setCookie } from "@/utils"
 export async function getMusicPlayUrl(id: string | number) {
-  let url = ''
+  let url = ""
   try {
     const res = await api.checkMusic({ id })
-    if (res.message !== 'ok') {
-      return ''
+    if (res.message !== "ok") {
+      return ""
     }
     const { code, data } = await api.getMusicUrl({ id })
-    url = code === 200 ? data[0].url : ''
+    url = code === 200 ? data[0].url : ""
     // url = `https://music.163.com/song/media/outer/url?id=${id}.mp3 `
   } catch (error) {
     url = `https://music.163.com/song/media/outer/url?id=${id}.mp3 `
   }
   return url
 }
-
 
 export async function getMusicLyric(params: string | number) {
   const { code, lrc, tlyric } = await api.getlyric({ id: params })
@@ -35,11 +36,27 @@ export async function getLikeList(uid: string | number) {
   }
 }
 
-
 export async function setLike(id: number | string, like: boolean) {
   try {
     const { code } = await api.likeMusic({ id, like })
     return code === 200 ? like : null
+  } catch (error) {
+    return null
+  }
+}
+
+export async function getUserInfo() {
+  try {
+    const uid = getCookie('userId')
+    if (uid) {
+      return uid
+    }
+
+    const { code, profile } = await user.getUserInfo()
+    if (code == 200 && profile) {
+      setCookie('userId', profile.userId)
+    }
+    return profile.userId
   } catch (error) {
     return null
   }

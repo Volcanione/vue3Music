@@ -1,28 +1,45 @@
 <template>
   <div class="Panel">
     <div class="SongDisc" ref="SongDiscRef">
-      <Disc :key=" playerNow?.id||-1" :src="playerNow?.img" :playerState="playerState" />
+      <Disc
+        :key="playerNow?.id || -1"
+        :src="playerNow?.img"
+        :playerState="playerState"
+      />
     </div>
     <div class="content">
       <div class="Info">
         <div class="name">
-          <span class="title ellipsis">{{playerNow?.name || 'nomusic'}}</span>
-          <span class="arts">{{playerNow?.artists || '-'}}</span>
+          <span class="title ellipsis">{{ playerNow?.name || "nomusic" }}</span>
+          <span class="arts">{{ playerNow?.artists || "-" }}</span>
         </div>
-        <div class="icons">
-          <i class="iconfont" v-if="!playerNow?.like" @click="setLikeMusic()">&#xe870;</i>
+        <div class="icons" v-if="playerNow?.id">
+          <i class="iconfont" v-if="!playerNow?.like" @click="setLikeMusic()"
+            >&#xe870;</i
+          >
           <i class="iconfont" v-else @click="setLikeMusic()">&#xe86f;</i>
         </div>
       </div>
       <div class="lyricBar">
-        <Lyric v-if="playerShow" :key="playerNow?.id || 1" line :lyricData="musicLyric" :currentTime="currentTime" ref="lyricRef" />
+        <Lyric
+          v-if="playerShow"
+          :key="playerNow?.id || 1"
+          line
+          :lyricData="musicLyric"
+          :currentTime="currentTime"
+          ref="lyricRef"
+        />
       </div>
       <div class="time">
-        <span>{{curTime || '00:00'}}</span>
-        <span>{{totalTime || '00:00'}}</span> 
+        <span>{{ curTime || "00:00" }}</span>
+        <span>{{ totalTime || "00:00" }}</span>
       </div>
       <div class="progess">
-        <Progess v-model="progess" @changeProgess="changeProgess" :disabled="!duration" />
+        <Progess
+          v-model="progess"
+          @changeProgess="changeProgess"
+          :disabled="!duration"
+        />
       </div>
     </div>
     <div class="bottom">
@@ -32,19 +49,26 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted, nextTick, computed } from 'vue'
-import Progess from './components/Progress/index.vue'
-import Control from './components/Control/index.vue'
-import createAudio from '@/layout/components/Player/audio'
-import Disc from './components/disc/index.vue'
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
-import Lyric from '@/components/Lyric/index.vue'
-import ResizeObserver from 'resize-observer-polyfill'
-dayjs.extend(duration)
+import {
+  defineComponent,
+  ref,
+  watch,
+  onMounted,
+  nextTick,
+  computed,
+} from "vue";
+import Progess from "./components/Progress/index.vue";
+import Control from "./components/Control/index.vue";
+import createAudio from "@/layout/components/Player/audio";
+import Disc from "./components/disc/index.vue";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+import Lyric from "@/components/Lyric/index.vue";
+import ResizeObserver from "resize-observer-polyfill";
+dayjs.extend(duration);
 export default defineComponent({
   components: { Progess, Control, Lyric, Disc },
-  emits: ['updateLyric', 'updateTime'],
+  emits: ["updateLyric", "updateTime"],
   setup(props, { emit }) {
     //创建音频
     const {
@@ -64,91 +88,91 @@ export default defineComponent({
       resetPlayState,
       musicLyric,
       setLikeList,
-      setLikeMusic
-    } = createAudio()
+      setLikeMusic,
+    } = createAudio();
 
-    const SongDiscRef = ref(null)
-    const lyricRef = ref(null)
+    const SongDiscRef = ref(null);
+    const lyricRef = ref(null);
 
     onMounted(async () => {
       const setDiscWidth = async () => {
-        const dom = SongDiscRef.value as any
-        await nextTick()
-        dom.style.width = dom.clientHeight + 'px'
-      }
+        const dom = SongDiscRef.value as any;
+        await nextTick();
+        dom.style.width = dom.clientHeight + "px";
+      };
 
       //监听器
       const intersectionObserver = new ResizeObserver(function () {
-        setDiscWidth()
-      })
-      intersectionObserver.observe(SongDiscRef.value as any)
+        setDiscWidth();
+      });
+      intersectionObserver.observe(SongDiscRef.value as any);
       //播放暂停
       watch(
         () => playerState.value,
         (val) => {
-          setPlayerAudioState(val)
+          setPlayerAudioState(val);
         }
-      )
+      );
       //监听当前播放应用变化重置播放器
-      await nextTick()
-      
+      await nextTick();
+
       watch(
         () => playerNow.value,
         (val) => {
           if (!val) {
-            return resetPlayState()
+            return resetPlayState();
           }
-          updatePlayState(playerState.value) //传入参数true 为立即播放
+          updatePlayState(playerState.value); //传入参数true 为立即播放
         },
         {
           immediate: true,
         }
-      )
+      );
 
       watch(
         () => currentTime.value,
         (cur: any | number) => {
-          emit('updateTime', cur)
-          setProgess(progess.value)
+          emit("updateTime", cur);
+          setProgess(progess.value);
         },
         { immediate: true, deep: true }
-      )
+      );
 
       watch(
         () => musicLyric,
         (data) => {
-          emit('updateLyric', data)
+          emit("updateLyric", data);
         },
         { immediate: true, deep: true }
-      )
+      );
 
       watch(
         () => ended.value,
         (val) => {
           if (val) {
-            setNextNow()
+            setNextNow();
           }
         },
         { immediate: true }
-      )
-    })
+      );
+    });
 
     watch(
       () => playerShow.value,
       (val) => {
         if (!val) {
-          return
+          return;
         }
-        setLikeList()
+        setLikeList();
       }
-    )
+    );
 
     const curTime = computed(() => {
-      return dayjs.duration((currentTime.value || 0) * 1000).format('mm:ss')
-    })
+      return dayjs.duration((currentTime.value || 0) * 1000).format("mm:ss");
+    });
     const totalTime = computed(() => {
-      return dayjs.duration((duration.value || 0) * 1000).format('mm:ss')
-    })
+      return dayjs.duration((duration.value || 0) * 1000).format("mm:ss");
+    });
     return {
       progess,
       playerState,
@@ -163,10 +187,10 @@ export default defineComponent({
       currentTime,
       SongDiscRef,
       lyricRef,
-      setLikeMusic
-    }
+      setLikeMusic,
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -202,7 +226,7 @@ export default defineComponent({
         top: 0;
         box-sizing: border-box;
         left: 0;
-        content: '';
+        content: "";
         position: absolute;
         width: 100%;
         height: 100%;

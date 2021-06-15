@@ -74,7 +74,7 @@ export default defineComponent({
     const init = () => {
       getSearchKey();
       searchHotDeatil();
-    };
+    }
     const LayerPage = ref(null) as any;
 
     const {
@@ -94,7 +94,7 @@ export default defineComponent({
       () => {
         nextTick(() => {
           LayerPage.value.refresh();
-        });
+        })
       }
     );
     init()

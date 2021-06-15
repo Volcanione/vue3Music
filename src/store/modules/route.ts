@@ -1,10 +1,10 @@
 interface STATETYPE {
-  LastPath: any
-  routerScroll: any
+  LastPath: any;
+  routerScroll: any;
 }
 const state: STATETYPE = {
   LastPath: null,
-  routerScroll: null
+  routerScroll: null,
 };
 
 const mutations = {
@@ -13,7 +13,7 @@ const mutations = {
   },
   setRouterScroll(state: STATETYPE, data: any) {
     state.routerScroll = data;
-  }
+  },
 };
 
 const actions = {};

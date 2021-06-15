@@ -9,12 +9,12 @@ const directive_loading = (app: App) => {
       // container.className = "loadingBox";
       const vnode = createVNode(Loading);
       render(vnode, el);
-      el.style.position = 'relative'
+      el.style.position = "relative"
       // el.appendChild(container);
       const instance: any = vnode.component;
       el.setLoading = (state: boolean) => {
         instance.data.loading = state;
-      };
+      }
       el.setLoading(!binding.value);
       el.setAttribute("id", instance.uid);
     },
@@ -22,7 +22,7 @@ const directive_loading = (app: App) => {
       el.setLoading(!binding.value);
     },
   });
-};
+}
 
 export default {
   install: (app: App) => {

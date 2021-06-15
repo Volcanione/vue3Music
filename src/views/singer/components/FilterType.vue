@@ -2,17 +2,29 @@
   <Drawer v-model="show" direction="bottom" size="150px">
     <div class="filterSinger">
       <div class="type">
-        <span v-for="item in typeList" :key="item.value" :class="{active:config.type === item.value}" @click="config.type=item.value">{{item.label}}</span>
+        <span
+          v-for="item in typeList"
+          :key="item.value"
+          :class="{ active: config.type === item.value }"
+          @click="config.type = item.value"
+          >{{ item.label }}</span
+        >
       </div>
       <div class="language">
-        <span v-for="item in languageList" :key="item.value" :class="{active:config.area === item.value}" @click="config.area=item.value">{{item.label}}</span>
+        <span
+          v-for="item in languageList"
+          :key="item.value"
+          :class="{ active: config.area === item.value }"
+          @click="config.area = item.value"
+          >{{ item.label }}</span
+        >
       </div>
     </div>
   </Drawer>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed, watch } from 'vue'
-import { TweenMax } from 'gsap'
+import { defineComponent, PropType, computed, watch } from "vue"
+import { TweenMax } from "gsap"
 export default defineComponent({
   props: {
     visible: {
@@ -24,7 +36,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:modelValue', 'update:visible'],
+  emits: ["update:modelValue", "update:visible"],
   setup(props, { emit }) {
     const config = computed(() => props.modelValue)
     const show = computed({
@@ -32,88 +44,88 @@ export default defineComponent({
         return props.visible
       },
       set(val) {
-        emit('update:visible', val)
+        emit("update:visible", val)
       },
     })
 
     watch(
       () => config,
       (val) => {
-        emit('update:modelValue', val)
+        emit("update:modelValue", val)
       },
       { deep: true }
     )
 
     const typeList: any[] = [
       {
-        label: '全部',
+        label: "全部",
         value: -1,
       },
       {
-        label: '男',
+        label: "男",
         value: 1,
       },
       {
-        label: '女',
+        label: "女",
         value: 2,
       },
       {
-        label: '乐团',
+        label: "乐团",
         value: 3,
       },
     ]
 
     const languageList: any[] = [
       {
-        label: '全部',
+        label: "全部",
         value: -1,
       },
       {
-        label: '华语',
+        label: "华语",
         value: 7,
       },
       {
-        label: '欧美',
+        label: "欧美",
         value: 96,
       },
       {
-        label: '日本',
+        label: "日本",
         value: 8,
       },
       {
-        label: '韩国',
+        label: "韩国",
         value: 16,
       },
       {
-        label: '其他',
+        label: "其他",
         value: 0,
       },
     ]
 
     const beforeEnter = async (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0, {
-        y: '-100%',
+        y: "-100%",
         onComplete: done,
       })
-    }
+    };
     const enter = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0.4, {
         y: 0,
         onComplete: done,
       })
-    }
+    };
     const leave = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0.4, {
-        y: '-100%',
+        y: "-100%",
         onComplete: done,
       })
-    }
+    };
     const afterLeave = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0, {
-        y: '-100%',
+        y: "-100%",
         onComplete: done,
       })
-    }
+    };
 
     return {
       beforeEnter,

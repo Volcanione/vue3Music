@@ -1,5 +1,11 @@
 <template>
-  <LayerPage :loading="loadingState" ref="searchResultRef" @pullDown="pullDown" @pullUp="pullUp" forcedUpdates>
+  <LayerPage
+    :loading="loadingState"
+    ref="searchResultRef"
+    @pullDown="pullDown"
+    @pullUp="pullUp"
+    forcedUpdates
+  >
     <template #header>
       <Nav :right="false">
         <div class="searchBar">
@@ -8,7 +14,7 @@
               <i class="iconfont searchIcon">&#xe632;</i>
             </template>
             <template #right>
-              <i class="iconfont clearIcon"  @click="clearSearch">&#xe600;</i>
+              <i class="iconfont clearIcon" @click="clearSearch">&#xe600;</i>
             </template>
           </Field>
         </div>
@@ -18,7 +24,12 @@
       </div>
     </template>
     <template #content>
-      <Item :data="resultList" :type="type" v-if="resultList.length" @confirm="confirmItem" />
+      <Item
+        :data="resultList"
+        :type="type"
+        v-if="resultList.length"
+        @confirm="confirmItem"
+      />
     </template>
     <template #fixed>
       <SearchTip
@@ -75,11 +86,11 @@ export default defineComponent({
     };
   },
   setup(props) {
-    const { search, searchSuggest, clearSearch, } = searchFn();
+    const { search, searchSuggest, clearSearch } = searchFn()
 
     const init = () => {
       getsearchResult();
-    };
+    }
 
     const {
       getsearchResult,
@@ -90,7 +101,7 @@ export default defineComponent({
       searchResultRef,
       pullDown,
       pullUp,
-      confirmItem
+      confirmItem,
     } = searchResult();
     init()
     return {
@@ -104,7 +115,7 @@ export default defineComponent({
       searchResultRef,
       pullDown,
       pullUp,
-      confirmItem
+      confirmItem,
     };
   },
 });

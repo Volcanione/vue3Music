@@ -1,17 +1,23 @@
 <template>
   <div class="LyricPage">
-    <Lyric v-if="playerShow" :key="playerNow?.id + 'page' || 1+'page'" :lyricData="lyricData" :currentTime="curTime" ref="lyricRef" />
+    <Lyric
+      v-if="playerShow"
+      :key="playerNow?.id + 'page' || 1 + 'page'"
+      :lyricData="lyricData"
+      :currentTime="curTime"
+      ref="lyricRef"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import createAudio from '@/layout/components/Player/audio'
-import Lyric from '@/components/Lyric/index.vue'
+import { defineComponent, PropType } from "vue";
+import createAudio from "@/layout/components/Player/audio";
+import Lyric from "@/components/Lyric/index.vue";
 export default defineComponent({
   props: {
     curTime: {
-      type: Number as PropType<Number>,
+      type: Number as PropType<number>,
       default: 0,
     },
     lyricData: {
@@ -21,13 +27,13 @@ export default defineComponent({
   },
   components: { Lyric },
   setup() {
-    const { playerNow, playerShow } = createAudio()
+    const { playerNow, playerShow } = createAudio();
     return {
       playerNow,
       playerShow,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

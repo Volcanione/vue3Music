@@ -1,14 +1,27 @@
 <template>
-  <LayerPage ref="songListRef" :loading="loadingState" @pullDown="pullDown" @pullUp="pullUp" forcedUpdates>
+  <LayerPage
+    ref="songListRef"
+    :loading="loadingState"
+    @pullDown="pullDown"
+    @pullUp="pullUp"
+    forcedUpdates
+  >
     <template #header>
       <Nav>
         推荐歌单
         <template #right>
-          <span class="more" @click="moreCatList"><i class="iconfont">&#xe623;</i></span>
+          <span class="more" @click="moreCatList"
+            ><i class="iconfont">&#xe623;</i></span
+          >
         </template>
       </Nav>
       <div class="tabbar">
-        <TabBar v-model="catType" :list="catlist" v-if="catlist.length" @change="changeType" />
+        <TabBar
+          v-model="catType"
+          :list="catlist"
+          v-if="catlist.length"
+          @change="changeType"
+        />
       </div>
     </template>
     <template #content>
@@ -24,19 +37,19 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import SongItem from '@/views/recom/components/Item/SongItem.vue'
-import api from '@/api'
-import AllCatList from './components/allCatList.vue'
-import { useRouter } from 'vue-router'
-import { songlistSetup } from './setup'
+import { defineComponent, ref } from "vue"
+import SongItem from "@/views/recom/components/Item/SongItem.vue"
+import api from "@/api"
+import AllCatList from "./components/allCatList.vue"
+import { useRouter } from "vue-router"
+import { songlistSetup } from "./setup"
 export default defineComponent({
   components: { AllCatList, SongItem },
-  name: 'songList',
+  name: "songList",
   setup() {
     const router = useRouter()
     const catlist = ref([]) //歌单分类
-    const catType = ref('') //当前歌单分类
+    const catType = ref("") //当前歌单分类
     const allCatListshow = ref(false) //全部分类弹窗
 
     const {
@@ -54,7 +67,7 @@ export default defineComponent({
       //初始化
       await getSongListCatList()
       initData()
-    }
+    };
     //请求歌单分类数据
     const getSongListCatList = async () => {
       const { code, tags } = await api.getSongListCatListHOT()
@@ -68,12 +81,12 @@ export default defineComponent({
             })
           : []
       catType.value = tags[0]?.name
-    }
+    };
 
     //更多歌单
     const moreCatList = () => {
       allCatListshow.value = !allCatListshow.value
-    }
+    };
 
     //选择歌单回调
     const confirmCheckCat = ({ name }: any) => {
@@ -83,7 +96,7 @@ export default defineComponent({
       if (isNavCat) {
         catType.value = isNavCat.value
       } else {
-        router.push({ name: 'SongListCat', params: { cat: name } })
+        router.push({ name: "SongListCat", params: { cat: name } })
       }
     }
     init()

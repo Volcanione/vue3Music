@@ -31,8 +31,12 @@ export default defineComponent({
     let instance: any = getCurrentInstance();
     onBeforeMount(() => {
       instance._hub = {
-        complete: () => {},
-        destroy: () => {},
+        complete: () => {
+          console.log("complete");
+        },
+        destroy: () => {
+          console.log("destroy");
+        },
       };
     });
     let timeID = -1;

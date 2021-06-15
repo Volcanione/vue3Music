@@ -45,20 +45,20 @@ export default defineComponent({
       loadingState.value = true;
       nextTick(() => {
         ScrollPage?.value?.refresh();
-      });
-    };
+      })
+    }
 
     //点击单行
     const handlerClick = (item: any) => {
       emit("comfirm", item);
       close();
-    };
+    }
 
     const close = () => {
       nextTick(() => {
         visible.value = false;
-      });
-    };
+      })
+    }
 
     watch(
       () => props.keyword,
@@ -78,7 +78,7 @@ export default defineComponent({
           searchSuggest();
         }
       );
-    };
+    }
 
     return {
       afterEnter,
@@ -97,7 +97,7 @@ export default defineComponent({
 .SearchTip {
   height: calc(100% - 44px);
   width: 100%;
-  position: absolute  !important;
+  position: absolute !important;
   background: #{$appBackColor};
   top: 44px;
   left: 0;

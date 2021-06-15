@@ -3,8 +3,8 @@ interface TabRouteView {
   enter: (el: HTMLElement, done: any) => void;
   leave: (el: HTMLElement, done: any) => void;
   pullDownrefresh: (done: () => void) => void;
-  afterEnter: () => void,
-  pageRef: any
+  afterEnter: () => void;
+  pageRef: any;
 }
 
 import { toRefs, watch, ref, computed } from "vue";
@@ -25,7 +25,7 @@ export function setTabRouteView(props: Props, context: any): TabRouteView {
   });
   const Left = computed(() => {
     return disabled.value ? 0 : !type.value ? "-100%" : "100%";
-  });
+  })
 
   const beforeEnter = (el: HTMLElement, done: any) => {
     context.emit("beforeEnter");
@@ -35,7 +35,7 @@ export function setTabRouteView(props: Props, context: any): TabRouteView {
       transform: "translateZ(0)",
       onComplete: done,
     });
-  };
+  }
 
   //  const afterEnter = (el: HTMLElement, done: any) => {
   //   TweenMax.to(el, 0, { x: 0, onComplete: done })
@@ -44,17 +44,17 @@ export function setTabRouteView(props: Props, context: any): TabRouteView {
   const enter = (el: HTMLElement, done: any) => {
     el.style.backfaceVisibility = "hidden";
     TweenMax.to(el, 0.2, { x: 0, onComplete: done });
-  };
+  }
   const leave = (el: HTMLElement, done: any) => {
     el.style.backfaceVisibility = "hidden";
     TweenMax.to(el, 0.2, { x: X.value, onComplete: done });
-  };
+  }
 
   const afterEnter = () => {
     const RouterView: any = pageRef.value;
     const refresh = RouterView.$refs?.ScrollPage?.refresh;
     refresh && refresh();
-  }
+  };
 
   const pullDownrefresh = async (done: () => void) => {
     //组件请求数据的方法
@@ -62,9 +62,7 @@ export function setTabRouteView(props: Props, context: any): TabRouteView {
     pageCom.init();
 
     await done();
-  }
-
-
+  };
 
   return {
     beforeEnter,
@@ -72,6 +70,6 @@ export function setTabRouteView(props: Props, context: any): TabRouteView {
     leave,
     pullDownrefresh,
     afterEnter,
-    pageRef
+    pageRef,
   };
 }

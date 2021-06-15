@@ -1,11 +1,11 @@
 <template></template>
 <script lang="tsx">
-import { computed, defineComponent, PropType } from 'vue'
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
+import { computed, defineComponent, PropType } from "vue"
+import dayjs from "dayjs"
+import duration from "dayjs/plugin/duration"
 dayjs.extend(duration)
 export default defineComponent({
-  emits: ['confirm'],
+  emits: ["confirm"],
   props: {
     type: {
       type: Number as PropType<number>,
@@ -27,7 +27,7 @@ export default defineComponent({
           class="song"
           key={item.id}
           onClick={() => {
-            emit('confirm', item)
+            emit("confirm", item)
           }}
         >
           <div class="left">
@@ -35,11 +35,11 @@ export default defineComponent({
             <span class="art">{item.album.name}</span>
           </div>
           <span class="time">
-            {dayjs.duration(item.duration).format('mm:ss')}
+            {dayjs.duration(item.duration).format("mm:ss")}
           </span>
         </div>
       )
-    }
+    };
 
     const AlbumItem = (item: any) => {
       return (
@@ -47,11 +47,11 @@ export default defineComponent({
           class="album"
           key={item.id}
           onClick={() => {
-            emit('confirm', item)
+            emit("confirm", item)
           }}
         >
           <div class="imgBox">
-            <img v-layz={item.blurPicUrl + '?param=100y100'} />
+            <img v-layz={item.blurPicUrl + "?param=100y100"} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -59,7 +59,7 @@ export default defineComponent({
           </div>
         </div>
       )
-    }
+    };
 
     const artsItem = (item: any, idx: number) => {
       return (
@@ -67,11 +67,11 @@ export default defineComponent({
           class="arts"
           key={item.id}
           onClick={() => {
-            emit('confirm', item)
+            emit("confirm", item)
           }}
         >
           <div class="ImgBox">
-            <img v-layz={item.img1v1Url + '?param=100y100'} />
+            <img v-layz={item.img1v1Url + "?param=100y100"} />
           </div>
           <div class="right">
             <span class="ellipsis">{item.name}</span>
@@ -79,7 +79,7 @@ export default defineComponent({
           </div>
         </div>
       )
-    }
+    };
 
     const songList = (item: any) => {
       return (
@@ -87,11 +87,11 @@ export default defineComponent({
           class="songList"
           key={item.id}
           onClick={() => {
-            emit('confirm', item)
+            emit("confirm", item)
           }}
         >
           <div class="ImgBox">
-            <img v-layz={item.coverImgUrl + '?param=100y100'} />
+            <img v-layz={item.coverImgUrl + "?param=100y100"} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
@@ -99,7 +99,7 @@ export default defineComponent({
           </div>
         </div>
       )
-    }
+    };
 
     const MVlist = (item: any) => {
       return (
@@ -107,22 +107,22 @@ export default defineComponent({
           class="Mv"
           key={item.id}
           onClick={() => {
-            emit('confirm', item)
+            emit("confirm", item)
           }}
         >
           <div class="ImgBox">
-            <img v-layz={item.cover + '?param=100y100'} />
+            <img v-layz={item.cover + "?param=100y100"} />
           </div>
           <div class="right">
             <span class="name ellipsis">{item.name}</span>
             <div class="info">
               <span>{item.artistName}</span>
-              <span>{dayjs.duration(item.duration).format('mm:ss')}</span>{' '}
+              <span>{dayjs.duration(item.duration).format("mm:ss")}</span>{" "}
             </div>
           </div>
         </div>
       )
-    }
+    };
 
     const radio = (item: any) => {
       return (
@@ -130,48 +130,48 @@ export default defineComponent({
           class="radio"
           key={item.id}
           onClick={() => {
-            emit('confirm', item)
+            emit("confirm", item)
           }}
         >
           <div class="ImgBox">
-            <img v-layz={item.picUrl + '?param=100y100'} />
+            <img v-layz={item.picUrl + "?param=100y100"} />
           </div>
           <div class="right">
             <span>{item.name}</span>
             <span class="time">
-              {dayjs(item.createTime).format('YYYY-MM-DD')}
+              {dayjs(item.createTime).format("YYYY-MM-DD")}
             </span>
           </div>
         </div>
       )
-    }
+    };
 
     return () => {
       switch (type.value) {
         case 1:
           return data.value.map((item: any) => {
             return SongItem(item)
-          })
+          });
         case 10:
           return data.value.map((item: any) => {
             return AlbumItem(item)
-          })
+          });
         case 100:
           return data.value.map((item: any, idx: number) => {
             return artsItem(item, idx)
-          })
+          });
         case 1000:
           return data.value.map((item: any) => {
             return songList(item)
-          })
+          });
         case 1004:
           return data.value.map((item: any) => {
             return MVlist(item)
-          })
+          });
         case 1009:
           return data.value.map((item: any) => {
             return radio(item)
-          })
+          });
         default:
           return <span>1</span>
       }

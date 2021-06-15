@@ -23,7 +23,7 @@ import { getUserType } from "@/utils/index";
 import { $msg } from "@/components/Msg/index";
 import api from "@/api/user";
 import { useRouter } from "vue-router";
-import {setCookie} from '@/utils'
+import { setCookie } from "@/utils"
 export default defineComponent({
   name: "login",
   data() {
@@ -51,11 +51,11 @@ export default defineComponent({
       if (res.code !== 200) {
         return;
       }
-      setCookie('cookie',res.cookie)
-      setCookie('userId',res.account.id)
+      setCookie("cookie", res.cookie)
+      setCookie("userId", res.account.id)
       await $msg({ title: "登录成功" });
       router.replace("/");
-    };
+    }
     return {
       form,
       login,

@@ -42,12 +42,15 @@ img {
     url('./fonts/HuaWenYuanTi-REGULAR-2.ttf') format('svg');
   /* iOS 4.1- */
 }
+
 @font-face {
-  font-family: 'iconfont';  /* Project id 1294292 */
-  src: url('//at.alicdn.com/t/font_1294292_p1vkxt5711n.woff2?t=1622626966716') format('woff2'),
-       url('//at.alicdn.com/t/font_1294292_p1vkxt5711n.woff?t=1622626966716') format('woff'),
-       url('//at.alicdn.com/t/font_1294292_p1vkxt5711n.ttf?t=1622626966716') format('truetype');
+  font-family: 'iconfont';
+  /* Project id 1294292 */
+  src: url('//at.alicdn.com/t/font_1294292_jg5lplaifx8.woff2?t=1623319209036') format('woff2'),
+    url('//at.alicdn.com/t/font_1294292_jg5lplaifx8.woff?t=1623319209036') format('woff'),
+    url('//at.alicdn.com/t/font_1294292_jg5lplaifx8.ttf?t=1623319209036') format('truetype');
 }
+
 .viewContent {
   @include viewContent;
 }
@@ -59,7 +62,7 @@ img {
   left: 0;
   bottom: 0;
   overflow: hidden;
-  background: #{$appBackColor}; 
+  background: #{$appBackColor};
 }
 
 .fade-enter-active,

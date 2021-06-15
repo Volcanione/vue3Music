@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, toRefs } from 'vue'
+import { defineComponent, PropType, computed, toRefs } from "vue";
 export default defineComponent({
   props: {
     state: {
@@ -18,23 +18,25 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const {state,white} = toRefs(props)
+    const { state, white } = toRefs(props);
     const setloading = computed(() => {
-      if (state?.value === 0 ||state?.value === 1 || state?.value === 2) {
-        return true
+      if (state?.value === 0 || state?.value === 1 || state?.value === 2) {
+        return true;
       }
-      return false
-    })
+      return false;
+    });
 
-    const src = computed((  ) => {
-        return white?.value?require('@/style/icons/svg-loaders/puffwhite.svg'):require('@/style/icons/svg-loaders/puff.svg')
-    })
+    const src = computed(() => {
+      return white?.value
+        ? require("@/style/icons/svg-loaders/puffwhite.svg")
+        : require("@/style/icons/svg-loaders/puff.svg");
+    });
     return {
       setloading,
-      src
-    }
+      src,
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .pullDown {

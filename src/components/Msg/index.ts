@@ -24,8 +24,8 @@ export const $msg = ({ title = "", duration = 2000 }) => {
       duration,
     });
     document.body.appendChild(container);
-  });
-};
+  })
+}
 
 export default {
   install: (app: App, option?: any) => {

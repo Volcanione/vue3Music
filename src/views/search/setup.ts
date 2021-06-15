@@ -3,7 +3,7 @@ import api from "@/api/index";
 import { LS_set, LS_get, LS_remove } from "@/utils/index";
 import { useRouter, useRoute } from "vue-router";
 import { $msg } from "@/components/Msg/index";
-import { musicSetup } from '@/layout/components/Player/setup'
+import { musicSetup } from "@/layout/components/Player/setup"
 export function searchFn() {
   const router = useRouter();
   const route = useRoute();
@@ -20,7 +20,7 @@ export function searchFn() {
       data: { realkeyword },
     } = await api.getSearchDefault();
     search.value = code === 200 ? realkeyword : "搜索";
-  };
+  }
 
   //搜索事件
   const searchEnter = (keyword: string, state = false) => {
@@ -40,7 +40,7 @@ export function searchFn() {
   //清空输入框
   const clearSearch = () => {
     search.value = "";
-  };
+  }
 
   //搜索建议点击
   const searchSuggest = (item: any, state = false) => {
@@ -53,8 +53,8 @@ export function searchFn() {
         searchTipRef?.value?.close();
         clearTimeout(timeid);
       }, 0);
-    });
-  };
+    })
+  }
 
   //搜索数据持久化
   const saveSearchKey = () => {
@@ -73,22 +73,22 @@ export function searchFn() {
     }
     LS_set(SEARCHKEY, ls);
     searchHistoryList.value = ls;
-  };
+  }
 
   const getSearchKey = () => {
     searchHistoryList.value = LS_get(SEARCHKEY) || [];
-  };
+  }
 
   const removeHistory = () => {
     LS_remove(SEARCHKEY);
     getSearchKey();
-  };
+  }
 
   //请求热门搜索
   const searchHotDeatil = async () => {
     const { code, data } = await api.searchHotDeatil();
     searchHotList.value = code === 200 ? data : [];
-  };
+  }
 
   return {
     search,
@@ -139,17 +139,16 @@ export function searchResult() {
         } else {
           resultList.value.push(...val)
         }
-
       }
     });
     loadingState.value = true;
     refreshScroll()
-  };
+  }
 
   const refreshScroll = async () => {
     await nextTick();
     searchResultRef?.value?.refresh();
-  }
+  };
 
   //改变类别
 
@@ -160,21 +159,16 @@ export function searchResult() {
     await getsearchResult();
     refreshScroll()
     searchResultRef?.value?.scrollTo()
-  };
+  }
 
   //下拉刷新
   const pullDown = async (done: () => void) => {
     searchParam.offset = 0
     try {
-
       await getsearchResult()
-
-    } catch (error) {
-
-    }
+    } catch (error) {}
     await done()
-
-  }
+  };
   //上拉加载
   const pullUp = async (done: (state?: number) => void) => {
     searchParam.offset++
@@ -192,24 +186,23 @@ export function searchResult() {
 
   //点击item
   const confirmItem = (data: any) => {
-
-    let routename = ''
+    let routename = ""
     let params = {}
     console.log(type.value, data);
     switch (type.value) {
       case 1:
         return playMusic(data)
       case 1000:
-        routename = 'SongListDetail'
+        routename = "SongListDetail"
         params = {
-          cat: '搜索',
+          cat: "搜索",
           id: data.id,
         }
-        break
+        break;
       case 100:
-        routename = 'SingerDetail'
+        routename = "SingerDetail"
         params = {
-          cat: '搜索',
+          cat: "搜索",
           name: data.name,
           id: data.id,
         }
@@ -219,16 +212,17 @@ export function searchResult() {
       return
     }
     router.push({
-      name: routename, params,
+      name: routename,
+      params,
       query: {
-        name: data.name
-      }
+        name: data.name,
+      },
     })
-  }
+  };
 
   //点击单曲
   const playMusic = async (data: any) => {
-    const { code, songs } = await api.getSongMusicDetail({ ids: data.id + '' })
+    const { code, songs } = await api.getSongMusicDetail({ ids: data.id + "" })
     if (code !== 200) {
       return
     }
@@ -241,7 +235,7 @@ export function searchResult() {
       duration: dt,
       img: al.picUrl,
     })
-  }
+  };
 
   return {
     getsearchResult,
@@ -252,6 +246,6 @@ export function searchResult() {
     searchResultRef,
     pullDown,
     pullUp,
-    confirmItem
+    confirmItem,
   };
 }

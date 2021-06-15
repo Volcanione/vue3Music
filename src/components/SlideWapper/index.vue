@@ -7,8 +7,8 @@
   </div>
 </template>
 <script lang="ts">
-import BScroll from '@better-scroll/core'
-import Slide from '@better-scroll/slide'
+import BScroll from "@better-scroll/core";
+import Slide from "@better-scroll/slide";
 import {
   defineComponent,
   nextTick,
@@ -18,24 +18,24 @@ import {
   ref,
   toRefs,
   watch,
-} from 'vue'
-import { BScrollType } from '@/interface/index'
-BScroll.use(Slide)
+} from "vue";
+import { BScrollType } from "@/interface/index";
+BScroll.use(Slide);
 export default defineComponent({
   props: {
     data: {
       type: Array as PropType<Array<any>>,
       default: () => {
-        return []
+        return [];
       },
     },
     height: {
       type: String as PropType<string>,
-      default: '100%',
+      default: "100%",
     },
     width: {
       type: String as PropType<string>,
-      default: '100%',
+      default: "100%",
     },
     loop: {
       type: Boolean as PropType<boolean>,
@@ -43,18 +43,18 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { data } = toRefs(props)
-    let slide = {} as BScrollType
-    const slideRef = ref(null) as any
-    const currentPageIndex = ref(0)
+    const { data } = toRefs(props);
+    let slide = {} as BScrollType;
+    const slideRef = ref(null) as any;
+    const currentPageIndex = ref(0);
 
     onMounted(() => {
-      init()
-    })
+      init();
+    });
 
     onBeforeUnmount(() => {
-      slide.destroy()
-    })
+      slide.destroy();
+    });
 
     const init = () => {
       slide = new BScroll(slideRef.value as HTMLElement, {
@@ -65,33 +65,33 @@ export default defineComponent({
           loop: false,
           autoplay: false,
         },
-        tap: 'tap',
+        tap: "tap",
         momentum: false,
-      }) as any
-      slide.on('slideWillChange', (page) => {
-        currentPageIndex.value = page.pageX
-      })
-    }
+      }) as any;
+      slide.on("slideWillChange", (page) => {
+        currentPageIndex.value = page.pageX;
+      });
+    };
 
     const refresh = async () => {
-      await nextTick()
-      slide.refresh()
-    }
+      await nextTick();
+      slide.refresh();
+    };
 
     watch(
       () => data,
       () => {
-        refresh()
+        refresh();
       },
       { deep: true }
-    )
+    );
 
     return {
       currentPageIndex,
       slideRef,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

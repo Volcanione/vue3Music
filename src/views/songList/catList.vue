@@ -1,8 +1,13 @@
 <template>
-  <LayerPage ref="songListRef" :loading="loadingState" @pullDown="pullDown" @pullUp="pullUp">
+  <LayerPage
+    ref="songListRef"
+    :loading="loadingState"
+    @pullDown="pullDown"
+    @pullUp="pullUp"
+  >
     <template #header>
       <Nav>
-        {{title}}
+        {{ title }}
       </Nav>
     </template>
     <template #content>
@@ -15,12 +20,12 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import SongItem from '@/views/recom/components/Item/SongItem.vue'
-import { defineComponent, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { songlistSetup } from './setup'
+import SongItem from "@/views/recom/components/Item/SongItem.vue"
+import { defineComponent, ref } from "vue"
+import { useRoute } from "vue-router"
+import { songlistSetup } from "./setup"
 export default defineComponent({
-  name: 'songList',
+  name: "songList",
   components: { SongItem },
   setup() {
     const route = useRoute()
@@ -39,7 +44,7 @@ export default defineComponent({
     const init = async () => {
       //初始化
       initData()
-    }
+    };
     init()
     return {
       title,
@@ -66,7 +71,7 @@ export default defineComponent({
     max-height: 250px;
     margin: 5px;
     flex-shrink: 0;
-    :deep( .imgBox) {
+    :deep(.imgBox) {
       flex: 1;
       img {
         height: 100%;

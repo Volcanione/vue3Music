@@ -1,41 +1,57 @@
 <template>
-  <LayerPage ref="songDetailRef" :loading="loadingState" @pullDown="pullDown" class="songDetaile">
+  <LayerPage
+    ref="songDetailRef"
+    :loading="loadingState"
+    @pullDown="pullDown"
+    class="songDetaile"
+  >
     <template #pullDown="{ state }">
       <PullDownSlot :state="state" white />
     </template>
     <template #header>
       <Nav class="Nav" :bgImgStyle="bgImgStyle">
-        {{name}}
+        {{ name }}
       </Nav>
     </template>
     <template #content>
       <div class="info">
-        <div class="imgBox"><img v-if="info?.coverImgUrl"  v-layz="info?.coverImgUrl" alt=""></div>
+        <div class="imgBox">
+          <img v-if="info?.coverImgUrl" v-layz="info?.coverImgUrl" alt="" />
+        </div>
         <div class="infoBox">
-          <span class="name">{{info.name}}</span>
-          <span class="subscribe"><i class="iconfont">&#xe870;</i> {{info.subscribedCount}}</span>
-          <span class="ellipsis">简介：{{info.description}}</span>
+          <span class="name">{{ info.name }}</span>
+          <span class="subscribe"
+            ><i class="iconfont">&#xe870;</i> {{ info.subscribedCount }}</span
+          >
+          <span class="ellipsis">简介：{{ info.description }}</span>
         </div>
       </div>
       <div class="content">
         <div class="toolBar">
-          <span class="playAll" @click="playAll"> <i class="iconfont">&#xe65b;</i>播放全部</span>
-          <span>{{info.trackCount}}</span>
+          <span class="playAll" @click="playAll">
+            <i class="iconfont">&#xe65b;</i>播放全部</span
+          >
+          <span>{{ info.trackCount }}</span>
         </div>
-        <Item :data="songList" :type="1" v-if="songList.length" @confirm="checkMusicItem" />
+        <Item
+          :data="songList"
+          :type="1"
+          v-if="songList.length"
+          @confirm="checkMusicItem"
+        />
       </div>
     </template>
     <template #fixed>
       <div class="top" :style="topStyle">
-        <img :src="`${info.coverImgUrl}?param=300y300`" :style="imgStyle">
+        <img :src="`${info.coverImgUrl}?param=300y300`" :style="imgStyle" />
       </div>
     </template>
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Item from '@/views/search/components/Item/item.vue'
-import { songlistDetailSetup } from './setup'
+import { defineComponent } from "vue"
+import Item from "@/views/search/components/Item/item.vue"
+import { songlistDetailSetup } from "./setup"
 export default defineComponent({
   components: { Item },
   setup() {
@@ -46,7 +62,7 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-@import '~@/style/layout.scss';
+@import "~@/style/layout.scss";
 .songDetaile {
   :deep(.viewContent) {
     background: transparent;
@@ -65,7 +81,7 @@ export default defineComponent({
     height: 200px;
     &::after {
       position: absolute;
-      content: '';
+      content: "";
       width: 100%;
       background: rgba(255, 255, 255, 0.3);
       top: -100%;

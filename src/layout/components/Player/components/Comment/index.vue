@@ -1,10 +1,25 @@
 <template>
   <Drawer v-model="show" direction="bottom" size="80%">
     <div class="commentContent">
-      <div class="header"><span>歌曲评论</span>
-        <TabBar class="TabBar" v-model="active" :list="typeList" @change="changeType" />
+      <div class="header">
+        <span>歌曲评论</span>
+        <TabBar
+          class="TabBar"
+          v-model="active"
+          :list="typeList"
+          @change="changeType"
+        />
       </div>
-      <ScrollPage v-if="commentList.length" class="ScrollPage" ref="ScrollPageRef" v-loading="loadingState" :pull-down="true" @refresh="pullDownrefresh" @loading="pullUploading" :pull-Up="true">
+      <ScrollPage
+        v-if="commentList.length"
+        class="ScrollPage"
+        ref="ScrollPageRef"
+        v-loading="loadingState"
+        :pull-down="true"
+        @refresh="pullDownrefresh"
+        @loading="pullUploading"
+        :pull-Up="true"
+      >
         <template #pullDown="{ state }">
           <PullDownSlot :state="state" />
         </template>
@@ -30,11 +45,11 @@ import {
   reactive,
   ref,
   nextTick,
-} from 'vue'
-import api from '@/api/index'
-import { useStore } from 'vuex'
-import CommentItem from './item.vue'
-import { $msg } from '@/components/Msg/index'
+} from "vue";
+import api from "@/api/index";
+import { useStore } from "vuex";
+import CommentItem from "./item.vue";
+import { $msg } from "@/components/Msg/index";
 export default defineComponent({
   components: { CommentItem },
   props: {
@@ -43,127 +58,127 @@ export default defineComponent({
       default: false,
     },
   },
-  emits: ['update:visible'],
+  emits: ["update:visible"],
   setup(props, { emit }) {
-    const store = useStore()
-    const playerNow = toRef(store.getters, 'player/nowPlay')
+    const store = useStore();
+    const playerNow = toRef(store.getters, "player/nowPlay");
     const typeList = [
-      { label: '最热', value: 0 },
-      { label: '推荐', value: 1 },
-    ]
+      { label: "最热", value: 0 },
+      { label: "推荐", value: 1 },
+    ];
     const param = reactive({
-      id: '',
-      before: '',
+      id: "",
+      before: "",
       limit: 30,
       offset: 0,
       type: 0,
-    })
+    });
 
-    const count = ref(0)
+    const count = ref(0);
 
-    const active = ref(0)
+    const active = ref(0);
 
-    const commentList = ref([]) as any
+    const commentList = ref([]) as any;
 
-    const ScrollPageRef = ref(null) as any
+    const ScrollPageRef = ref(null) as any;
 
-    const loadingState = ref(false)
+    const loadingState = ref(false);
 
     const show = computed({
       get() {
-        return props.visible
+        return props.visible;
       },
       set(val) {
-        emit('update:visible', val)
+        emit("update:visible", val);
       },
-    })
+    });
 
     const initParam = () => {
       Object.assign(param, {
         limit: 30,
         offset: 0,
-      })
-    }
+      });
+    };
 
     const getData = async (status = false) => {
-      loadingState.value = false
-      const Api = !active.value ? api.getMusicCommentHot : api.getMusicComment
+      loadingState.value = false;
+      const Api = !active.value ? api.getMusicCommentHot : api.getMusicComment;
       if (!param.id) {
-        loadingState.value = true
-        return (commentList.value = [])
+        loadingState.value = true;
+        return (commentList.value = []);
       }
-      const { code, hotComments, comments, total } = await Api(param)
-      loadingState.value = true
+      const { code, hotComments, comments, total } = await Api(param);
+      loadingState.value = true;
       if (code !== 200) {
-        return (commentList.value = [])
+        return (commentList.value = []);
       }
 
       // commentList.value = code === 200 ? comments || hotComments : []
-      count.value = total
+      count.value = total;
       if (!status) {
-        commentList.value = comments || hotComments
+        commentList.value = comments || hotComments;
       } else {
-        const data = comments || hotComments
-        commentList.value.push(...data)
+        const data = comments || hotComments;
+        commentList.value.push(...data);
       }
 
-      refresh()
-    }
+      refresh();
+    };
 
     //更新组件
     const refresh = async () => {
-      await nextTick()
-      ScrollPageRef.value?.refresh()
-    }
+      await nextTick();
+      ScrollPageRef.value?.refresh();
+    };
 
     const changeType = () => {
-      param.offset = 0
-      commentList.value = []
-      getData()
-    }
+      param.offset = 0;
+      commentList.value = [];
+      getData();
+    };
 
     //下拉刷新
     const pullDownrefresh = async (done: (state?: boolean) => void) => {
-      initParam()
-      getData()
-      await done()
-    }
+      initParam();
+      getData();
+      await done();
+    };
 
     //上拉加载
     const pullUploading = async (done: (state?: number) => void) => {
-      param.offset++
+      param.offset++;
       if (count.value <= commentList.value.length) {
-        await done(2)
-        return $msg({ title: '真的到底了' })
+        await done(2);
+        return $msg({ title: "真的到底了" });
       }
 
       try {
-        getData(true)
-        await done(1)
+        getData(true);
+        await done(1);
       } catch (error) {
-        await done(0)
+        await done(0);
       }
-    }
+    };
 
     watch(
       () => props.visible,
       (val) => {
         if (!val) {
-          return
+          return;
         }
-        param.offset = 0
-        getData()
+        param.offset = 0;
+        getData();
       },
       { deep: true }
-    )
+    );
 
     watch(
       () => playerNow.value,
       (data) => {
-        param.id = data?.id
+        param.id = data?.id;
       },
       { deep: true }
-    )
+    );
 
     return {
       show,
@@ -177,9 +192,9 @@ export default defineComponent({
       pullDownrefresh,
       pullUploading,
       count,
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .commentContent {

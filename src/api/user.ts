@@ -1,5 +1,9 @@
 import request from "@/utils/request";
-import { APILogin, APIGetUserPlaylist, APIGetUserRecord } from "@/interface/index";
+import {
+  APILogin,
+  APIGetUserPlaylist,
+  APIGetUserRecord,
+} from "@/interface/index"
 export default {
   loginStatus() {
     return request({
@@ -16,7 +20,7 @@ export default {
   },
   logout() {
     return request({
-      url: '/logout',
+      url: "/logout",
       method: "post",
     });
   },
@@ -36,15 +40,14 @@ export default {
     return request({
       url: "/user/playlist",
       method: "post",
-      data
+      data,
     });
   },
   getUserRecord(data: APIGetUserRecord) {
     return request({
       url: "/user/record",
       method: "post",
-      data
+      data,
     });
   },
-
 };

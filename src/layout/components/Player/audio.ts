@@ -1,74 +1,80 @@
 import { ref, nextTick, reactive } from "vue";
-import { playerSetup } from '@/layout/components/Player/setup'
-import { getMusicPlayUrl, getMusicLyric, getLikeList, setLike } from './data'
-import { $msg } from '@/components/Msg/index'
-import { getCookie } from '@/utils'
+import { playerSetup } from "@/layout/components/Player/setup"
+import { getMusicPlayUrl, getMusicLyric, getLikeList, setLike, getUserInfo } from "./data"
+import { $msg } from "@/components/Msg/index"
 export default () => {
-  const { playerState, playerNow, setPlayerState, setNextNow, playerMode, playerShow, playerList, setPlayerListShow,
-    playerListShow, setProgess, playerProgess: progess, setPlayerShow } = playerSetup()
+  const {
+    playerState,
+    playerNow,
+    setPlayerState,
+    setNextNow,
+    playerMode,
+    playerShow,
+    playerList,
+    setPlayerListShow,
+    playerListShow,
+    setProgess,
+    playerProgess: progess,
+    setPlayerShow,
+  } = playerSetup()
 
 
   const audioElement = ref(null) as any
   const currentTime = ref(0) //当前播放时间
-  const ended = ref(false)//是否播放结束
+  const ended = ref(false) //是否播放结束
   // const progess = ref(0) //进度
   const duration = ref(0) //长度
   const musicLyric = reactive({})
-
+  let timeId = -1
   const getlike = ref(false)
 
   const getMusicDuration = () => {
     audioElement.value.onloadeddata = null
     audioElement.value.onerror = null
-    return new Promise(async (res: (i?: any) => void, rej: (i?: any) => void) => {
-      try {
-        audioElement.value.onloadeddata = () => {
-          res(audioElement.value.duration)
-        }
-        audioElement.value.onerror = () => {
-          rej({ code: 0, msg: '无效音乐地址' })
-        }
-
-      } catch (error) {
-
+    return new Promise(
+      async (res: (i?: any) => void, rej: (i?: any) => void) => {
+        try {
+          audioElement.value.onloadeddata = () => {
+            res(audioElement.value.duration)
+          };
+          audioElement.value.onerror = () => {
+            rej({ code: 0, msg: "无效音乐地址" })
+          };
+        } catch (error) { }
       }
-    })
-  }
+    )
+  };
 
   //设置音乐src地址
   const setPlaySrc = (url: string) => {
     try {
       audioElement.value.src = url
-    } catch (error) {
-    }
+    } catch (error) { }
   }
 
-  //设置进度条时长 
+  //设置进度条时长
   const setProessDuration = async (duration: number) => {
     try {
       audioElement.value.ontimeupdate = null
       await nextTick()
       audioElement.value.ontimeupdate = async () => {
         currentTime.value = audioElement.value?.currentTime || 0
-        progess.value = + (currentTime.value / duration * 100).toFixed(3)
+        progess.value = +((currentTime.value / duration) * 100).toFixed(3)
         ended.value = audioElement.value?.ended || false
         // await nextTick()
         // currentTime.value = 0
-      }
-    } catch (error) {
-    }
+      };
+    } catch (error) { }
   }
 
   //bug  暂停时切换歌曲  时间和进度条不对应 已修复
 
-
   const changeProgess = (proess: any) => {
-    audioElement.value.currentTime = proess.value / 100 * duration.value
-  }
-
+    audioElement.value.currentTime = (proess.value / 100) * duration.value
+  };
 
   const delErorr = async (type = false) => {
-    await $msg({ title: '暂无版权' })
+    await $msg({ title: "暂无版权" })
     setProessDuration(0)
     if (playerList.length <= 1) {
       return setPlayerState(false)
@@ -81,24 +87,22 @@ export default () => {
     setPlayerState(type)
     await nextTick()
     playerState.value && updatePlayState(type)
-
-  }
-
-
-
+  };
 
   //播放暂停
   const setPlayerAudioState = async (type?: boolean) => {
     await nextTick()
-    try {
-      if (type) {
-        return await audioElement.value?.play()
-      }
-      return await audioElement.value?.pause()
-    } catch (error) {
-    }
-  }
-
+    clearTimeout(timeId)
+    timeId = setTimeout(async () => {
+      try {
+        if (type) {
+          return await audioElement.value?.play()
+        }
+        return await audioElement.value?.pause()
+      } catch (error) { }
+      clearTimeout(timeId)
+    }, 0)
+  };
 
   //更新
   const updatePlayState = async (type?: boolean) => {
@@ -114,7 +118,7 @@ export default () => {
     await nextTick()
     try {
       duration.value = await getMusicDuration()
-      //设置进度条时长 
+      //设置进度条时长
       setProessDuration(duration.value)
       setPlayerState(type)
     } catch (error) {
@@ -129,34 +133,35 @@ export default () => {
     if (getlike.value) {
       return
     }
-    const uid = getCookie('userId')
+    const uid = await getUserInfo()
     getlike.value = true
     if (!uid) {
       getlike.value = false
-      playerNow.value.like = false
-      return
+      playerNow.value && (playerNow.value.like = false)
+      return;
     }
     const ids = await getLikeList(uid)
     getlike.value = false
-    playerNow.value.like = ids.includes(playerNow.value.id)
-  }
+    playerNow.value &&
+      (playerNow.value.like = ids.includes(playerNow.value.id))
+  };
 
   //喜欢该音乐
   const setLikeMusic = async () => {
-    const uid = getCookie('userId')
+    const uid = await getUserInfo()
     if (!uid) {
       return
     }
     if (!playerNow.value.id) {
       return
     }
-    const like = await setLike(playerNow.value.id, !playerNow.value.like)
+    const like = await setLike(playerNow.value.id, !playerNow.value?.like)
 
-    if (typeof like !== 'boolean') {
+    if (typeof like !== "boolean") {
       return
     }
-    playerNow.value.like = like
-  }
+    playerNow.value && (playerNow.value.like = like)
+  };
 
   //获取歌词
 
@@ -175,11 +180,11 @@ export default () => {
     duration.value = 0
     Object.assign(musicLyric, { lyric_0: null, lyric_1: null })
     setPlayerState(false)
-  }
+  };
 
   //下一首
   const setNextNowPlay = async () => {
-    if (playerMode.value === 'alone') {
+    if (playerMode.value === "alone") {
       updatePlayState(true)
     } else {
       const { code } = await setNextNow()
@@ -188,10 +193,6 @@ export default () => {
       }
     }
   }
-
-
-
-
 
   return {
     audioElement,
@@ -215,6 +216,6 @@ export default () => {
     setPlayerState,
     setPlayerShow,
     setLikeList,
-    setLikeMusic
+    setLikeMusic,
   }
-}
+};

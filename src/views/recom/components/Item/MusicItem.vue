@@ -1,7 +1,7 @@
 <template>
   <div v-for="(item, index) in List" :key="index" class="MusicBox">
     <div class="item" v-for="i in item" :key="i.id" @click="handlerClick(i)">
-      <img v-layz="i.img+'?param=100y100'" alt="" />
+      <img v-layz="i.img + '?param=100y100'" alt="" />
       <div class="info">
         <span class="name ellipsis">{{ i.name }}</span>
         <span class="artists ellipsis">{{ i.artists }}</span>
@@ -41,12 +41,12 @@ export default defineComponent({
           Arr[i].push(item);
         }
         List.value = Arr as [];
-      });
+      })
     });
 
     const handlerClick = (data: any) => {
       emit("confirm", data);
-    };
+    }
 
     return {
       List,
@@ -57,7 +57,7 @@ export default defineComponent({
     setTime() {
       return (val: number) => {
         return dayjs.duration(val).format("mm:ss");
-      };
+      }
     },
   },
 });

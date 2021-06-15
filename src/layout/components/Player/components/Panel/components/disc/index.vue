@@ -1,19 +1,22 @@
 <template>
   <div class="discBox">
-    <div class="disc" :style="{ 'animation-play-state': playerState?'running':'paused' }">
+    <div
+      class="disc"
+      :style="{ 'animation-play-state': playerState ? 'running' : 'paused' }"
+    >
       <span class="border"></span>
-      <img :src="!src?defaultImg:(src+`?param=${size}y${size}`)" alt="">
+      <img :src="!src ? defaultImg : src + `?param=${size}y${size}`" alt="" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref } from "vue";
 export default defineComponent({
   props: {
     src: {
       type: String as PropType<string>,
-      default: '',
+      default: "",
     },
     playerState: {
       type: Boolean as PropType<boolean>,
@@ -25,14 +28,14 @@ export default defineComponent({
     },
   },
   setup() {
-    const SongDiscRef = ref(null)
-    const defaultImg = require('@/assets/songListBG.png')
+    const SongDiscRef = ref(null);
+    const defaultImg = require("@/assets/songListBG.png");
     return {
       SongDiscRef,
       defaultImg,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -80,5 +83,3 @@ export default defineComponent({
   }
 }
 </style>
-
-

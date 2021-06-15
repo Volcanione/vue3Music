@@ -7,6 +7,6 @@ export default createStore({
   state: {},
   mutations: {},
   actions: {},
-  modules: { route, user,player },
+  modules: { route, user, player },
   getters,
 }) as any;

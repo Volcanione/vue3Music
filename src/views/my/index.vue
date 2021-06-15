@@ -4,7 +4,8 @@
       <PullDownSlot :state="state" white />
     </template>
     <template #header>
-      <Nav class="nav" :bgImgStyle="bgImgStyle"> 我的
+      <Nav class="nav" :bgImgStyle="bgImgStyle">
+        我的
         <template #right>
           <i class="iconfont" @click="logOut">&#xe63a;</i>
         </template>
@@ -13,50 +14,70 @@
     <template #content>
       <div class="infoBox">
         <div class="avatar">
-          <img v-layz="userInfo?.avatarUrl?`${userInfo?.avatarUrl}?param=100y100`:''">
+          <img
+            v-layz="
+              userInfo?.avatarUrl ? `${userInfo?.avatarUrl}?param=100y100` : ''
+            "
+          />
         </div>
         <div class="infoText">
-          <span class="nickname">{{userInfo.nickname}}</span>
+          <span class="nickname">{{ userInfo.nickname }}</span>
         </div>
       </div>
       <div class="content">
         <div class="songlist">
           <div class="title">
             <span>我创建的歌单</span>
-            <span>{{createList.length}}</span>
+            <span>{{ createList.length }}</span>
           </div>
-          <Item :data="createList" :type="1000" v-if="createList.length" @confirm="getSongDetaile" />
+          <Item
+            :data="createList"
+            :type="1000"
+            v-if="createList.length"
+            @confirm="getSongDetaile"
+          />
         </div>
         <div class="songlist">
           <div class="title">
             <span>喜欢的歌单</span>
-            <span>{{likeList.length}}</span>
+            <span>{{ likeList.length }}</span>
           </div>
-          <Item :data="likeList" :type="1000" v-if="likeList.length" @confirm="getSongDetaile" />
+          <Item
+            :data="likeList"
+            :type="1000"
+            v-if="likeList.length"
+            @confirm="getSongDetaile"
+          />
         </div>
       </div>
     </template>
     <template #fixed>
       <div class="top" :style="topStyle">
         <div :style="imgStyle">
-          <img :src="userInfo?.backgroundUrl?`${userInfo?.backgroundUrl}?param=300y300`:''">
+          <img
+            :src="
+              userInfo?.backgroundUrl
+                ? `${userInfo?.backgroundUrl}?param=300y300`
+                : ''
+            "
+          />
         </div>
       </div>
     </template>
   </LayerPage>
 </template>
 <script lang="ts">
-import Item from '@/views/search/components/Item/item.vue'
-import { defineComponent, reactive, ref, nextTick } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import user from '@/api/user'
-import { songlistDetailSetup } from '@/views/songList/setup'
-import { $msg } from '@/components/Msg/index'
-import {removeCookie} from '@/utils'
+import Item from "@/views/search/components/Item/item.vue"
+import { defineComponent, reactive, ref, nextTick } from "vue"
+import { useStore } from "vuex"
+import { useRouter } from "vue-router"
+import user from "@/api/user"
+import { songlistDetailSetup } from "@/views/songList/setup"
+import { $msg } from "@/components/Msg/index"
+import { removeCookie } from "@/utils"
 export default defineComponent({
   components: { Item },
-  name: 'my',
+  name: "my",
   setup() {
     const store = useStore()
     const router = useRouter()
@@ -85,9 +106,9 @@ export default defineComponent({
       if (code !== 200) {
         return
       }
-      store.commit('user/setUserInfo', profile)
+      store.commit("user/setUserInfo", profile)
       playListParam.uid = profile.userId
-    }
+    };
 
     const getUserPlaylist = async () => {
       const { code, playlist } = await user.getUserPlaylist(playListParam)
@@ -96,44 +117,44 @@ export default defineComponent({
       }
       createList.value = playlist.filter((item: any) => {
         return item.creator.userId === userInfo.userId
-      })
+      });
       likeList.value = playlist.filter((item: any) => {
         return item.creator.userId !== userInfo.userId
-      })
+      });
       await nextTick()
       refreshScroll()
-    }
+    };
 
     //歌单详细
     const getSongDetaile = (item: any) => {
       router.push({
-        name: 'SongListDetail',
+        name: "SongListDetail",
         params: {
-          cat: 'my',
+          cat: "my",
           id: item.id,
         },
         query: {
           name: item.name,
         },
       })
-    }
+    };
 
     const pullDown = async (done: () => void) => {
       await init()
       done()
-    }
+    };
 
     //登出
 
     const logOut = async () => {
       //存在bug  登出后用户token等store信息未清空bug
       try {
-        await store.dispatch('user/logOut')
-        removeCookie('userId')
-        removeCookie('cookie')
-        $msg({ title: '当前账号已退出' })
+        await store.dispatch("user/logOut")
+        removeCookie("userId")
+        removeCookie("cookie")
+        $msg({ title: "当前账号已退出" })
         router.replace({
-          path: '/recom',
+          path: "/recom",
         })
       } catch (error) {}
     }
@@ -143,7 +164,7 @@ export default defineComponent({
       await getUserInfo()
       await getUserPlaylist()
       loadingState.value = true
-    }
+    };
 
     init()
     return {
@@ -163,7 +184,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '~@/style/layout.scss';
+@import "~@/style/layout.scss";
 .my {
   :deep(.viewContent) {
     background: transparent;
@@ -182,7 +203,7 @@ export default defineComponent({
     height: 200px;
     &::after {
       position: absolute;
-      content: '';
+      content: "";
       width: 100%;
       background: rgba(255, 255, 255, 0.3);
       top: -100vh;

@@ -1,34 +1,46 @@
 <template>
   <div class="playContont" ref="wrapper">
     <div class="box">
-      <Panel :key="0" ref="Panel" @updateLyric="updateLyric" @updateTime="updateTime" />
+      <Panel
+        :key="0"
+        ref="Panel"
+        @updateLyric="updateLyric"
+        @updateTime="updateTime"
+      />
       <Lyric :key="1" ref="Lyric" :curTime="curTime" :lyricData="lyricData" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, onMounted, reactive, watch } from 'vue'
-import Panel from './Panel/index.vue'
-import Lyric from './Lyric/index.vue'
-import BScroll from '@better-scroll/core'
+import {
+  defineComponent,
+  PropType,
+  ref,
+  onMounted,
+  reactive,
+  watch,
+} from "vue";
+import Panel from "./Panel/index.vue";
+import Lyric from "./Lyric/index.vue";
+import BScroll from "@better-scroll/core";
 export default defineComponent({
   components: { Panel, Lyric },
   props: {
     config: {
       type: Object as PropType<any>,
       default() {
-        return null
+        return null;
       },
     },
   },
   setup(props: any) {
-    const wrapper = ref(null)
-    const Panel = ref(null)
-    const Lyric = ref(null)
-    const curTime = ref(0)
-    const lyricData: any = reactive({})
-    let scroll = {} as any
+    const wrapper = ref(null);
+    const Panel = ref(null);
+    const Lyric = ref(null);
+    const curTime = ref(0);
+    const lyricData: any = reactive({});
+    let scroll = {} as any;
     onMounted(() => {
       scroll = new BScroll(wrapper.value as any, {
         scrollY: false,
@@ -36,26 +48,26 @@ export default defineComponent({
         bounce: false,
         click: true,
         preventDefault: false,
-      })
-      scroll.disable()
-    })
+      });
+      scroll.disable();
+    });
 
     watch(
       () => props.config.value,
       (val) => {
-        scroll.refresh()
-        const el: any = val ? Lyric.value : Panel.value
-        scroll.scrollToElement(el.$el, 300, 0, 0)
+        scroll.refresh();
+        const el: any = val ? Lyric.value : Panel.value;
+        scroll.scrollToElement(el.$el, 300, 0, 0);
       }
-    )
+    );
 
     const updateLyric = (data: any) => {
-      Object.assign(lyricData, data)
-    }
+      Object.assign(lyricData, data);
+    };
 
     const updateTime = (data: any) => {
-      curTime.value = data
-    }
+      curTime.value = data;
+    };
 
     return {
       wrapper,
@@ -65,9 +77,9 @@ export default defineComponent({
       updateTime,
       curTime,
       lyricData,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

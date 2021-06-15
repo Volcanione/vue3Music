@@ -1,17 +1,16 @@
 import user from "@/api/user";
-import { removeCookie } from '@/utils/'
+import { removeCookie } from "@/utils/"
 interface STATETYPE {
   loginStatus: boolean;
-  userInfo: any
+  userInfo: any;
 }
 
 const defaultState = (): STATETYPE => {
   return {
     loginStatus: false,
-    userInfo: {}
+    userInfo: {},
   }
-}
-
+};
 
 const state: STATETYPE = defaultState()
 
@@ -24,8 +23,7 @@ const mutations = {
   },
   removeUserInfo(state: STATETYPE) {
     Object.assign(state, defaultState())
-  }
-
+  },
 };
 
 const actions = {
@@ -35,17 +33,17 @@ const actions = {
         .loginStatus()
         .then((result: any) => {
           if (!result?.data?.account) {
-            rej({ code: 301, msg: '需要登录' });
+            rej({ code: 301, msg: "需要登录" })
             commit("setLoginStatus", false);
-            return
+            return;
           }
           res(result);
           commit("setLoginStatus", true);
         })
         .catch((err: any) => {
-          rej({ code: 301, msg: '需要登录' });
+          rej({ code: 301, msg: "需要登录" })
           commit("setLoginStatus", false);
-        });
+        })
     });
   },
   refreshLoginState({ commit }: any) {
@@ -59,22 +57,25 @@ const actions = {
         .catch((err: any) => {
           rej(err);
           commit("setLoginStatus", false);
-        });
+        })
     });
   },
   logOut({ commit }: any) {
     return new Promise((res, rej) => {
-      user.logout().then((result: any) => {
-        res(result);
-        commit("setLoginStatus", false);
-        commit("removeUserInfo");
-        removeCookie('cookie')
-      })
+      user
+        .logout()
+        .then((result: any) => {
+          res(result)
+          commit("setLoginStatus", false)
+          commit("removeUserInfo")
+          removeCookie("cookie")
+          removeCookie("userId")
+        })
         .catch((err: any) => {
           rej(err);
-        });
-    })
-  }
+        })
+    });
+  },
 };
 export default {
   namespaced: true,

@@ -3,7 +3,8 @@
     <div class="left">
       <slot name="left" />
       <span class="back" v-if="!$slots.left" @click="handlerBack">
-        <i class="iconfont">&#xe603;</i></span>
+        <i class="iconfont">&#xe603;</i></span
+      >
     </div>
     <div class="content">
       <div class="ellipsis">
@@ -17,8 +18,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, PropType, computed } from "vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   props: {
     right: {
@@ -30,26 +31,26 @@ export default defineComponent({
       required: false,
     },
     bgImgStyle: {
-      type: Object as PropType<object>,
+      type: Object as PropType<any>,
       required: false,
     },
   },
   setup(props) {
-    const router = useRouter()
+    const router = useRouter();
     const handlerBack = () => {
       if (props.back) {
-        return props.back()
+        return props.back();
       }
-      router.go(-1)
-    }
+      router.go(-1);
+    };
     return {
       handlerBack,
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
-@import '~@/style/layout.scss';
+@import "~@/style/layout.scss";
 .Nav {
   height: #{$navbarHeight};
   background: #{$appBackColor};
@@ -69,7 +70,7 @@ export default defineComponent({
     // -webkit-filter: blur(2px);
     // filter: blur(2px);
     overflow: hidden;
-    background-color:#{$appBackColor};
+    background-color: #{$appBackColor};
   }
   .left,
   .right {
