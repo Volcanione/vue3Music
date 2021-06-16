@@ -18,7 +18,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed } from "vue";
+import { defineComponent, PropType } from "vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
   props: {

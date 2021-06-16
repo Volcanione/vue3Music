@@ -7,7 +7,7 @@ export function playerSetup() {
   //不要在这里用钩子函数 或者watch监听函数  会重复调用
   const store: any = useStore();
   const player = store.state.player;
-  const playerGetter = store.getters
+  const playerGetter = store.getters;
   // const playerMode = toRef(player, "playerMode");
   // const playerState = toRef(player, "playerState");
   // const playerShow = toRef(player, "playerShow");
@@ -20,14 +20,14 @@ export function playerSetup() {
     playerShow,
     playerListShow,
     playerProgess,
-  } = toRefs(player)
+  } = toRefs(player);
   //打开关闭页面
   const setPlayerShow = (state = false) => {
     store.commit("player/setPlayerShow", state);
     // if (!state) {
     //   setPlayerListShow(state)
     // }
-  }
+  };
 
   //切换模式
   const setPlayerMode = () => {
@@ -36,7 +36,7 @@ export function playerSetup() {
       "player/setPlayerMode",
       MODELIST[idx < MODELIST.length - 1 ? idx + 1 : 0]
     );
-  }
+  };
 
   //播放暂停
   const setPlayerState = (state = false) => {
@@ -45,27 +45,27 @@ export function playerSetup() {
       return $msg({ title: "音乐列表空空如也" });
     }
     store.commit("player/setPlayerState", state);
-  }
+  };
 
   //上一首
   const setPrevNow = async () => {
     try {
       return await store.dispatch("player/prevPlayer");
     } catch (error) {
-      $msg({ title: error.msg })
-      return error
+      $msg({ title: error.msg });
+      return error;
     }
-  }
+  };
 
   //下一首
   const setNextNow = async (update?: boolean) => {
     try {
       return await store.dispatch("player/nextPlayer", update);
     } catch (error) {
-      $msg({ title: error.msg })
-      return error
+      $msg({ title: error.msg });
+      return error;
     }
-  }
+  };
 
   //进度
 
@@ -102,7 +102,7 @@ export function musicSetup() {
   //添加至当前播放
   const setPlayerNow = (data: PlayListType[] | PlayListType) => {
     // store.commit("player/addToPlayerList", data);
-    store.dispatch("player/addListPlaying", data)
+    store.dispatch("player/addListPlaying", data);
   };
   //删除歌曲
   const removePlayList = (data?: PlayListType) => {
@@ -112,5 +112,5 @@ export function musicSetup() {
   return {
     setPlayerNow,
     removePlayList,
-  }
+  };
 }

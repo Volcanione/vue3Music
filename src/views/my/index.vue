@@ -67,62 +67,62 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import Item from "@/views/search/components/Item/item.vue"
-import { defineComponent, reactive, ref, nextTick } from "vue"
-import { useStore } from "vuex"
-import { useRouter } from "vue-router"
-import user from "@/api/user"
-import { songlistDetailSetup } from "@/views/songList/setup"
-import { $msg } from "@/components/Msg/index"
-import { removeCookie } from "@/utils"
+import Item from "@/views/search/components/Item/item.vue";
+import { defineComponent, reactive, ref, nextTick } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import user from "@/api/user";
+import { songlistDetailSetup } from "@/views/songList/setup";
+import { $msg } from "@/components/Msg/index";
+import { removeCookie } from "@/utils";
 export default defineComponent({
   components: { Item },
   name: "my",
   setup() {
-    const store = useStore()
-    const router = useRouter()
-    const userInfo = reactive(store.getters.userInfo)
-    const loadingState = ref(false)
+    const store = useStore();
+    const router = useRouter();
+    const userInfo = reactive(store.getters.userInfo);
+    const loadingState = ref(false);
     const {
       topStyle,
       imgStyle,
       bgImgStyle,
       refreshScroll,
-    } = songlistDetailSetup()
+    } = songlistDetailSetup();
     const playListParam = reactive({
       uid: store.getters.userInfo.userId,
       limit: 30,
       offset: 0,
-    })
+    });
 
-    const createList = ref([])
-    const likeList = ref([])
+    const createList = ref([]);
+    const likeList = ref([]);
 
     const getUserInfo = async () => {
       if (userInfo.userId) {
-        return
+        return;
       }
-      const { code, profile } = await user.getUserInfo()
+      const { code, profile } = await user.getUserInfo();
       if (code !== 200) {
-        return
+        return;
       }
-      store.commit("user/setUserInfo", profile)
-      playListParam.uid = profile.userId
+      store.commit("user/setUserInfo", profile);
+      playListParam.uid = profile.userId;
     };
 
     const getUserPlaylist = async () => {
-      const { code, playlist } = await user.getUserPlaylist(playListParam)
+      const { code, playlist } = await user.getUserPlaylist(playListParam);
       if (code !== 200) {
-        return
+        return;
       }
       createList.value = playlist.filter((item: any) => {
-        return item.creator.userId === userInfo.userId
+        return item.creator.userId === userInfo.userId;
       });
       likeList.value = playlist.filter((item: any) => {
-        return item.creator.userId !== userInfo.userId
+        return item.creator.userId !== userInfo.userId;
       });
-      await nextTick()
-      refreshScroll()
+      await nextTick();
+      refreshScroll();
     };
 
     //歌单详细
@@ -136,12 +136,12 @@ export default defineComponent({
         query: {
           name: item.name,
         },
-      })
+      });
     };
 
     const pullDown = async (done: () => void) => {
-      await init()
-      done()
+      await init();
+      done();
     };
 
     //登出
@@ -149,24 +149,24 @@ export default defineComponent({
     const logOut = async () => {
       //存在bug  登出后用户token等store信息未清空bug
       try {
-        await store.dispatch("user/logOut")
-        removeCookie("userId")
-        removeCookie("cookie")
-        $msg({ title: "当前账号已退出" })
+        await store.dispatch("user/logOut");
+        removeCookie("userId");
+        removeCookie("cookie");
+        $msg({ title: "当前账号已退出" });
         router.replace({
           path: "/recom",
-        })
+        });
       } catch (error) {}
-    }
-
-    const init = async () => {
-      loadingState.value = false
-      await getUserInfo()
-      await getUserPlaylist()
-      loadingState.value = true
     };
 
-    init()
+    const init = async () => {
+      loadingState.value = false;
+      await getUserInfo();
+      await getUserPlaylist();
+      loadingState.value = true;
+    };
+
+    init();
     return {
       userInfo,
       topStyle,
@@ -178,9 +178,9 @@ export default defineComponent({
       getSongDetaile,
       loadingState,
       logOut,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

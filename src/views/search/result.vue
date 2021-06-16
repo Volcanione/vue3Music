@@ -86,11 +86,11 @@ export default defineComponent({
     };
   },
   setup(props) {
-    const { search, searchSuggest, clearSearch } = searchFn()
+    const { search, searchSuggest, clearSearch } = searchFn();
 
     const init = () => {
       getsearchResult();
-    }
+    };
 
     const {
       getsearchResult,
@@ -103,7 +103,7 @@ export default defineComponent({
       pullUp,
       confirmItem,
     } = searchResult();
-    init()
+    init();
     return {
       search,
       searchSuggest,

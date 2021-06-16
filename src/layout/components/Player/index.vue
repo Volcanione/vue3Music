@@ -30,7 +30,9 @@
       </div>
     </div>
   </Drawer>
-  <Comment v-model:visible="commentShow" />
+  <Drawer v-model="commentShow" direction="bottom" size="100%">
+    <Comment v-model:visible="commentShow" />
+  </Drawer>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, nextTick, ref } from "vue";

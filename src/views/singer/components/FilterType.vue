@@ -23,8 +23,8 @@
   </Drawer>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed, watch } from "vue"
-import { TweenMax } from "gsap"
+import { defineComponent, PropType, computed, watch } from "vue";
+import { TweenMax } from "gsap";
 export default defineComponent({
   props: {
     visible: {
@@ -38,23 +38,23 @@ export default defineComponent({
   },
   emits: ["update:modelValue", "update:visible"],
   setup(props, { emit }) {
-    const config = computed(() => props.modelValue)
+    const config = computed(() => props.modelValue);
     const show = computed({
       get() {
-        return props.visible
+        return props.visible;
       },
       set(val) {
-        emit("update:visible", val)
+        emit("update:visible", val);
       },
-    })
+    });
 
     watch(
       () => config,
       (val) => {
-        emit("update:modelValue", val)
+        emit("update:modelValue", val);
       },
       { deep: true }
-    )
+    );
 
     const typeList: any[] = [
       {
@@ -73,7 +73,7 @@ export default defineComponent({
         label: "乐团",
         value: 3,
       },
-    ]
+    ];
 
     const languageList: any[] = [
       {
@@ -100,31 +100,31 @@ export default defineComponent({
         label: "其他",
         value: 0,
       },
-    ]
+    ];
 
     const beforeEnter = async (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0, {
         y: "-100%",
         onComplete: done,
-      })
+      });
     };
     const enter = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0.4, {
         y: 0,
         onComplete: done,
-      })
+      });
     };
     const leave = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0.4, {
         y: "-100%",
         onComplete: done,
-      })
+      });
     };
     const afterLeave = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0, {
         y: "-100%",
         onComplete: done,
-      })
+      });
     };
 
     return {
@@ -136,9 +136,9 @@ export default defineComponent({
       languageList,
       config,
       show,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

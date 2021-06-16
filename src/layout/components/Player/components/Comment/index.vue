@@ -1,40 +1,55 @@
 <template>
-  <Drawer v-model="show" direction="bottom" size="80%">
-    <div class="commentContent">
-      <div class="header">
-        <span>歌曲评论</span>
+  <div class="commentContent">
+    <Nav class="nav" :back="() => (show = false)">
+      歌曲评论
+      <template #right>
         <TabBar
           class="TabBar"
           v-model="active"
           :list="typeList"
           @change="changeType"
         />
-      </div>
-      <ScrollPage
-        v-if="commentList.length"
-        class="ScrollPage"
-        ref="ScrollPageRef"
-        v-loading="loadingState"
-        :pull-down="true"
-        @refresh="pullDownrefresh"
-        @loading="pullUploading"
-        :pull-Up="true"
-      >
-        <template #pullDown="{ state }">
-          <PullDownSlot :state="state" />
-        </template>
-        <CommentItem v-for="item in commentList" :key="item.id" :data="item" />
-        <template #pullUp="{ state }">
-          <PullUpSlot :state="state">
-            <span class="tip">到底了</span>
-          </PullUpSlot>
-        </template>
-      </ScrollPage>
-      <div v-if="!count" class="nodata"><span>没有评论</span></div>
-    </div>
+      </template>
+    </Nav>
+    <ScrollPage
+      v-if="count"
+      class="ScrollPage"
+      ref="ScrollPageRef"
+      v-loading="loadingState"
+      :pull-down="true"
+      @refresh="pullDownrefresh"
+      @loading="pullUploading"
+      :pull-Up="true"
+    >
+      <template #pullDown="{ state }">
+        <PullDownSlot :state="state" />
+      </template>
+      <CommentItem
+        v-for="item in commentList"
+        :key="item.id"
+        :data="item"
+        :type="0"
+        :id="playerNow.id"
+        foolr
+        @getfloor="getFloorData"
+      />
+      <template #pullUp="{ state }">
+        <PullUpSlot :state="state">
+          <span class="tip">到底了</span>
+        </PullUpSlot>
+      </template>
+    </ScrollPage>
+    <div v-if="!count" class="nodata"><span>没有评论</span></div>
+  </div>
+  <Drawer
+    v-model="foolrShow"
+    direction="bottom"
+    size="calc(100% - 44px)"
+    contentClass="foolrCommit"
+  >
+    <Floor :data="foolrData" v-model:visible="foolrShow" />
   </Drawer>
 </template>
-
 <script lang="ts">
 import {
   defineComponent,
@@ -50,8 +65,9 @@ import api from "@/api/index";
 import { useStore } from "vuex";
 import CommentItem from "./item.vue";
 import { $msg } from "@/components/Msg/index";
+import Floor from "./foolr.vue";
 export default defineComponent({
-  components: { CommentItem },
+  components: { CommentItem, Floor },
   props: {
     visible: {
       type: Boolean as PropType<boolean>,
@@ -67,14 +83,14 @@ export default defineComponent({
       { label: "推荐", value: 1 },
     ];
     const param = reactive({
-      id: "",
+      id: playerNow?.value?.id,
       before: "",
       limit: 30,
       offset: 0,
       type: 0,
     });
 
-    const count = ref(0);
+    const count = ref(1);
 
     const active = ref(0);
 
@@ -93,6 +109,9 @@ export default defineComponent({
       },
     });
 
+    const foolrShow = ref(false);
+    const foolrData = reactive({});
+
     const initParam = () => {
       Object.assign(param, {
         limit: 30,
@@ -105,11 +124,13 @@ export default defineComponent({
       const Api = !active.value ? api.getMusicCommentHot : api.getMusicComment;
       if (!param.id) {
         loadingState.value = true;
+        count.value = 0;
         return (commentList.value = []);
       }
       const { code, hotComments, comments, total } = await Api(param);
       loadingState.value = true;
       if (code !== 200) {
+        count.value = 0;
         return (commentList.value = []);
       }
 
@@ -137,6 +158,12 @@ export default defineComponent({
       getData();
     };
 
+    //获取楼层评论
+    const getFloorData = (data: any) => {
+      foolrShow.value = true;
+      Object.assign(foolrData, data);
+    };
+
     //下拉刷新
     const pullDownrefresh = async (done: (state?: boolean) => void) => {
       initParam();
@@ -161,24 +188,18 @@ export default defineComponent({
     };
 
     watch(
-      () => props.visible,
-      (val) => {
-        if (!val) {
-          return;
-        }
-        param.offset = 0;
-        getData();
-      },
-      { deep: true }
-    );
-
-    watch(
       () => playerNow.value,
       (data) => {
         param.id = data?.id;
       },
       { deep: true }
     );
+
+    const init = () => {
+      getData();
+    };
+
+    init();
 
     return {
       show,
@@ -192,6 +213,10 @@ export default defineComponent({
       pullDownrefresh,
       pullUploading,
       count,
+      playerNow,
+      getFloorData,
+      foolrShow,
+      foolrData,
     };
   },
 });
@@ -201,13 +226,11 @@ export default defineComponent({
   height: 100%;
   display: flex;
   flex-direction: column;
-  .header {
-    height: 40px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    justify-content: space-between;
+  .nav {
+    background: #fff;
+    ::v-deep(.right) {
+      width: auto;
+    }
     .TabBar {
       width: auto;
       :deep(.line) {
@@ -217,6 +240,7 @@ export default defineComponent({
   }
   .ScrollPage {
     flex: 1;
+    overflow: hidden;
   }
 }
 .tip {

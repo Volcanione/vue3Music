@@ -45,20 +45,20 @@ export default defineComponent({
       loadingState.value = true;
       nextTick(() => {
         ScrollPage?.value?.refresh();
-      })
-    }
+      });
+    };
 
     //点击单行
     const handlerClick = (item: any) => {
       emit("comfirm", item);
       close();
-    }
+    };
 
     const close = () => {
       nextTick(() => {
         visible.value = false;
-      })
-    }
+      });
+    };
 
     watch(
       () => props.keyword,
@@ -78,7 +78,7 @@ export default defineComponent({
           searchSuggest();
         }
       );
-    }
+    };
 
     return {
       afterEnter,

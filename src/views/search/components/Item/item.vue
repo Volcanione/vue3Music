@@ -1,9 +1,9 @@
 <template></template>
 <script lang="tsx">
-import { computed, defineComponent, PropType } from "vue"
-import dayjs from "dayjs"
-import duration from "dayjs/plugin/duration"
-dayjs.extend(duration)
+import { computed, defineComponent, PropType } from "vue";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
 export default defineComponent({
   emits: ["confirm"],
   props: {
@@ -14,20 +14,20 @@ export default defineComponent({
     data: {
       type: Array as PropType<Array<any>>,
       default() {
-        return []
+        return [];
       },
     },
   },
   setup(props: any, { emit }) {
-    const data = computed(() => props.data) as any
-    const type = computed(() => props.type) as any
+    const data = computed(() => props.data) as any;
+    const type = computed(() => props.type) as any;
     const SongItem = (item: any) => {
       return (
         <div
           class="song"
           key={item.id}
           onClick={() => {
-            emit("confirm", item)
+            emit("confirm", item);
           }}
         >
           <div class="left">
@@ -38,7 +38,7 @@ export default defineComponent({
             {dayjs.duration(item.duration).format("mm:ss")}
           </span>
         </div>
-      )
+      );
     };
 
     const AlbumItem = (item: any) => {
@@ -47,7 +47,7 @@ export default defineComponent({
           class="album"
           key={item.id}
           onClick={() => {
-            emit("confirm", item)
+            emit("confirm", item);
           }}
         >
           <div class="imgBox">
@@ -58,7 +58,7 @@ export default defineComponent({
             <span class="art">{item.artist.name}</span>
           </div>
         </div>
-      )
+      );
     };
 
     const artsItem = (item: any, idx: number) => {
@@ -67,7 +67,7 @@ export default defineComponent({
           class="arts"
           key={item.id}
           onClick={() => {
-            emit("confirm", item)
+            emit("confirm", item);
           }}
         >
           <div class="ImgBox">
@@ -78,7 +78,7 @@ export default defineComponent({
             <span class="albums">{item.albumSize}张专辑</span>
           </div>
         </div>
-      )
+      );
     };
 
     const songList = (item: any) => {
@@ -87,7 +87,7 @@ export default defineComponent({
           class="songList"
           key={item.id}
           onClick={() => {
-            emit("confirm", item)
+            emit("confirm", item);
           }}
         >
           <div class="ImgBox">
@@ -98,7 +98,7 @@ export default defineComponent({
             <span class="count">{item.bookCount || item.trackCount}首</span>
           </div>
         </div>
-      )
+      );
     };
 
     const MVlist = (item: any) => {
@@ -107,7 +107,7 @@ export default defineComponent({
           class="Mv"
           key={item.id}
           onClick={() => {
-            emit("confirm", item)
+            emit("confirm", item);
           }}
         >
           <div class="ImgBox">
@@ -121,7 +121,7 @@ export default defineComponent({
             </div>
           </div>
         </div>
-      )
+      );
     };
 
     const radio = (item: any) => {
@@ -130,7 +130,7 @@ export default defineComponent({
           class="radio"
           key={item.id}
           onClick={() => {
-            emit("confirm", item)
+            emit("confirm", item);
           }}
         >
           <div class="ImgBox">
@@ -143,41 +143,41 @@ export default defineComponent({
             </span>
           </div>
         </div>
-      )
+      );
     };
 
     return () => {
       switch (type.value) {
         case 1:
           return data.value.map((item: any) => {
-            return SongItem(item)
+            return SongItem(item);
           });
         case 10:
           return data.value.map((item: any) => {
-            return AlbumItem(item)
+            return AlbumItem(item);
           });
         case 100:
           return data.value.map((item: any, idx: number) => {
-            return artsItem(item, idx)
+            return artsItem(item, idx);
           });
         case 1000:
           return data.value.map((item: any) => {
-            return songList(item)
+            return songList(item);
           });
         case 1004:
           return data.value.map((item: any) => {
-            return MVlist(item)
+            return MVlist(item);
           });
         case 1009:
           return data.value.map((item: any) => {
-            return radio(item)
+            return radio(item);
           });
         default:
-          return <span>1</span>
+          return <span>1</span>;
       }
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .right {

@@ -1,4 +1,4 @@
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 export function getUserType(user: string | number) {
   const phoneReg = /^1[3-9][0-9]{9}$/ as any;
   const mailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/ as any;
@@ -38,28 +38,28 @@ export const getrandomData = <T extends unknown>(
   key?: keyof T
 ): T | null => {
   if (!arr.length) {
-    return null
+    return null;
   }
   if (!i || !key) {
-    const re = Math.floor(Math.random() * arr.length)
-    return arr[re]
+    const re = Math.floor(Math.random() * arr.length);
+    return arr[re];
   }
   const FILTER = arr.filter((m: T) => {
-    return m[key] !== i[key]
+    return m[key] !== i[key];
   });
-  const re = Math.floor(Math.random() * FILTER.length)
+  const re = Math.floor(Math.random() * FILTER.length);
 
-  return FILTER[re]
-}
+  return FILTER[re];
+};
 
 export const setCookie = (name: string, data: string) => {
   Cookies.set(name, data);
 };
 
 export const getCookie = (name: string) => {
-  return Cookies.get(name)
+  return Cookies.get(name);
 };
 
 export const removeCookie = (name: string) => {
-  return Cookies.remove(name)
+  return Cookies.remove(name);
 };

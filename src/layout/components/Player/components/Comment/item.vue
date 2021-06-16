@@ -1,5 +1,5 @@
 <template>
-  <div class="item" v-longList="getCommit">
+  <div class="item" v-longList:[foolr]="getCommit">
     <div class="avatar">
       <img v-layz="data.user.avatarUrl + '?param=100y100'" alt="" />
     </div>
@@ -14,29 +14,63 @@
         <p class="time">{{ showtime }}</p>
       </div>
       <div class="text">{{ data.content }}</div>
+      <div class="footer" v-if="foolr" @click="foolrCommit(data.foolrData)">
+        共有{{ foolrTotal }}条回复
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, watch, ref, toRefs } from "vue";
+import { defineComponent, PropType, ref, toRefs, reactive } from "vue";
 import dayjs from "dayjs";
+import api from "@/api/index";
 export default defineComponent({
   props: {
     data: {
       type: Object as PropType<any>,
       default: null,
     },
+    type: {
+      type: Number as PropType<number>,
+      default: 0,
+    },
+    id: {
+      type: Number as PropType<number>,
+      default: null,
+    },
+    foolr: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
   },
-  setup(props) {
-    const { data }: any = toRefs(props);
+  emits: ["getfloor"],
+  setup(props, { emit }) {
+    const { data, type, id }: any = toRefs(props);
     const showtime = dayjs(data.value.time).format("YYYY-MM-DD HH:mm:ss");
-
-    const getCommit = () => {
-      console.log(111);
+    const param = reactive({
+      id,
+      type,
+      parentCommentId: data.value.commentId,
+      limit: 20,
+    });
+    const foolrTotal = ref(0);
+    const getCommit = async () => {
+      const { code, data: foolr } = await api.getCommentfloor(param);
+      if (code !== 200) {
+        return;
+      }
+      foolrTotal.value = foolr.totalCount;
+      Object.assign(data.value, { foolrData: { foolr, param } });
+      // emit("floor", data.comments);
     };
 
-    return { showtime, getCommit };
+    //楼层评论
+    const foolrCommit = (data: any) => {
+      emit("getfloor", data);
+    };
+
+    return { showtime, getCommit, foolrTotal, foolrCommit };
   },
 });
 </script>
@@ -100,6 +134,13 @@ export default defineComponent({
       font-size: 14px;
       margin-top: 5px;
       line-height: 22px;
+    }
+    .footer {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #cecece;
     }
   }
 }

@@ -3,7 +3,7 @@ import {
   APILogin,
   APIGetUserPlaylist,
   APIGetUserRecord,
-} from "@/interface/index"
+} from "@/interface/index";
 export default {
   loginStatus() {
     return request({

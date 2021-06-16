@@ -12,6 +12,7 @@ import {
   APIUid,
   APIGetArtistList,
   APISetLikeMusic,
+  APIGetCommentfloor
 } from "@/interface/index";
 export default {
   //获取banner
@@ -123,7 +124,7 @@ export default {
     return request({
       url: `https://music.163.com/song/media/outer/url?id=${id}.mp3 `,
       method: "get",
-    })
+    });
   },
   //获取歌词
   getlyric(params: APIGetMusicUrl) {
@@ -131,7 +132,7 @@ export default {
       url: "/lyric",
       method: "get",
       params,
-    })
+    });
   },
   //获取歌曲评论
   getMusicComment(params: APIGetMusicComment) {
@@ -139,7 +140,14 @@ export default {
       url: "/comment/music",
       method: "get",
       params,
-    })
+    });
+  },
+  getCommentfloor(params:APIGetCommentfloor) {
+    return request({
+      url: "/comment/floor",
+      method: "get",
+      params,
+    });
   },
   //获取热门歌曲评论
   getMusicCommentHot(params: APIGetMusicComment) {
@@ -147,14 +155,15 @@ export default {
       url: "/comment/hot",
       method: "get",
       params,
-    })
+    });
   },
+
   //获取歌单分类
   getSongListCatList() {
     return request({
       url: "/playlist/catlist",
       method: "get",
-    })
+    });
   },
 
   //获取歌单分类(hot)
@@ -162,7 +171,7 @@ export default {
     return request({
       url: "/playlist/hot",
       method: "get",
-    })
+    });
   },
 
   //获取歌单列表
@@ -171,7 +180,7 @@ export default {
       url: "/top/playlist",
       method: "post",
       data,
-    })
+    });
   },
   //获取歌单详情
   getSongDetail(data: APIGetSongDetail) {
@@ -179,7 +188,7 @@ export default {
       url: "/playlist/detail",
       method: "post",
       data,
-    })
+    });
   },
   //获取歌曲详情
   getSongMusicDetail(data: APIGetSongMusicDetail) {
@@ -187,21 +196,21 @@ export default {
       url: "/song/detail",
       method: "post",
       data,
-    })
+    });
   },
   //最新专辑
   getAlbumNewest() {
     return request({
       url: "/album/newest",
       method: "post",
-    })
+    });
   },
   //榜单摘要
   getToplistDetail() {
     return request({
       url: "/toplist/artist",
       method: "post",
-    })
+    });
   },
   //喜欢音乐列表
   getLikelist(data: APIUid) {
@@ -209,7 +218,7 @@ export default {
       url: "/likelist",
       method: "post",
       data,
-    })
+    });
   },
   //喜欢音乐
   likeMusic(params: APISetLikeMusic) {
@@ -217,7 +226,7 @@ export default {
       url: "/like",
       method: "get",
       params,
-    })
+    });
   },
   //作者列表
   getArtistList(data: APIGetArtistList) {
@@ -225,7 +234,7 @@ export default {
       url: "/artist/list",
       method: "post",
       data,
-    })
+    });
   },
 
   //获取歌手详情
@@ -234,7 +243,7 @@ export default {
       url: "/artist/detail",
       method: "post",
       data,
-    })
+    });
   },
 
   //获取歌手描述
@@ -243,6 +252,6 @@ export default {
       url: "/artist/desc",
       method: "post",
       data,
-    })
+    });
   },
 };

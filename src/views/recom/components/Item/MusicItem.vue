@@ -41,12 +41,12 @@ export default defineComponent({
           Arr[i].push(item);
         }
         List.value = Arr as [];
-      })
+      });
     });
 
     const handlerClick = (data: any) => {
       emit("confirm", data);
-    }
+    };
 
     return {
       List,
@@ -57,7 +57,7 @@ export default defineComponent({
     setTime() {
       return (val: number) => {
         return dayjs.duration(val).format("mm:ss");
-      }
+      };
     },
   },
 });

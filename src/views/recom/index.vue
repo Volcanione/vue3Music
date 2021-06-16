@@ -102,15 +102,15 @@
   </ScrollPage>
 </template>
 <script lang="ts">
-import Slide from "@/components/Slide/index.vue"
-import SongItem from "./components/Item/SongItem.vue"
-import MusicItem from "./components/Item/MusicItem.vue"
-import MvItem from "./components/Item/MvItem.vue"
-import { defineComponent, nextTick, ref } from "vue"
-import { useRouter, onBeforeRouteLeave } from "vue-router"
-import { $msg } from "@/components/Msg/index"
-import { getPublicDate, getPrivateDate } from "./steup"
-import { musicSetup } from "@/layout/components/Player/setup"
+import Slide from "@/components/Slide/index.vue";
+import SongItem from "./components/Item/SongItem.vue";
+import MusicItem from "./components/Item/MusicItem.vue";
+import MvItem from "./components/Item/MvItem.vue";
+import { defineComponent, nextTick, ref } from "vue";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { $msg } from "@/components/Msg/index";
+import { getPublicDate, getPrivateDate } from "./steup";
+import { musicSetup } from "@/layout/components/Player/setup";
 export default defineComponent({
   name: "Recom",
   components: {
@@ -121,22 +121,22 @@ export default defineComponent({
   },
   setup() {
     //初始化路由
-    const router = useRouter()
-    const PUBLIC = getPublicDate()
-    const PRIVATE = getPrivateDate()
+    const router = useRouter();
+    const PUBLIC = getPublicDate();
+    const PRIVATE = getPrivateDate();
 
-    const PrivateState = ref(false)
-    const loadingState = ref(false)
+    const PrivateState = ref(false);
+    const loadingState = ref(false);
 
     // const PrivateSongList = ref([])
     // const PrivateState = ref(false)
-    const { setPlayerNow } = musicSetup()
+    const { setPlayerNow } = musicSetup();
     const init = async () => {
       Object.values(PUBLIC).forEach((val) => {
         if (val instanceof Function) {
-          val()
+          val();
         }
-      })
+      });
     };
 
     //点击歌单
@@ -150,41 +150,41 @@ export default defineComponent({
         query: {
           name: data.name,
         },
-      })
+      });
     };
     //点击歌单更多
     const moreSongList = () => {
       router.push({
         path: "/songList",
         query: { type: 0 },
-      })
+      });
     };
 
     //下拉
     const pullDownrefresh = async (done: (state?: boolean) => void) => {
       try {
-        const obj = { ...PUBLIC }
+        const obj = { ...PUBLIC };
         if (PrivateState.value) {
-          Object.assign(obj, { ...PRIVATE })
+          Object.assign(obj, { ...PRIVATE });
         }
         await Promise.all(
           Object.values(obj)
             .filter((val) => val instanceof Function)
             .map((fn: any) => fn())
-        )
-        await done(true)
-        $msg({ title: "更新成功" })
+        );
+        await done(true);
+        $msg({ title: "更新成功" });
       } catch (error) {
-        await done(false)
+        await done(false);
       }
-    }
+    };
 
     //上拉
 
     const pullUploading = async (done: (state?: number) => void) => {
       if (PrivateState.value) {
-        await done(2)
-        $msg({ title: "没有内容了" })
+        await done(2);
+        $msg({ title: "没有内容了" });
         return;
       }
       try {
@@ -192,31 +192,31 @@ export default defineComponent({
           Object.values({ ...PRIVATE })
             .filter((val) => val instanceof Function)
             .map((fn: any) => fn())
-        )
-        await done(1)
-        PrivateState.value = true
+        );
+        await done(1);
+        PrivateState.value = true;
         nextTick(() => {
-          loadingState.value = true
+          loadingState.value = true;
         });
       } catch (error) {
-        console.log(error)
-        await done(0)
+        console.log(error);
+        await done(0);
       }
       // PrivateState.value = true
-    }
+    };
 
     //点击最新歌曲
     const checkMusicItem = (data: any) => {
-      setPlayerNow(data)
+      setPlayerNow(data);
     };
 
     onBeforeRouteLeave((to) => {
       if (to.name === "SongListDetail") {
-        to.meta.parent = null
+        to.meta.parent = null;
       }
-    })
+    });
 
-    init()
+    init();
 
     return {
       ...PUBLIC,
@@ -228,10 +228,10 @@ export default defineComponent({
       loadingState,
       checkMusicItem,
       moreSongList,
-    }
+    };
   },
   methods: {},
-})
+});
 </script>
 <style lang="scss" scoped>
 .viewContent {

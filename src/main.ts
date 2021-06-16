@@ -12,7 +12,7 @@ import msg from "@/components/Msg/index";
 import longList from "@/components/Longlist";
 const app = createApp(App);
 
-app.use(store).use(router)
+app.use(store).use(router);
 app.use(MyCom);
 app.use(msg);
 app.use(loading);

@@ -49,17 +49,17 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue"
-import Item from "@/views/search/components/Item/item.vue"
-import { songlistDetailSetup } from "./setup"
+import { defineComponent } from "vue";
+import Item from "@/views/search/components/Item/item.vue";
+import { songlistDetailSetup } from "./setup";
 export default defineComponent({
   components: { Item },
   setup() {
-    const data = songlistDetailSetup()
-    data.init()
-    return data
+    const data = songlistDetailSetup();
+    data.init();
+    return data;
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 @import "~@/style/layout.scss";

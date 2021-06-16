@@ -38,18 +38,18 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from "vue"
-import { useRoute } from "vue-router"
-import api from "@/api/index"
-import { songlistDetailSetup } from "@/views/songList/setup"
-import Thumbtack from "@/components/Thumbtack/index.vue"
+import { defineComponent, reactive, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import api from "@/api/index";
+import { songlistDetailSetup } from "@/views/songList/setup";
+import Thumbtack from "@/components/Thumbtack/index.vue";
 export default defineComponent({
   components: { Thumbtack },
   setup() {
-    const route = useRoute()
-    const name = route.params.name
-    const info = reactive({})
-    const contentRef = ref(null)
+    const route = useRoute();
+    const name = route.params.name;
+    const info = reactive({});
+    const contentRef = ref(null);
     const catlist: any[] = [
       {
         label: "主页",
@@ -75,23 +75,23 @@ export default defineComponent({
         label: "相似歌手",
         value: "7",
       },
-    ]
+    ];
 
-    const catType = ref("0")
+    const catType = ref("0");
 
     const {
       topStyle,
       imgStyle,
       bgImgStyle,
       // refreshScroll,
-    } = songlistDetailSetup()
+    } = songlistDetailSetup();
 
     const getData = async () => {
       const { code, data } = await api.getArtistDetail({
         id: +route.params.id,
-      })
+      });
       if (code !== 200) {
-        return
+        return;
       }
       Object.assign(info, {
         cover: data?.artist?.cover,
@@ -100,13 +100,13 @@ export default defineComponent({
         name: data?.artist.name,
         musicSize: data?.artist.musicSize,
         mvSize: data?.artist.mvSize,
-      })
+      });
     };
 
     //获取歌手描述
     const getDescData = async () => {
-      const res = await api.getArtistDesc({ id: +route.params.id })
-      console.log(res)
+      const res = await api.getArtistDesc({ id: +route.params.id });
+      console.log(res);
     };
 
     watch(
@@ -114,22 +114,22 @@ export default defineComponent({
       (val) => {
         switch (val) {
           case "0":
-            return getDescData()
+            return getDescData();
         }
       },
       { immediate: true }
-    )
+    );
 
     const pullDown = async (done: () => void) => {
-      await init()
-      done()
+      await init();
+      done();
     };
 
     const init = () => {
-      getData()
+      getData();
     };
 
-    init()
+    init();
 
     return {
       name,
@@ -141,9 +141,9 @@ export default defineComponent({
       catlist,
       catType,
       contentRef,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

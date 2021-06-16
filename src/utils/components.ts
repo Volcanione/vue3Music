@@ -6,8 +6,8 @@ import ScrollPage from "@/components/ScrollPage/index.vue";
 import ScrollBox from "@/components/ScrollBox/index.vue";
 import { PullDownSlot, PullUpSlot } from "@/components/PullDownUp/index";
 import Field from "@/components/Field/index.vue";
-import { TabBar } from "@/components/Tab/index"
-import Drawer from "@/components/Drawer/index.vue"
+import { TabBar } from "@/components/Tab/index";
+import Drawer from "@/components/Drawer/index.vue";
 export default {
   install: (app: App) => {
     app.component("LayerPage", LayerPage);

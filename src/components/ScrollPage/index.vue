@@ -9,7 +9,7 @@
       </div>
       <slot />
       <template v-if="pullUp">
-        <div class="pullingUpLoading">
+        <div class="pullingUpLoading" ref="pullUpRef" v-if="pullUpShow">
           <template v-if="!$slots.pullUp">
             {{ pullingUpText }}
           </template>
@@ -62,24 +62,6 @@ export default defineComponent({
       default: false,
     },
   },
-  data() {
-    return {
-      // scroll: {} as BScrollType,
-      // threshold: 60,
-      // stop: 40,
-      // pullDownConfig: {
-      //   srcollState: true,
-      //   type: 0, //0初始 1 下拉中 2 加载中
-      //   refreshtimeID: -1,
-      //   initializetimeID: -1,
-      // },
-      // pullUpConfig: {
-      //   type: 0, //0初始 1 上拉中 2 加载中
-      //   refreshtimeID: -1,
-      //   initializetimeID: -1,
-      // },
-    };
-  },
   setup(props, { emit }) {
     const { scrollBack, pullDown, pullUp, disabled, forcedUpdates } = toRefs(
       props
@@ -90,7 +72,8 @@ export default defineComponent({
     const threshold = 60;
     const stop = 40;
     let scroll = {} as BScrollType;
-
+    const pullUpRef = ref(null) as any;
+    const pullUpShow = ref(true);
     const pullDownConfig = reactive({
       srcollState: true,
       type: 0, //0初始 1 下拉中 2 加载中
@@ -98,7 +81,7 @@ export default defineComponent({
       initializetimeID: -1,
     });
     const pullUpConfig = reactive({
-      type: 0, //0初始 1 上拉中 2 加载中
+      type: 1, //0上拉 1 成功 2 没有内容
       refreshtimeID: -1,
       initializetimeID: -1,
     });
@@ -108,7 +91,23 @@ export default defineComponent({
     //初始化
     const init = () => {
       initWapper();
+
+      //开启监听器
+      setIntersectionObserver();
     };
+
+    const setIntersectionObserver = () => {
+      if (!pullUp.value) {
+        return;
+      }
+      const intersectionObserver = new IntersectionObserver(function (entries) {
+        if (entries[0].intersectionRatio <= 0) return;
+        pullUpShow.value = false;
+        intersectionObserver.unobserve(pullUpRef.value);
+      });
+      intersectionObserver.observe(pullUpRef.value);
+    };
+
     //初始化容器
     const initWapper = () => {
       pullDown.value &&
@@ -159,6 +158,7 @@ export default defineComponent({
 
     //页面滚动处理
     const pageScrollHandler = (pos: any) => {
+      pullUpShow.value = true;
       if (pos.y < 10) {
         pullDownConfig.type = 0;
       }
@@ -285,7 +285,7 @@ export default defineComponent({
     const pullingUpText = computed(() => {
       switch (pullUpConfig.type) {
         case 0:
-          return "加载中";
+          return "上拉加载";
         case 1:
           return "加载成功";
         case 2:
@@ -339,6 +339,8 @@ export default defineComponent({
       pullingDownText,
       pullingUpText,
       scrollToElement,
+      pullUpRef,
+      pullUpShow,
     };
   },
 });

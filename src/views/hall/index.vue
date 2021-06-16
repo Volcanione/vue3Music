@@ -69,17 +69,17 @@
   </ScrollPage>
 </template>
 <script lang="ts">
-import Slide from "@/components/Slide/index.vue"
-import SongItem from "@/views/recom/components/Item/SongItem.vue"
-import { defineComponent } from "vue"
-import { hallSetup } from "./setup"
+import Slide from "@/components/Slide/index.vue";
+import SongItem from "@/views/recom/components/Item/SongItem.vue";
+import { defineComponent } from "vue";
+import { hallSetup } from "./setup";
 export default defineComponent({
   name: "Hall",
   components: { Slide, SongItem },
   setup() {
-    return hallSetup()
+    return hallSetup();
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .viewContent {

@@ -7,7 +7,7 @@
         v-if="setloading"
       />
       <span v-else class="tip">
-        <slot />
+        <slot v-if="state === 2" /> <template v-else> 上拉获取 </template>
       </span>
     </transition>
   </div>
@@ -46,6 +46,7 @@ export default defineComponent({
   position: relative;
   .tip {
     position: absolute;
+    color: #cecece;
   }
   .icon {
     width: 20px;

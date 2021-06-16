@@ -1,6 +1,6 @@
 <template>
   <Drawer
-    v-model="modelValue"
+    v-model="showDrawer"
     direction="left"
     size="100%"
     target="#MUSICAPP"
@@ -27,8 +27,8 @@
   </Drawer>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, watch, ref } from "vue"
-import api from "@/api/index"
+import { defineComponent, PropType, watch, ref, computed } from "vue";
+import api from "@/api/index";
 export default defineComponent({
   emits: ["confirm", "update:modelValue"],
   name: "searchTip",
@@ -39,48 +39,57 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const loadingState = ref(false)
-    const ScrollPage = ref(null) as any
-    const catList = ref([]) as any
+    const loadingState = ref(false);
+    const ScrollPage = ref(null) as any;
+    const catList = ref([]) as any;
 
     watch(
       () => props.modelValue,
       (val) => {
-        val && init()
+        val && init();
       }
-    )
+    );
+
+    const showDrawer = computed({
+      get() {
+        return props.modelValue;
+      },
+      set(val) {
+        emit("update:modelValue", val);
+      },
+    });
 
     //初始化
     const init = () => {
-      getSongListCatList()
+      getSongListCatList();
     };
 
     //全部分类接口
     const getSongListCatList = async () => {
-      loadingState.value = false
-      const { code, categories, sub } = await api.getSongListCatList()
-      loadingState.value = true
+      loadingState.value = false;
+      const { code, categories, sub } = await api.getSongListCatList();
+      loadingState.value = true;
       if (code !== 200) {
-        return
+        return;
       }
       catList.value = Object.keys(categories).map((idx: string | number) => {
         return {
           cat: categories[idx],
           list: sub.filter((i: any) => i.category === +idx),
-        }
+        };
       });
 
-      ScrollPage?.value?.refresh()
+      ScrollPage?.value?.refresh();
     };
 
     //点击分类
     const checkCat = (item: any) => {
-      emit("confirm", item)
-      close()
+      emit("confirm", item);
+      close();
     };
     //关闭窗口
     const close = () => {
-      emit("update:modelValue", false)
+      emit("update:modelValue", false);
     };
 
     return {
@@ -89,9 +98,10 @@ export default defineComponent({
       catList,
       checkCat,
       close,
-    }
+      showDrawer,
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 @import "~@/style/layout.scss";

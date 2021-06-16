@@ -36,114 +36,114 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, nextTick, watch } from "vue"
-import { $msg } from "@/components/Msg/index"
-import FilterLetter from "@/components/FilterLetter/index.vue"
-import FilterType from "./components/FilterType.vue"
-import Item from "@/views/search/components/Item/item.vue"
-import api from "@/api/index"
-import { useRouter } from "vue-router"
+import { defineComponent, reactive, ref, nextTick, watch } from "vue";
+import { $msg } from "@/components/Msg/index";
+import FilterLetter from "@/components/FilterLetter/index.vue";
+import FilterType from "./components/FilterType.vue";
+import Item from "@/views/search/components/Item/item.vue";
+import api from "@/api/index";
+import { useRouter } from "vue-router";
 export default defineComponent({
   components: { FilterLetter, FilterType, Item },
   setup(props) {
-    const letter = ref("热")
-    const loadingState = ref(false)
-    const filterSingerVisible = ref(false)
-    const singerResultRef = ref(null) as any
-    const router = useRouter()
+    const letter = ref("热");
+    const loadingState = ref(false);
+    const filterSingerVisible = ref(false);
+    const singerResultRef = ref(null) as any;
+    const router = useRouter();
     const filterData = reactive({
       type: -1,
       area: -1,
-    })
+    });
 
     const offsetLimit = reactive({
       limit: 30,
       offset: 0,
-    })
+    });
 
-    const dataList = ref([]) as any
-    const moreData = ref(true)
+    const dataList = ref([]) as any;
+    const moreData = ref(true);
 
     watch(
       () => filterData,
       () => {
-        offsetLimit.offset = 0
-        getData()
+        offsetLimit.offset = 0;
+        getData();
       },
       { deep: true }
-    )
+    );
 
     watch(
       () => letter,
       () => {
-        offsetLimit.offset = 0
-        getData()
+        offsetLimit.offset = 0;
+        getData();
       },
       { deep: true }
-    )
+    );
 
     const getData = async (state = false) => {
-      loadingState.value = false
+      loadingState.value = false;
       const { code, more, artists } = await api.getArtistList({
         ...filterData,
         ...offsetLimit,
         initial:
           letter.value === "热" ? -1 : letter.value === "#" ? 0 : letter.value,
-      })
-      moreData.value = more
+      });
+      moreData.value = more;
       if (code !== 200) {
-        return (dataList.value = [])
+        return (dataList.value = []);
       }
       if (!state) {
-        dataList.value = [...artists]
+        dataList.value = [...artists];
       } else {
-        dataList.value.push(...artists)
+        dataList.value.push(...artists);
       }
-      loadingState.value = true
-      refreshScroll()
+      loadingState.value = true;
+      refreshScroll();
     };
 
     const refreshScroll = async () => {
-      await nextTick()
-      singerResultRef?.value?.refresh()
+      await nextTick();
+      singerResultRef?.value?.refresh();
     };
 
     const pullDown = async (done: () => void) => {
-      offsetLimit.offset = 0
+      offsetLimit.offset = 0;
       try {
-        await getData()
+        await getData();
       } catch (error) {}
-      await done()
+      await done();
     };
 
     const pullUp = async (done: (state?: number) => void) => {
-      offsetLimit.offset++
+      offsetLimit.offset++;
       if (!moreData.value) {
-        await done(2)
-        return $msg({ title: "真的到底了" })
+        await done(2);
+        return $msg({ title: "真的到底了" });
       }
       try {
-        await getData(true)
-        await done(1)
+        await getData(true);
+        await done(1);
       } catch (error) {
-        await done(0)
+        await done(0);
       }
-    }
+    };
 
     const getDetail = (item: any) => {
       router.push({
         name: "SingerDetail",
         params: { id: item.id, name: item.name },
-      })
+      });
     };
 
     //初始化
     const init = () => {
-      getData()
+      getData();
     };
 
     //初始化
-    init()
+    init();
 
     return {
       letter,
@@ -155,9 +155,9 @@ export default defineComponent({
       pullUp,
       singerResultRef,
       getDetail,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

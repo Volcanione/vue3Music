@@ -37,7 +37,7 @@ export interface ApiGetBanner {
   type?: number;
 }
 
-export interface APISearchResult extends APISearchSuggest, LimitOffset {}
+export interface APISearchResult extends APISearchSuggest, LimitOffset { }
 
 export interface APIGetMusicUrl {
   id: string | number;
@@ -62,7 +62,7 @@ export interface APIGetSongMusicDetail {
   ids: string;
 }
 
-export interface APIGetUserPlaylist extends LimitOffset, APIUid {}
+export interface APIGetUserPlaylist extends LimitOffset, APIUid { }
 
 export interface APIGetUserRecord {
   uid: number | string;
@@ -90,4 +90,12 @@ export interface APIGetMusicComment extends LimitOffset {
 
 export interface APISetLikeMusic extends APIGetSongDetail {
   like: boolean;
+}
+
+export interface APIGetCommentfloor {
+  parentCommentId: number | string;
+  id: number | string;
+  type: number;
+  limit?: number;
+  time?: number | string
 }

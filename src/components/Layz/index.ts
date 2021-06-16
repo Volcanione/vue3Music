@@ -35,10 +35,10 @@ const config = async (
     }
   }
 
-  let parentDom = el
+  let parentDom = el;
 
   if (!update) {
-    parentDom = createImageBitmap(el, binding, options)
+    parentDom = createImageBitmap(el, binding, options);
   } else {
     //图片路径为空到赋值时 存在bug 无法显示
   }
@@ -47,9 +47,9 @@ const config = async (
   const intersectionObserver = new IntersectionObserver(function (entries) {
     if (entries[0].intersectionRatio <= 0) return;
     const { x, y } = parentDom.getBoundingClientRect();
-    if (x >= 0 && y >= 0 && !el.loadingState) {
-      el.loadingState = true
-      setImg(parentDom, binding, options)
+    if (x >= 0 && y >= 0) {
+      setImg(parentDom, binding, options);
+      intersectionObserver.unobserve(el)
     }
   });
   intersectionObserver.observe(parentDom);
@@ -58,12 +58,12 @@ const config = async (
 //创建Dom
 const createImageBitmap = (el: any, binding: any, options: Options) => {
   if (!el.offsetWidth) {
-    el.style.width = "100%"
-    el.style.display = "block"
+    el.style.width = "100%";
+    el.style.display = "block";
   }
   if (!el.offsetHeight) {
-    el.style.height = "100%"
-    el.style.display = "block"
+    el.style.height = "100%";
+    el.style.display = "block";
   }
 
   const cloneDom = el.cloneNode(false);
@@ -71,63 +71,63 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
   const container = document.createElement("div") as any;
   const LAYZNODE = createVNode(Layz);
   render(LAYZNODE, container);
-  container.style.height = el.height + "px"
-  container.style.width = el.width + "px"
-  container.style.position = "relative"
-  cloneDom.style.position = "relative"
-  cloneDom.style.zIndex = 1
-  container.appendChild(cloneDom)
-  el.parentNode && el.parentNode.replaceChild(container, el)
+  container.style.height = el.height + "px";
+  container.style.width = el.width + "px";
+  container.style.position = "relative";
+  cloneDom.style.position = "relative";
+  cloneDom.style.zIndex = 1;
+  container.appendChild(cloneDom);
+  el.parentNode && el.parentNode.replaceChild(container, el);
   //创建数据
-  const { props, ctx }: any = LAYZNODE.component
-  props.loadImg = binding.value?.loadImg || options.loadImg
-  props.errorImg = binding.value?.errorImg || options.errorImg
+  const { props, ctx }: any = LAYZNODE.component;
+  props.loadImg = binding.value?.loadImg || options.loadImg;
+  props.errorImg = binding.value?.errorImg || options.errorImg;
 
   const setImgState = (state: number) => {
-    ctx.setloadState(state)
+    ctx.setloadState(state);
   };
 
-  container.setImgState = setImgState
-  return container
+  container.setImgState = setImgState;
+  return container;
 };
 
 const setImg = (el: any, binding: any, options: any) => {
   //设置图片路径
   const imgUrl = computed(() => {
-    return binding.value?.src || binding.value
+    return binding.value?.src || binding.value;
   });
 
   if (!imgUrl.value) {
-    return
+    return;
   }
-  const setImgState = el.setImgState
-  el.lastChild.src = binding.value?.src || binding.value
+  const setImgState = el.setImgState;
+  el.lastChild.src = binding.value?.src || binding.value;
 
   el.lastChild.onload = () => {
-    setImgState(1)
+    setImgState(1);
   };
   el.lastChild.onerror = () => {
-    setImgState(-1)
+    setImgState(-1);
   };
-}
+};
 
 const directive_layz = (app: App, options: Options) => {
   app.directive("Layz", {
     mounted(el: any, binding: any) {
       if (binding.value || binding.value?.src) {
-        config(el, binding, options)
+        config(el, binding, options);
       } else {
-        el.src = options.loadImg
+        el.src = options.loadImg;
       }
     },
     updated(el: HTMLElement, binding: any) {
       // config(el, binding, options, true)
       if (binding.value || binding.value?.src) {
-        config(el, binding, options)
+        config(el, binding, options);
       }
     },
   });
-}
+};
 
 export default {
   install: (app: App, options: Options) => {

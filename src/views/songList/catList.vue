@@ -20,17 +20,17 @@
   </LayerPage>
 </template>
 <script lang="ts">
-import SongItem from "@/views/recom/components/Item/SongItem.vue"
-import { defineComponent, ref } from "vue"
-import { useRoute } from "vue-router"
-import { songlistSetup } from "./setup"
+import SongItem from "@/views/recom/components/Item/SongItem.vue";
+import { defineComponent, ref } from "vue";
+import { useRoute } from "vue-router";
+import { songlistSetup } from "./setup";
 export default defineComponent({
   name: "songList",
   components: { SongItem },
   setup() {
-    const route = useRoute()
-    const catType = ref(route.params.cat)
-    const title = route.params.cat
+    const route = useRoute();
+    const catType = ref(route.params.cat);
+    const title = route.params.cat;
     const {
       songList,
       initData,
@@ -39,13 +39,13 @@ export default defineComponent({
       pullUp,
       songListRef,
       getSongDetaile,
-    } = songlistSetup(catType)
+    } = songlistSetup(catType);
 
     const init = async () => {
       //初始化
-      initData()
+      initData();
     };
-    init()
+    init();
     return {
       title,
       songList,
@@ -54,9 +54,9 @@ export default defineComponent({
       pullUp,
       songListRef,
       getSongDetaile,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>
