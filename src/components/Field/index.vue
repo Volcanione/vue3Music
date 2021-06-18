@@ -9,6 +9,7 @@
       :autocomplete="false"
       @keyup.enter="$emit('enter')"
       :disabled="disabled"
+      @focus="$emit('focus')"
     />
     <slot name="right" :class="{ disabled: disabled }" />
   </div>

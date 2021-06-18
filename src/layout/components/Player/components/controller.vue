@@ -28,10 +28,8 @@ export default defineComponent({
   components: { Panel, Lyric },
   props: {
     config: {
-      type: Object as PropType<any>,
-      default() {
-        return null;
-      },
+      type: Number as PropType<number>,
+      default: 0,
     },
   },
   setup(props: any) {
@@ -53,12 +51,13 @@ export default defineComponent({
     });
 
     watch(
-      () => props.config.value,
+      () => props.config,
       (val) => {
         scroll.refresh();
         const el: any = val ? Lyric.value : Panel.value;
         scroll.scrollToElement(el.$el, 300, 0, 0);
-      }
+      },
+      { deep: true }
     );
 
     const updateLyric = (data: any) => {

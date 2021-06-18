@@ -100,19 +100,15 @@ export default defineComponent({
         dataList.value.push(...artists);
       }
       loadingState.value = true;
-      refreshScroll();
-    };
-
-    const refreshScroll = async () => {
-      await nextTick();
-      singerResultRef?.value?.refresh();
     };
 
     const pullDown = async (done: () => void) => {
       offsetLimit.offset = 0;
       try {
         await getData();
-      } catch (error) {}
+      } catch (error) {
+        //
+      }
       await done();
     };
 

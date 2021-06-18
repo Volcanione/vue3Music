@@ -1,5 +1,5 @@
 import Layz from "./index.vue";
-import { createVNode, render, App, watch, ref, computed, nextTick } from "vue";
+import { h, render, App, watch, ref, computed, nextTick } from "vue";
 
 interface Options {
   errorImg?: string;
@@ -69,7 +69,7 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
   const cloneDom = el.cloneNode(false);
   //创建dom
   const container = document.createElement("div") as any;
-  const LAYZNODE = createVNode(Layz);
+  const LAYZNODE = h(Layz);
   render(LAYZNODE, container);
   container.style.height = el.height + "px";
   container.style.width = el.width + "px";
@@ -79,12 +79,13 @@ const createImageBitmap = (el: any, binding: any, options: Options) => {
   container.appendChild(cloneDom);
   el.parentNode && el.parentNode.replaceChild(container, el);
   //创建数据
-  const { props, ctx }: any = LAYZNODE.component;
+  const { props, _hub }: any = LAYZNODE.component;
   props.loadImg = binding.value?.loadImg || options.loadImg;
   props.errorImg = binding.value?.errorImg || options.errorImg;
 
   const setImgState = (state: number) => {
-    ctx.setloadState(state);
+    // console.log(ctx);
+    _hub.setloadState(state);
   };
 
   container.setImgState = setImgState;

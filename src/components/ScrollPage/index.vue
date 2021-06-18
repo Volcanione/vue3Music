@@ -23,6 +23,7 @@
 import BScroll from "@better-scroll/core";
 import PullDown from "@better-scroll/pull-down";
 import Pullup from "@better-scroll/pull-up";
+import ObserveDOM from "@better-scroll/observe-dom";
 import {
   computed,
   defineComponent,
@@ -39,6 +40,7 @@ import { useStore } from "vuex";
 import { BScrollType } from "@/interface/index";
 BScroll.use(PullDown);
 BScroll.use(Pullup);
+BScroll.use(ObserveDOM);
 export default defineComponent({
   props: {
     pullDown: {
@@ -120,23 +122,13 @@ export default defineComponent({
           threshold: 0,
         });
 
-      // Object.assign(
-      //   scroll,
-      //   new BScroll(scrollWarpper.value, {
-      //     scrollbar: false,
-      //     stopPropagation: true,
-      //     bounce: { top: true, bottom: true, left: false, right: false },
-      //     bounceTime: 400,
-      //     click: true,
-      //     ...CONFIG,
-      //   })
-      // )
       scroll = new BScroll(scrollWarpper.value, {
         scrollbar: false,
         stopPropagation: true,
         bounce: { top: true, bottom: true, left: false, right: false },
         bounceTime: 400,
         click: true,
+        observeDOM: true,
         ...CONFIG,
       }) as any;
       pullDown.value && scroll.on("pullingDown", pullingDownHandler);

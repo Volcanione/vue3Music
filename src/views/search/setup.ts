@@ -90,6 +90,10 @@ export function searchFn() {
     searchHotList.value = code === 200 ? data : [];
   };
 
+  const foucsSearch = (  ) => {
+      searchTipRef.value.setvisible(true)
+  }
+
   return {
     search,
     searchSuggest,
@@ -101,6 +105,7 @@ export function searchFn() {
     clearSearch,
     searchHotDeatil,
     searchHotList,
+    foucsSearch
   };
 }
 
@@ -142,13 +147,8 @@ export function searchResult() {
       }
     });
     loadingState.value = true;
-    refreshScroll();
   };
 
-  const refreshScroll = async () => {
-    await nextTick();
-    searchResultRef?.value?.refresh();
-  };
 
   //改变类别
 
@@ -157,7 +157,6 @@ export function searchResult() {
     resultList.value = [];
     loadingState.value = false;
     await getsearchResult();
-    refreshScroll();
     searchResultRef?.value?.scrollTo();
   };
 
@@ -166,7 +165,7 @@ export function searchResult() {
     searchParam.offset = 0;
     try {
       await getsearchResult();
-    } catch (error) {}
+    } catch (error) { }
     await done();
   };
   //上拉加载
@@ -247,5 +246,6 @@ export function searchResult() {
     pullDown,
     pullUp,
     confirmItem,
+
   };
 }

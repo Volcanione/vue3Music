@@ -8,6 +8,7 @@
     <transition
       @before-enter="beforeEnter"
       @enter="enter"
+      @after-enter="afterEnter"
       @leave="leave"
       @after-leave="afterLeave"
       type="animation"
@@ -20,7 +21,7 @@
           v-if="show"
           :style="contentStyle"
         >
-          <slot />
+          <div><slot /></div>
         </div>
       </template>
       <template v-else>
@@ -30,7 +31,7 @@
           v-show="show"
           :style="contentStyle"
         >
-          <slot />
+          <div><slot /></div>
         </div>
       </template>
     </transition>
@@ -39,7 +40,15 @@
 
 <script lang="ts">
 import { TweenMax } from "gsap";
-import { computed, defineComponent, PropType, reactive, toRefs } from "vue";
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  PropType,
+  reactive,
+  ref,
+  toRefs,
+} from "vue";
 
 type StyleType = {
   width?: string | number;
@@ -102,7 +111,6 @@ export default defineComponent({
     const { modelValue, size, direction } = toRefs(props);
     const contentStyle: StyleType = reactive({});
     const config: SetType = reactive({});
-
     const show = computed({
       get() {
         return modelValue.value;
@@ -155,6 +163,9 @@ export default defineComponent({
         onComplete: done,
       });
     };
+    const afterEnter = async () => {
+      await nextTick();
+    };
     const leave = (el: HTMLElement, done: any) => {
       TweenMax.to(el, 0.4, {
         ...config,
@@ -174,6 +185,7 @@ export default defineComponent({
       close,
       beforeEnter,
       enter,
+      afterEnter,
       leave,
       afterLeave,
       contentStyle,
@@ -195,5 +207,13 @@ export default defineComponent({
   z-index: 10;
   background: #fff;
   overflow: hidden;
+  backface-visibility: hidden;
+  & > div {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    backface-visibility: hidden;
+    position: relative;
+  }
 }
 </style>

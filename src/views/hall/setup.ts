@@ -38,7 +38,7 @@ export function hallSetup() {
   //搜索
 
   const goSeach = () => {
-    router.push("/search");
+    router.push({name:"Search",params:{keyword:search.value}});
   };
 
   const pullDownrefresh = async (done: any) => {

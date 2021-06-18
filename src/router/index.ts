@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/search",
+    path: "/search/:keyword",
     name: "Search",
     components: {
       layer: () => import("@/views/search/index.vue"),

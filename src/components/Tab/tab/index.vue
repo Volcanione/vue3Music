@@ -23,6 +23,7 @@
 </template>
 <script lang="ts">
 import BScroll from "@better-scroll/core";
+import ObserveDOM from "@better-scroll/observe-dom";
 import {
   defineComponent,
   computed,
@@ -46,6 +47,7 @@ interface SizeSeat {
   left: number;
   barWidth: number;
 }
+BScroll.use(ObserveDOM);
 
 export default defineComponent({
   name: "Tab",
@@ -139,6 +141,7 @@ export default defineComponent({
         bounce: true,
         click: true,
         tap: "tap",
+        observeDOM: true,
       }) as any;
 
       scrollDisabled.value && scroll.disable();
@@ -156,10 +159,6 @@ export default defineComponent({
       { deep: true }
     );
 
-    const refresh = async () => {
-      await nextTick();
-      scroll.refresh();
-    };
     const getBarWidth = (dom: HTMLElement) => {
       const domlist: Element[] = [...dom.children];
       return domlist.reduce((count: number, item: Element) => {
@@ -174,7 +173,6 @@ export default defineComponent({
     onMounted(async () => {
       setLineStyle();
       initWapper();
-      refresh();
       await nextTick();
       transitionState.value = true;
     });
@@ -188,7 +186,6 @@ export default defineComponent({
       handlerClick,
       tabbar,
       scrollContent,
-      refresh,
       barWidth,
       style,
       transitionState,

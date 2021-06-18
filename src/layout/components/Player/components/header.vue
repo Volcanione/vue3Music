@@ -4,15 +4,7 @@
       <i class="iconfont">&#xe6ca;</i>
     </div>
     <div class="center">
-      <TabBar
-        v-model="actives"
-        :list="list"
-        @change="
-          (val) => {
-            $emit('switch', { type: val, value: active });
-          }
-        "
-      />
+      <TabBar v-model="activeVal" :list="list" />
     </div>
     <div class="right" @click="$emit('comment')">
       <i class="iconfont">&#xe6d3;</i>
@@ -20,7 +12,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType, watch } from "vue";
+import { defineComponent, PropType, computed } from "vue";
 import { playerSetup } from "../setup";
 export default defineComponent({
   props: {
@@ -29,9 +21,16 @@ export default defineComponent({
       default: 0,
     },
   },
-  emits: ["comment", "switch"],
-  setup(props) {
-    const actives = ref(0);
+  emits: ["comment", "switch", "update:active"],
+  setup(props, { emit }) {
+    const activeVal = computed({
+      get() {
+        return props.active;
+      },
+      set(val) {
+        emit("update:active", val);
+      },
+    });
     const list = [
       {
         label: "歌曲",
@@ -42,16 +41,10 @@ export default defineComponent({
         value: 1,
       },
     ];
-    watch(
-      () => props.active,
-      (val) => {
-        actives.value = val;
-      }
-    );
     const { setPlayerShow } = playerSetup();
     return {
       setPlayerShow,
-      actives,
+      activeVal,
       list,
     };
   },

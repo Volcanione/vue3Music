@@ -10,7 +10,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import {
+  defineComponent,
+  PropType,
+  ref,
+  getCurrentInstance,
+  onBeforeMount,
+} from "vue";
 export default defineComponent({
   props: {
     loadImg: {
@@ -23,13 +29,20 @@ export default defineComponent({
     },
   },
   setup() {
+    let instance: any = getCurrentInstance();
     const loadState = ref(0);
-    const setloadState = (code: number) => {
-      loadState.value = code;
-    };
+    onBeforeMount(() => {
+      instance._hub = {
+        setloadState: (code: number) => {
+          loadState.value = code;
+        },
+      };
+    });
+    // const setloadState = (code: number) => {
+    //   loadState.value = code
+    // }
     return {
       loadState,
-      setloadState,
     };
   },
 });

@@ -69,7 +69,6 @@ export default defineComponent({
   }
   .Nav {
     position: fixed;
-    z-index: 1;
     background: transparent;
     color: #333;
   }

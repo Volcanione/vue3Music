@@ -11,6 +11,7 @@
     "@better-scroll/core": "^2.2.1",
     "@better-scroll/infinity": "^2.2.1",
     "@better-scroll/nested-scroll": "^2.3.1",
+    "@better-scroll/observe-dom": "^2.3.1",
     "@better-scroll/pull-down": "^2.2.1",
     "@better-scroll/pull-up": "^2.2.1",
     "@better-scroll/slide": "^2.2.1",

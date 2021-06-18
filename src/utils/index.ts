@@ -53,7 +53,10 @@ export const getrandomData = <T extends unknown>(
 };
 
 export const setCookie = (name: string, data: string) => {
-  Cookies.set(name, data);
+  Cookies.set(name, data,{
+    sameSite: 'none',
+    secure: true
+  });
 };
 
 export const getCookie = (name: string) => {

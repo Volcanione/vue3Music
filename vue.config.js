@@ -4,7 +4,7 @@ const port = process.env.port || process.env.npm_config_port || 9528; // dev por
 
 module.exports = {
   publicPath: "./",
-  assetsDir: "static",
+  assetsDir: "playStatic",
   //lintOnSave: process.env.NODE_ENV === "development",
   lintOnSave: false,
   productionSourceMap: false,

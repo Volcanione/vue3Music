@@ -1,9 +1,14 @@
 <template>
-  <LayerPage ref="LayerPage">
+  <LayerPage>
     <template #header>
       <Nav :right="false">
         <div class="searchBar">
-          <Field v-model="search" class="field" placeholder="搜索">
+          <Field
+            v-model="search"
+            class="field"
+            placeholder="搜索"
+            @focus="foucsSearch"
+          >
             <template #label>
               <i class="iconfont searchIcon">&#xe632;</i>
             </template>
@@ -75,7 +80,6 @@ export default defineComponent({
       getSearchKey();
       searchHotDeatil();
     };
-    const LayerPage = ref(null) as any;
 
     const {
       search,
@@ -87,16 +91,8 @@ export default defineComponent({
       clearSearch,
       searchHotDeatil,
       searchHotList,
+      foucsSearch,
     } = searchFn();
-
-    watch(
-      () => searchHotList.value,
-      () => {
-        nextTick(() => {
-          LayerPage.value.refresh();
-        });
-      }
-    );
     init();
     return {
       search,
@@ -104,9 +100,9 @@ export default defineComponent({
       searchHistoryList,
       searchTipRef,
       searchHotList,
-      LayerPage,
       removeHistory,
       clearSearch,
+      foucsSearch,
     };
   },
   methods: {},

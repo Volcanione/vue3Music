@@ -34,7 +34,6 @@ import {
 } from "vue";
 import { BScrollType } from "@/interface/index";
 BScroll.use(Slide);
-
 export default defineComponent({
   props: {
     data: {

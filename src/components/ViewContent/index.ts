@@ -51,9 +51,6 @@ export function setTabRouteView(props: Props, context: any): TabRouteView {
   };
 
   const afterEnter = () => {
-    const RouterView: any = pageRef.value;
-    const refresh = RouterView.$refs?.ScrollPage?.refresh;
-    refresh && refresh();
   };
 
   const pullDownrefresh = async (done: () => void) => {

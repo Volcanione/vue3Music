@@ -38,14 +38,8 @@ export function songlistSetup(catType: any) {
     } else {
       songList.value.push(...playlists);
     }
-    refreshScroll();
   };
 
-  const refreshScroll = async () => {
-    //刷新Dom
-    await nextTick();
-    songListRef?.value?.refresh();
-  };
 
   //下拉
   const pullDown = async (done: () => void) => {
@@ -78,7 +72,6 @@ export function songlistSetup(catType: any) {
       return;
     }
     await getSongList();
-    refreshScroll();
     songListRef?.value?.scrollTo();
   };
 
@@ -89,7 +82,6 @@ export function songlistSetup(catType: any) {
     songList.value = [];
     loadingState.value = false;
     await getSongList();
-    refreshScroll();
     songListRef?.value?.scrollTo();
   };
 
@@ -193,12 +185,8 @@ export function songlistDetailSetup() {
       };
     });
     await nextTick();
-    refreshScroll();
   };
 
-  const refreshScroll = () => {
-    scroll.refresh();
-  };
 
   //获取歌曲详情
   const getSongMusicDetail = async (ids: string) => {
@@ -266,6 +254,5 @@ export function songlistDetailSetup() {
     songList,
     checkMusicItem,
     playAll,
-    refreshScroll,
   };
 }

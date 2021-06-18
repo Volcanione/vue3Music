@@ -142,14 +142,6 @@ export default defineComponent({
         const data = comments || hotComments;
         commentList.value.push(...data);
       }
-
-      refresh();
-    };
-
-    //更新组件
-    const refresh = async () => {
-      await nextTick();
-      ScrollPageRef.value?.refresh();
     };
 
     const changeType = () => {

@@ -24,8 +24,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import BScroll from "@better-scroll/core";
+import ObserveDOM from "@better-scroll/observe-dom";
 import { BScrollType } from "@/interface/index";
-
+BScroll.use(ObserveDOM);
 export default defineComponent({
   props: {
     update: {
@@ -87,7 +88,6 @@ export default defineComponent({
     updateRender() {
       this.$nextTick(() => {
         this.getContentWidth();
-        this.refresh();
       });
     },
     initWapper() {
@@ -100,14 +100,10 @@ export default defineComponent({
         scrollbar: false,
         disableMouse: false,
         disableTouch: false,
+        observeDOM: true,
         bounce: true,
         ...scrollConfig,
       }) as any;
-    },
-    refresh() {
-      this.$nextTick(() => {
-        this.scroll.refresh && this.scroll.refresh();
-      });
     },
     //设置宽
     getContentWidth() {

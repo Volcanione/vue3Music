@@ -1,7 +1,7 @@
 <template>
   <div
     class="Thumbtack"
-    :style="{ ...ThumbtackBoxStyle, zIndex: !fixed ? 8 : -1, opacity: +!fixed }"
+    :style="{ ...ThumbtackBoxStyle, zIndex: !fixed ? 1 : -1, opacity: +!fixed }"
     ref="ThumbtackRef"
   >
     <slot v-if="!fixed" />
@@ -94,7 +94,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .Thumbtack {
   position: relative;
-  z-index: 8;
 }
 .fixedBar {
   width: 100%;

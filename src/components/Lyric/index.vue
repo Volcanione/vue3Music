@@ -80,16 +80,10 @@ export default defineComponent({
 
     let s = null as any;
 
-    //更新组件
-    const refresh = () => {
-      s?.refresh();
-    };
-
     watch(
       () => scrollPageRef.value,
       (val) => {
         s = val as any;
-        refresh();
       }
     );
 
@@ -118,11 +112,9 @@ export default defineComponent({
           console.log(error);
           key.value = +new Date();
           await nextTick();
-          refresh();
         }
       }
     };
-
     //切换歌词
     const checkLyric = () => {
       lyricItemDom = [];
@@ -136,7 +128,6 @@ export default defineComponent({
           delLryic(val);
         }
         await nextTick();
-        refresh();
       },
       { deep: true }
     );
@@ -152,7 +143,6 @@ export default defineComponent({
       () => checkLyricState.value,
       async () => {
         await nextTick();
-        refresh();
       }
     );
 
@@ -165,7 +155,6 @@ export default defineComponent({
       key,
       checkLyric,
       checkLyricState,
-      refresh,
     };
   },
 });

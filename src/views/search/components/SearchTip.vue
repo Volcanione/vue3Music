@@ -43,9 +43,6 @@ export default defineComponent({
       });
       searchSuggestList.value = code === 200 ? result?.allMatch || [] : [];
       loadingState.value = true;
-      nextTick(() => {
-        ScrollPage?.value?.refresh();
-      });
     };
 
     //点击单行
@@ -56,16 +53,20 @@ export default defineComponent({
 
     const close = () => {
       nextTick(() => {
-        visible.value = false;
+        setvisible(false);
       });
     };
 
     watch(
       () => props.keyword,
       (val) => {
-        visible.value = !!val;
+        setvisible(!!val);
       }
     );
+
+    const setvisible = (val: boolean) => {
+      visible.value = val;
+    };
 
     const afterEnter = () => {
       searchSuggest();
@@ -88,6 +89,7 @@ export default defineComponent({
       handlerClick,
       visible,
       close,
+      setvisible,
     };
   },
 });

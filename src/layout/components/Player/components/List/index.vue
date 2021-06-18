@@ -142,7 +142,6 @@ export default defineComponent({
 
     //更新组件
     const refresh = async () => {
-      scrollPageRef.value?.refresh();
       currentPage.value = 0;
     };
 

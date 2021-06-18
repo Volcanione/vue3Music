@@ -83,12 +83,7 @@ export default defineComponent({
     const router = useRouter();
     const userInfo = reactive(store.getters.userInfo);
     const loadingState = ref(false);
-    const {
-      topStyle,
-      imgStyle,
-      bgImgStyle,
-      refreshScroll,
-    } = songlistDetailSetup();
+    const { topStyle, imgStyle, bgImgStyle } = songlistDetailSetup();
     const playListParam = reactive({
       uid: store.getters.userInfo.userId,
       limit: 30,
@@ -122,7 +117,6 @@ export default defineComponent({
         return item.creator.userId !== userInfo.userId;
       });
       await nextTick();
-      refreshScroll();
     };
 
     //歌单详细
@@ -156,7 +150,9 @@ export default defineComponent({
         router.replace({
           path: "/recom",
         });
-      } catch (error) {}
+      } catch (error) {
+        //
+      }
     };
 
     const init = async () => {
@@ -191,7 +187,6 @@ export default defineComponent({
   }
   .nav {
     position: fixed;
-    z-index: 1;
     background: transparent;
     color: #333;
   }

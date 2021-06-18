@@ -56,12 +56,6 @@ export default defineComponent({
     handlerPush() {
       this.$router.push("/test");
     },
-    refresh() {
-      const ScrollPage = this.$refs.ScrollPage as any;
-      this.$nextTick(() => {
-        ScrollPage?.refresh();
-      });
-    },
     scrollTo() {
       const ScrollPage = this.$refs.ScrollPage as any;
       this.$nextTick(() => {

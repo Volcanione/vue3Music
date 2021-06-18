@@ -154,7 +154,6 @@ export default defineComponent({
   }
   .nav {
     position: fixed;
-    z-index: 1;
     background: transparent;
     color: #333;
   }

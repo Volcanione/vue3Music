@@ -9,7 +9,7 @@
     <div class="songListCat" v-loading="loadingState">
       <Nav :back="close"> 全部分类 </Nav>
 
-      <ScrollPage ref="ScrollPage" class="ScrollPage">
+      <ScrollPage class="ScrollPage">
         <div class="cat" v-for="cat in catList" :key="cat.cat">
           <div class="name">{{ cat.cat }}</div>
           <div class="catContent">
@@ -40,7 +40,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const loadingState = ref(false);
-    const ScrollPage = ref(null) as any;
     const catList = ref([]) as any;
 
     watch(
@@ -78,8 +77,6 @@ export default defineComponent({
           list: sub.filter((i: any) => i.category === +idx),
         };
       });
-
-      ScrollPage?.value?.refresh();
     };
 
     //点击分类
@@ -94,7 +91,6 @@ export default defineComponent({
 
     return {
       loadingState,
-      ScrollPage,
       catList,
       checkCat,
       close,

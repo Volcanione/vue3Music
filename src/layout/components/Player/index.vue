@@ -9,11 +9,7 @@
   >
     <div class="player">
       <div class="header">
-        <PlayerHeader
-          @switch="switchLRY"
-          :active="switchConfig.value"
-          @comment="openComment"
-        />
+        <PlayerHeader v-model:active="switchConfig" @comment="openComment" />
       </div>
       <div class="content">
         <PlayContriller :config="switchConfig" />
@@ -43,13 +39,9 @@ import Comment from "./components/Comment/index.vue";
 export default defineComponent({
   components: { PlayerHeader, PlayContriller, Comment },
   setup() {
-    const switchConfig = reactive({ type: 0, value: 0 });
+    const switchConfig = ref(0);
     const commentShow = ref(false);
     const bgImg = require("@/assets/bg.jpg");
-    const switchLRY = ({ type, value }: any) => {
-      switchConfig.type = type;
-      switchConfig.value = value;
-    };
 
     //评论
     const openComment = () => {
@@ -61,15 +53,12 @@ export default defineComponent({
         return;
       }
       await nextTick();
-      switchConfig.type = 0;
-      switchConfig.value = 0;
     };
 
     const { playerShow, playerNow } = playerSetup();
 
     return {
       playerShow,
-      switchLRY,
       switchConfig,
       playerNow,
       bgImg,
